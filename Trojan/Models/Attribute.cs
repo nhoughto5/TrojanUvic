@@ -15,6 +15,7 @@ namespace Trojan.Models
 
         [Required, StringLength(10000), Display(Name = "Attribute Description"), DataType(DataType.MultilineText)]
         public string Description { get; set; }
+        
         public string ImagePath { get; set; }
         public int F_in { get; set; }
         public int F_out { get; set; }

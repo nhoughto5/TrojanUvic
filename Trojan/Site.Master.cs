@@ -8,6 +8,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Linq;
 using Trojan.Models;
+using Trojan.Logic;
 
 namespace Trojan
 {
@@ -71,6 +72,14 @@ namespace Trojan
         protected void Page_Load(object sender, EventArgs e)
         {
 
+        }
+        protected void Page_PreRender(object sender, EventArgs e)
+        {
+            using (VirusDescriptionActions usersVirus = new VirusDescriptionActions())
+            {
+                string cartStr = string.Format("Description ({0})", usersVirus.GetCount());
+                currentCount.InnerText = cartStr;
+            }
         }
         public IQueryable<Category> GetCategories()
         {
