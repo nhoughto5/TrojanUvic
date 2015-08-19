@@ -138,6 +138,17 @@ namespace Trojan.Logic
             // Return 0 if all entries are null         
             return count ?? 0;
         }
+        public int GetOnCount()
+        {
+            VirusDescriptionID = GetVirusId();
+
+            // Get the count of each item in the cart and sum them up
+            int? count = 0;
+            count = (int?)(from virusItems in _db.VirusDescription where (virusItems.VirusId == VirusDescriptionID) && (virusItems.On_Off == true) select (int?)(virusItems.AttributeId)).Count();
+
+            // Return 0 if all entries are null         
+            return count ?? 0;
+        }
         public VirusDescriptionActions GetCart(HttpContext context)
         {
             using (var virus = new VirusDescriptionActions())

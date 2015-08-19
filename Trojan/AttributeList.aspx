@@ -7,7 +7,7 @@
             </hgroup>
 
             <asp:ListView ID="attributeList" runat="server" 
-                DataKeyNames="AttributeID" GroupItemCount="4"
+                DataKeyNames="AttributeID" style="align-items: center" GroupItemCount="4"
                 ItemType="Trojan.Models.Attribute" SelectMethod="GetAttributes">
                 <EmptyDataTemplate>
                     <table >
@@ -26,7 +26,7 @@
                 </GroupTemplate>
                 <ItemTemplate>
                     <td runat="server">
-                        <table>
+                        <table style="margin: 0 auto;">
                             <tr>
                                 <td>
                                     <a href="AttributeDetails.aspx?AttributeId=<%#:Item.AttributeId%>">

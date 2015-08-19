@@ -40,6 +40,15 @@ namespace Trojan {
         protected global::System.Web.UI.WebControls.GridView DescriptionList;
         
         /// <summary>
+        /// labels control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl labels;
+        
+        /// <summary>
         /// LabelTotalText control.
         /// </summary>
         /// <remarks>
@@ -92,6 +101,15 @@ namespace Trojan {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblTotalF_out;
+        
+        /// <summary>
+        /// buttonTable control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlTable buttonTable;
         
         /// <summary>
         /// UpdateBtn control.
@@ -148,15 +166,6 @@ namespace Trojan {
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl abstractionResults;
         
         /// <summary>
-        /// abstractionNone control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl abstractionNone;
-        
-        /// <summary>
         /// abstractionGrid control.
         /// </summary>
         /// <remarks>
@@ -175,15 +184,6 @@ namespace Trojan {
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl direct;
         
         /// <summary>
-        /// directNone control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl directNone;
-        
-        /// <summary>
         /// directGrid control.
         /// </summary>
         /// <remarks>
@@ -200,15 +200,6 @@ namespace Trojan {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl indirect;
-        
-        /// <summary>
-        /// indirectNone control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl indirectNone;
         
         /// <summary>
         /// indirectGrid control.
@@ -254,5 +245,50 @@ namespace Trojan {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.GridView ColumnGrid;
+        
+        /// <summary>
+        /// notes control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl notes;
+        
+        /// <summary>
+        /// canNot control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl canNot;
+        
+        /// <summary>
+        /// directNone control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl directNone;
+        
+        /// <summary>
+        /// indirectNone control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl indirectNone;
+        
+        /// <summary>
+        /// abstractionNone control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl abstractionNone;
     }
 }
