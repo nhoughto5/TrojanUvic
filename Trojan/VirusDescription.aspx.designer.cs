@@ -247,6 +247,24 @@ namespace Trojan {
         protected global::System.Web.UI.WebControls.GridView ColumnGrid;
         
         /// <summary>
+        /// ConnectionsResults control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl ConnectionsResults;
+        
+        /// <summary>
+        /// ConnectionsGrid control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.GridView ConnectionsGrid;
+        
+        /// <summary>
         /// notes control.
         /// </summary>
         /// <remarks>

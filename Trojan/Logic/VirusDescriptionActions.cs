@@ -19,7 +19,7 @@ namespace Trojan.Logic
             // Retrieve the Attribute from the database.           
             VirusDescriptionID = GetVirusId();
 
-            var virItem = _db.VirusDescription.SingleOrDefault(
+            var virItem = _db.Virus_Item.SingleOrDefault(
                 c => c.VirusId == VirusDescriptionID
                 && c.AttributeId == id);
             if (virItem == null)
@@ -37,7 +37,7 @@ namespace Trojan.Logic
                     DateCreated = DateTime.Now
                 };
 
-                _db.VirusDescription.Add(virItem);
+                _db.Virus_Item.Add(virItem);
             }
             else
             {
@@ -79,7 +79,7 @@ namespace Trojan.Logic
         {
             VirusDescriptionID = GetVirusId();
 
-            return _db.VirusDescription.Where(
+            return _db.Virus_Item.Where(
                 c => c.VirusId == VirusDescriptionID).ToList();
         }
         public bool Get_OnOff(string cartID, int AttributeId)
@@ -88,7 +88,7 @@ namespace Trojan.Logic
             {
                 try
                 {
-                    var myItem = (from c in _db.VirusDescription where c.VirusId == cartID && c.Attribute.AttributeId == AttributeId select c).FirstOrDefault();
+                    var myItem = (from c in _db.Virus_Item where c.VirusId == cartID && c.Attribute.AttributeId == AttributeId select c).FirstOrDefault();
                     return myItem.On_Off;
                 }
                 catch (Exception exp)
@@ -104,7 +104,7 @@ namespace Trojan.Logic
             // the current price for each of those Attributes in the cart.  
             // Sum all Attribute price totals to get the cart total.   
             int? total = 0;
-            total = (int?)(from virusItems in _db.VirusDescription where virusItems.VirusId == VirusDescriptionID select (int?)(virusItems.On_Off == true ? 1 : 1)).Sum();
+            total = (int?)(from virusItems in _db.Virus_Item where virusItems.VirusId == VirusDescriptionID select (int?)(virusItems.On_Off == true ? 1 : 1)).Sum();
             return total ?? 0;
         }
         public int getTotalF_in()
@@ -114,7 +114,7 @@ namespace Trojan.Logic
             // the current price for each of those Attributes in the cart.  
             // Sum all Attribute price totals to get the cart total.   
             int? total = 0;
-            total = (int?)(from virusItems in _db.VirusDescription where virusItems.VirusId == VirusDescriptionID select (int?)(virusItems.On_Off == true ? virusItems.Attribute.F_in : 0)).Sum();
+            total = (int?)(from virusItems in _db.Virus_Item where virusItems.VirusId == VirusDescriptionID select (int?)(virusItems.On_Off == true ? virusItems.Attribute.F_in : 0)).Sum();
             return total ?? 0;
         }
         public int getTotalF_out()
@@ -124,7 +124,7 @@ namespace Trojan.Logic
             // the current price for each of those Attributes in the cart.  
             // Sum all Attribute price totals to get the cart total.   
             int? total = 0;
-            total = (int?)(from virusItems in _db.VirusDescription where virusItems.VirusId == VirusDescriptionID select (int?)(virusItems.On_Off == true ? virusItems.Attribute.F_out : 0)).Sum();
+            total = (int?)(from virusItems in _db.Virus_Item where virusItems.VirusId == VirusDescriptionID select (int?)(virusItems.On_Off == true ? virusItems.Attribute.F_out : 0)).Sum();
             return total ?? 0;
         }
         public int GetCount()
@@ -133,7 +133,7 @@ namespace Trojan.Logic
 
             // Get the count of each item in the cart and sum them up
             int? count = 0;
-            count = (int?)(from virusItems in _db.VirusDescription where virusItems.VirusId == VirusDescriptionID select (int?)(virusItems.AttributeId)).Count();
+            count = (int?)(from virusItems in _db.Virus_Item where virusItems.VirusId == VirusDescriptionID select (int?)(virusItems.AttributeId)).Count();
             
             // Return 0 if all entries are null         
             return count ?? 0;
@@ -144,7 +144,7 @@ namespace Trojan.Logic
 
             // Get the count of each item in the cart and sum them up
             int? count = 0;
-            count = (int?)(from virusItems in _db.VirusDescription where (virusItems.VirusId == VirusDescriptionID) && (virusItems.On_Off == true) select (int?)(virusItems.AttributeId)).Count();
+            count = (int?)(from virusItems in _db.Virus_Item where (virusItems.VirusId == VirusDescriptionID) && (virusItems.On_Off == true) select (int?)(virusItems.AttributeId)).Count();
 
             // Return 0 if all entries are null         
             return count ?? 0;
@@ -198,11 +198,11 @@ namespace Trojan.Logic
             {
                 try
                 {
-                    var myItem = (from c in _db.VirusDescription where c.VirusId == removeCartID && c.Attribute.AttributeId == removeAttributeId select c).FirstOrDefault();
+                    var myItem = (from c in _db.Virus_Item where c.VirusId == removeCartID && c.Attribute.AttributeId == removeAttributeId select c).FirstOrDefault();
                     if (myItem != null)
                     {
                         // Remove Item.
-                        _db.VirusDescription.Remove(myItem);
+                        _db.Virus_Item.Remove(myItem);
                         _db.SaveChanges();
                     }
                 }
@@ -219,7 +219,7 @@ namespace Trojan.Logic
             {
                 try
                 {
-                    var myItem = (from c in _db.VirusDescription where c.VirusId == updateCartID && c.Attribute.AttributeId == updateAttributeId select c).FirstOrDefault();
+                    var myItem = (from c in _db.Virus_Item where c.VirusId == updateCartID && c.Attribute.AttributeId == updateAttributeId select c).FirstOrDefault();
                     if (myItem != null)
                     {
                         myItem.On_Off = OnOff;
@@ -236,11 +236,11 @@ namespace Trojan.Logic
         public void EmptyVirus()
         {
             VirusDescriptionID = GetVirusId();
-            var cartItems = _db.VirusDescription.Where(
+            var cartItems = _db.Virus_Item.Where(
                 c => c.VirusId == VirusDescriptionID);
             foreach (var cartItem in cartItems)
             {
-                _db.VirusDescription.Remove(cartItem);
+                _db.Virus_Item.Remove(cartItem);
             }
             // Save changes.             
             _db.SaveChanges();
@@ -254,7 +254,7 @@ namespace Trojan.Logic
         }
         public void MigrateCart(string cartId, string userName)
         {
-            var shoppingCart = _db.VirusDescription.Where(c => c.VirusId == cartId);
+            var shoppingCart = _db.Virus_Item.Where(c => c.VirusId == cartId);
             foreach (Virus_Item item in shoppingCart)
             {
                 item.VirusId = userName;

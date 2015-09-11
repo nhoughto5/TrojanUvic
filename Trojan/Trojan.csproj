@@ -451,6 +451,7 @@
     <Compile Include="Logic\VirusDescriptionActions.cs" />
     <Compile Include="Models\Attribute.cs" />
     <Compile Include="Models\Category.cs" />
+    <Compile Include="Models\Connection.cs" />
     <Compile Include="Models\DatabaseInit.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\Matrix.cs" />

@@ -14,7 +14,7 @@ namespace Trojan
 {
     public partial class VirusDescription : System.Web.UI.Page
     {
-        bool Built;
+        bool Built; List<Connection> Connections = new List<Connection>();
         TrojanContext db = new TrojanContext();
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -36,6 +36,8 @@ namespace Trojan
                     ColumnGrid.Visible = ColumnResults.Visible = false;
                     RowGrid.Visible = RowResults.Visible = false;
                     notes.Visible = false;
+                    ConnectionsResults.Visible = false;
+                   // ConnectionsGrid.Visible = false;
                 }
                 if (totalNumberofAttributes > 0)
                 {
@@ -91,7 +93,9 @@ namespace Trojan
                     directNone.Visible = direct.Visible = directGrid.Visible = false;
                     indirectNone.Visible = indirectGrid.Visible = indirect.Visible = false;
                     RowResults.Visible = RowGrid.Visible = false;
-                    ColumnResults.Visible = ColumnGrid.Visible = false; 
+                    ColumnResults.Visible = ColumnGrid.Visible = false;
+                    ConnectionsResults.Visible = false;
+                    //ConnectionsGrid.Visible = false;
                 }
             }
         }
@@ -105,7 +109,6 @@ namespace Trojan
             return actions.GetDescriptionItems();
         }
 
-       
         public List<Virus_Item> UpdateCartItems()
         {
             using (VirusDescriptionActions usersShoppingCart = new VirusDescriptionActions())
@@ -119,7 +122,7 @@ namespace Trojan
                     {
                         IOrderedDictionary rowValues = new OrderedDictionary();
                         rowValues = GetValues(DescriptionList.Rows[i]);
-                        cartUpdates[i].AttributeId = Convert.ToInt32(rowValues["AttributeID"]);
+                        cartUpdates[i].AttributeId = Convert.ToInt32(rowValues["AttributeId"]);
 
                         CheckBox cbRemove = new CheckBox();
                         cbRemove = (CheckBox)DescriptionList.Rows[i].FindControl("Remove");
@@ -207,6 +210,7 @@ namespace Trojan
             }
             
         }
+
         //Return all of the matrix cells in a particulat column that are in a particular submatrix
         private List<Matrix_Cell> scanColumnTrue(int Id, string subM)
         {
@@ -316,6 +320,9 @@ namespace Trojan
                 indirectNone.Visible = indirectGrid.Visible = indirect.Visible = false;
                 RowResults.Visible = RowGrid.Visible = false;
                 ColumnResults.Visible = ColumnGrid.Visible = false;
+                ConnectionsResults.Visible = false;
+                ConnectionsGrid.Visible = false;
+                Connections.Clear();
             }
         }
 
@@ -332,11 +339,12 @@ namespace Trojan
             ColumnGrid.Visible = ColumnResults.Visible = false;
             RowGrid.Visible = RowResults.Visible = false;
             notes.Visible = false;
-            List<int> comboBuild = new List<int>();
+            List<int> abstraction = new List<int>();
             List<int> removed = new List<int>();
             List<Trojan.Models.Attribute> Direct_Insertion = new List<Trojan.Models.Attribute>();
             List<Trojan.Models.Attribute> Indirect_Insertion = new List<Trojan.Models.Attribute>();
             List<Trojan.Models.Attribute> R2_Abstraction_Output = new List<Trojan.Models.Attribute>();
+            
             using (VirusDescriptionActions usersVirus = new VirusDescriptionActions())
             {
                 int total = usersVirus.GetOnCount();
@@ -349,25 +357,25 @@ namespace Trojan
                     {
                         IOrderedDictionary rowValues = new OrderedDictionary();
                         rowValues = GetValues(DescriptionList.Rows[i]);
-                        currentBuild[i].AttributeId = Convert.ToInt32(rowValues["AttributeID"]);
+                        currentBuild[i].AttributeId = Convert.ToInt32(rowValues["AttributeId"]);
 
+                        //If current attribute is turned on
                         if (usersVirus.Get_OnOff(virusId, currentBuild[i].AttributeId))
                         {
                             colTrue = getColumn(currentBuild[i].AttributeId, "R23");
                             foreach (Matrix_Cell N in colTrue)
                             {
-                                if (!comboBuild.Contains(N.RowId) && N.value == true)
+                                if (!abstraction.Contains(N.RowId) && N.value == true)
                                 {
                                     if (!removed.Contains(N.RowId))
                                     {
-                                        comboBuild.Add(N.RowId);
+                                        abstraction.Add(N.RowId);
                                     }
                                 }
                                 //A new attribute may remove a value from comboBuild
-                                else if (comboBuild.Contains(N.RowId) && N.value == false)
+                                else if (abstraction.Contains(N.RowId) && N.value == false)
                                 {
-                                    comboBuild.Remove(N.RowId);
-
+                                    abstraction.Remove(N.RowId);
                                 }
                                 else
                                 {
@@ -380,52 +388,75 @@ namespace Trojan
                             }
                         }
                     }
+
+                    //For combination trojans all of the properties attributes have now been looked at
+                    //The resulting life cycle or abstraction properties found from submatrix R23 are stored in list abstraction
+                    //Start Building Connections
                     List<Matrix_Cell> R2 = new List<Matrix_Cell>();
                     List<Matrix_Cell> R1 = new List<Matrix_Cell>();
+                    List<Matrix_Cell> R12 = new List<Matrix_Cell>();
                     List<Matrix_Cell> tempCols = new List<Matrix_Cell>();
-                    List<Matrix_Cell> tempCols2 = new List<Matrix_Cell>();
-                    //For combination trojans all of the properties attributes have now been looked at
-                    //The resulting life cycle or abstraction properties found from submatrix R23 are stored in list comboBuild
-                    foreach (int A in comboBuild)
+                    
+                    List<int> IndirectBuilder = new List<int>(abstraction);
+                    Trojan.Models.Attribute tempAttribute = new Trojan.Models.Attribute(); 
+                    foreach (int A in abstraction)
                     {
                         R1 = scanColumnTrue(A, "R1"); //Find each true value in R1
                         R2 = scanColumnTrue(A, "R2"); //Find each true value in R2
+                        R12 = scanColumnTrue(A, "R12");
                         R2_Abstraction_Output.Add(getAttribute(A));
 
                         //Direct Link
-                        foreach (Matrix_Cell B in R1)
+                        foreach (Matrix_Cell B in R12)
                         {
-                            Direct_Insertion.Add(getAttribute(B.RowId));
+                            tempAttribute = getAttribute(B.RowId);
+                            if (!Attribute_Check(Direct_Insertion, B.RowId))
+                            {
+                                Direct_Insertion.Add(tempAttribute);
+                            }
+                            if(B.RowId != tempAttribute.AttributeId){
+                                if (!Connection_Check(Connections, B.RowId, tempAttribute.AttributeId, true))
+                                {
+                                    Connections.Add(new Connection(B.RowId, tempAttribute.AttributeId, true));
+                                }
+                            }
                         }
-
-                        //Indirect Link
-                        foreach (Matrix_Cell C in R2)
+                        //Step Link
+                        foreach (Matrix_Cell B in R2)
                         {
-                            tempCols = scanColumnTrue(C.RowId, null);
+                            if (!IndirectBuilder.Contains(B.RowId))
+                            {
+                                IndirectBuilder.Add(B.RowId);
+                            }
+                            if (!Connection_Check(Connections, B.RowId, A, false))
+                            {
+                                Connections.Add(new Connection(B.RowId, A, false));
+                            }
+                        }
+                        //Indirect Link
+                        for(var x = 0; x < IndirectBuilder.Count; x++){
+                            int C = IndirectBuilder[x];
+                            tempCols = scanColumnTrue(C, null);
                             foreach (Matrix_Cell D in tempCols)
                             {
-                                if (D.submatrix != "R12")
+                                if (!IndirectBuilder.Contains(D.RowId)) IndirectBuilder.Add(D.RowId);
+                                if (!Connection_Check(Connections, D.RowId, C, false))
                                 {
-                                    tempCols2 = scanColumnTrue(D.RowId, "R12");
-                                    foreach (Matrix_Cell E in tempCols2)
-                                    {
-                                        Indirect_Insertion.Add(getAttribute(E.RowId));
-                                    }
+                                    Connections.Add(new Connection(D.RowId, C, false));
                                 }
-                                else
+                                if (!Attribute_Check(Indirect_Insertion, D.RowId))
                                 {
                                     Indirect_Insertion.Add(getAttribute(D.RowId));
                                 }
-
-
+                                
                             }
-                            tempCols.Clear(); tempCols2.Clear();
+                            tempCols.Clear();
                         }
                     }
-                    R2.Clear(); R1.Clear();
+                    R2.Clear(); R1.Clear(); R12.Clear();
                     if (Direct_Insertion.Count > 0)
                     {
-                        directGrid.DataSource = Direct_Insertion;
+                        directGrid.DataSource = Attribute_Sorting(Direct_Insertion);
                         directGrid.DataBind();
                         direct.Visible = directGrid.Visible = true;
                         directNone.Visible = false;
@@ -438,7 +469,7 @@ namespace Trojan
                     }
                     if (Indirect_Insertion.Count > 0)
                     {
-                        indirectGrid.DataSource = Indirect_Insertion;
+                        indirectGrid.DataSource = Attribute_Sorting(Indirect_Insertion);
                         indirectGrid.DataBind();
                         indirect.Visible = indirectGrid.Visible = true;
                         indirectNone.Visible = false;
@@ -451,7 +482,7 @@ namespace Trojan
                     }
                     if (R2_Abstraction_Output.Count > 0)
                     {
-                        abstractionGrid.DataSource = R2_Abstraction_Output;
+                        abstractionGrid.DataSource = Attribute_Sorting(R2_Abstraction_Output);
                         abstractionGrid.DataBind();
                         abstractionGrid.Visible = abstractionResults.Visible = true;
                         abstractionNone.Visible = false;
@@ -462,7 +493,20 @@ namespace Trojan
                         abstractionResults.Visible = false;
                         notes.Visible = true;
                     }
+                    if (Connections.Count > 0)
+                    {
+                        ConnectionsGrid.DataSource = Connection_Sorting(Connections);
+                        ConnectionsGrid.DataBind();
+                        ConnectionsResults.Visible = true;
+                        ConnectionsGrid.Visible = true;
+                    }
+                    else
+                    {
+                        ConnectionsResults.Visible = false;
+                        ConnectionsGrid.Visible = false;
+                    }
                 }
+                //Total <= 0
                 else
                 {
                     notes.Visible = true;
@@ -481,6 +525,8 @@ namespace Trojan
             abstractionGrid.Visible = abstractionResults.Visible = false;
             directNone.Visible = direct.Visible = directGrid.Visible = false;
             indirectNone.Visible = indirectGrid.Visible = indirect.Visible = false;
+            ConnectionsResults.Visible = false;
+            ConnectionsGrid.Visible = false;
             ColumnGrid.Visible = ColumnResults.Visible = false;
             RowGrid.Visible = RowResults.Visible = true;
             using (VirusDescriptionActions usersVirus = new VirusDescriptionActions())
@@ -497,7 +543,7 @@ namespace Trojan
                     {
                         IOrderedDictionary rowValues = new OrderedDictionary();
                         rowValues = GetValues(DescriptionList.Rows[i]);
-                        currentBuild[i].AttributeId = Convert.ToInt32(rowValues["AttributeID"]);
+                        currentBuild[i].AttributeId = Convert.ToInt32(rowValues["AttributeId"]);
 
                         if (usersVirus.Get_OnOff(virusId, currentBuild[i].AttributeId))
                         {
@@ -513,7 +559,7 @@ namespace Trojan
                             }
                         }
                     }
-                    RowGrid.DataSource = results;
+                    RowGrid.DataSource = Attribute_Sorting(results);
                     RowGrid.DataBind();
                 }
                 else
@@ -534,6 +580,8 @@ namespace Trojan
             abstractionGrid.Visible = abstractionResults.Visible = false;
             directNone.Visible = direct.Visible = directGrid.Visible = false;
             indirectNone.Visible = indirectGrid.Visible = indirect.Visible = false;
+            ConnectionsResults.Visible = false;
+            ConnectionsGrid.Visible = false;
             ColumnGrid.Visible = ColumnResults.Visible = true;
             RowGrid.Visible = RowResults.Visible = false;
             Trojan.Models.Attribute temp = new Trojan.Models.Attribute();
@@ -550,7 +598,7 @@ namespace Trojan
                     {
                         IOrderedDictionary rowValues = new OrderedDictionary();
                         rowValues = GetValues(DescriptionList.Rows[i]);
-                        currentBuild[i].AttributeId = Convert.ToInt32(rowValues["AttributeID"]);
+                        currentBuild[i].AttributeId = Convert.ToInt32(rowValues["AttributeId"]);
 
                         if (usersVirus.Get_OnOff(virusId, currentBuild[i].AttributeId))
                         {
@@ -566,7 +614,7 @@ namespace Trojan
                             }
                         }
                     }
-                    ColumnGrid.DataSource = results;
+                    ColumnGrid.DataSource = Attribute_Sorting(results);
                     ColumnGrid.DataBind();
                 }
                 else
@@ -580,6 +628,30 @@ namespace Trojan
                     ColumnResults.Visible = ColumnGrid.Visible = false; 
                 } 
             }
+        }
+        protected List<Connection> Connection_Sorting(List<Connection> List)
+        {
+            List<Connection> SortedList = List.OrderBy(p => p.source).ThenBy(c => c.destination).ToList();
+            return SortedList;
+        }
+        protected List<Trojan.Models.Attribute> Attribute_Sorting(List<Trojan.Models.Attribute> List)
+        {
+            List<Trojan.Models.Attribute> SortedList = List.OrderBy(p => p.AttributeId).ToList();
+            return SortedList;
+        }
+        protected bool Connection_Check(List<Connection> List, int source_, int dest, bool TF){
+            foreach(Connection X in List){
+                if (X.source == source_ && X.destination == dest && X.direct == TF) return true;
+            }
+            return false;
+        }
+        protected bool Attribute_Check(List<Trojan.Models.Attribute> List, int Y)
+        {
+            foreach (Trojan.Models.Attribute X in List)
+            {
+                if (X.AttributeId == Y) return true;
+            }
+            return false;
         }
     }
 }
