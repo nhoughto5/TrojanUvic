@@ -1,5 +1,7 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="VirusDescription.aspx.cs" Inherits="Trojan.VirusDescription" %>
 <asp:Content ID="DescriptionContent" ContentPlaceHolderID="MainContent" runat="server">
+    <script type="text/javascript" src="Scripts/d3.js"></script>
+    <link rel="stylesheet" type="text/css" href="Content/visualizer.css" />
     <div id="VirusDescriptionTitle" runat="server" class="ContentHead"><h1>Virus Description</h1></div>
     <div id="NoSelected" align="center" runat="server" class="ContentHead"><h1>&nbsp&nbsp</h1><h3>No Attributes Selected</h3></div>
     <asp:GridView ID="DescriptionList" runat="server" AutoGenerateColumns="False" ShowFooter="True" GridLines="Vertical" CellPadding="4"
@@ -117,6 +119,14 @@
             <asp:BoundField DataField="direct" HeaderText="Direct Connection" />
         </Columns>
     </asp:GridView>
+    <div id="Locationlbl" runat="server" class="ContentHead"><h1>Location Results</h1></div>
+    <asp:GridView ID="LocationGrid" runat="server" AutoGenerateColumns="false" ShowFooter="false" GridLines="Vertical" CellPadding="4" ItemType="Trojan.Models.Attribute" CssClass="table table-striped table-bordered">
+        <Columns>
+            <asp:BoundField DataField="AttributeId" HeaderText="ID" SortExpression="AttributeId" />
+            <asp:BoundField DataField="AttributeName" HeaderText="Name" />        
+            <asp:BoundField DataField="CategoryName" HeaderText="Category" />
+        </Columns>
+    </asp:GridView>
     <div>&nbsp</div>
     <div>&nbsp</div>
     <div>&nbsp</div>
@@ -125,4 +135,9 @@
     <div id="directNone" runat="server" class="Content"><h4>No Direct Connections to Insertion</h4></div>
     <div id="indirectNone" runat="server" class="Content"><h4>No Indirect Connections to Insertion</h4></div>
     <div id="abstractionNone" runat="server" class="Content"><h4>No Results for Abstraction Category</h4></div>
+    <div>&nbsp</div>
+    <div class="jumbotron">
+        <div id="visrep"></div>
+    </div>
+    <script type="text/javascript" src="JavaScript/visualizer.js"></script>
 </asp:Content>

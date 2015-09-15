@@ -37,7 +37,8 @@ namespace Trojan
                     RowGrid.Visible = RowResults.Visible = false;
                     notes.Visible = false;
                     ConnectionsResults.Visible = false;
-                   // ConnectionsGrid.Visible = false;
+                    ConnectionsGrid.Visible = false;
+                    LocationGrid.Visible = Locationlbl.Visible = false;
                 }
                 if (totalNumberofAttributes > 0)
                 {
@@ -95,7 +96,8 @@ namespace Trojan
                     RowResults.Visible = RowGrid.Visible = false;
                     ColumnResults.Visible = ColumnGrid.Visible = false;
                     ConnectionsResults.Visible = false;
-                    //ConnectionsGrid.Visible = false;
+                    ConnectionsGrid.Visible = false;
+                    LocationGrid.Visible = Locationlbl.Visible = false;
                 }
             }
         }
@@ -322,6 +324,7 @@ namespace Trojan
                 ColumnResults.Visible = ColumnGrid.Visible = false;
                 ConnectionsResults.Visible = false;
                 ConnectionsGrid.Visible = false;
+                LocationGrid.Visible = Locationlbl.Visible = false;
                 Connections.Clear();
             }
         }
@@ -337,14 +340,18 @@ namespace Trojan
             Built = true;
             
             ColumnGrid.Visible = ColumnResults.Visible = false;
+            LocationGrid.Visible = Locationlbl.Visible = false;
             RowGrid.Visible = RowResults.Visible = false;
             notes.Visible = false;
             List<int> abstraction = new List<int>();
             List<int> removed = new List<int>();
+            List<int> removed2 = new List<int>();
+            List<int> R34_Results = new List<int>();
             List<Trojan.Models.Attribute> Direct_Insertion = new List<Trojan.Models.Attribute>();
             List<Trojan.Models.Attribute> Indirect_Insertion = new List<Trojan.Models.Attribute>();
             List<Trojan.Models.Attribute> R2_Abstraction_Output = new List<Trojan.Models.Attribute>();
-            
+            List<Matrix_Cell> tempRow = new List<Matrix_Cell>();
+
             using (VirusDescriptionActions usersVirus = new VirusDescriptionActions())
             {
                 int total = usersVirus.GetOnCount();
@@ -386,7 +393,26 @@ namespace Trojan
                                     removed.Add(N.RowId);
                                 }
                             }
+                            //=========== Find R34 Values ==============//
+                            tempRow = getRow(currentBuild[i].AttributeId, "R34");
+                            foreach (Matrix_Cell W in tempRow)
+                            {
+                                if (W.value == false)
+                                {
+                                    removed2.Add(W.ColumnId);
+                                    if (R34_Results.Contains(W.ColumnId))
+                                    {
+                                        R34_Results.Remove(W.ColumnId);
+                                    }
+                                }
+                                if (!removed2.Contains(W.ColumnId) && !R34_Results.Contains(W.ColumnId) && W.value == true)
+                                {
+                                    R34_Results.Add(W.ColumnId);
+                                }
+                            }
                         }
+                        
+
                     }
 
                     //For combination trojans all of the properties attributes have now been looked at
@@ -504,6 +530,21 @@ namespace Trojan
                     {
                         ConnectionsResults.Visible = false;
                         ConnectionsGrid.Visible = false;
+                    }
+                    if (R34_Results.Count > 0)
+                    {
+                        List<Models.Attribute> Locations = new List<Models.Attribute>();
+                        foreach (int u in R34_Results)
+                        {
+                            Locations.Add(getAttribute(u));
+                        }
+                        LocationGrid.Visible = Locationlbl.Visible = true;
+                        LocationGrid.DataSource = Locations;
+                        LocationGrid.DataBind();
+                    }
+                    else
+                    {
+                        LocationGrid.Visible = Locationlbl.Visible = false;
                     }
                 }
                 //Total <= 0

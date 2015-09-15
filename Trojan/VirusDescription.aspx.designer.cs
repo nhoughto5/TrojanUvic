@@ -265,6 +265,24 @@ namespace Trojan {
         protected global::System.Web.UI.WebControls.GridView ConnectionsGrid;
         
         /// <summary>
+        /// Locationlbl control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl Locationlbl;
+        
+        /// <summary>
+        /// Location Grid control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.GridView LocationGrid;
+        
+        /// <summary>
         /// notes control.
         /// </summary>
         /// <remarks>
