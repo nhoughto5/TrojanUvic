@@ -11,15 +11,6 @@ namespace Trojan.Models
             GetCategories().ForEach(c => context.Categories.Add(c));
             GetAttributes().ForEach(p => context.Attributes.Add(p));
             GetCells().ForEach(a => context.Matrix_Cell.Add(a));
-            //GetCells().ForEach(p => context.Matrix_Cell.Add(p));
-            //var defaultMat = new Matrix()
-            //{
-            //    Matrix_Id = 0,
-            //    name = "Default",
-            //};
-            //GetCells().ForEach(p => defaultMat.Matrix_Cell.Add(p));
-            //context.Matrices.Add(defaultMat);
-            //context.SaveChanges();
         }
         private static List<Category> GetCategories()
         {

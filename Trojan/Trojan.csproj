@@ -238,6 +238,8 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Images\logo.jpg" />
     <Content Include="Images\TrojanLogo.png" />
+    <Content Include="JavaScript\DirectedGraph.js" />
+    <Content Include="JavaScript\REference.js" />
     <Content Include="JavaScript\visualizer.js" />
     <Content Include="LICENSE.txt" />
     <Content Include="packages.config" />

@@ -157,6 +157,15 @@ namespace Trojan {
         protected global::System.Web.UI.WebControls.Button ClearBtn;
         
         /// <summary>
+        /// VisualizeBtn control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button VisualizeBtn;
+        
+        /// <summary>
         /// abstractionResults control.
         /// </summary>
         /// <remarks>
@@ -274,7 +283,7 @@ namespace Trojan {
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl Locationlbl;
         
         /// <summary>
-        /// Location Grid control.
+        /// LocationGrid control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
@@ -299,6 +308,15 @@ namespace Trojan {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl canNot;
+        
+        /// <summary>
+        /// notBuilt control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl notBuilt;
         
         /// <summary>
         /// directNone control.

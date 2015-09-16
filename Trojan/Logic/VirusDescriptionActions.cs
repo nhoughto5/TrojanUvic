@@ -13,7 +13,6 @@ namespace Trojan.Logic
         private TrojanContext _db = new TrojanContext();
 
         public const string DescriptionSessionKey = "VirusId";
-
         public void AddToVirus(int id)
         {
             // Retrieve the Attribute from the database.           
