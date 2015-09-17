@@ -333,15 +333,17 @@
             update();
         }
 
-        var nodeEdges = [];
-
-
-        function visualize(element) {
-            //graph = new Visualizer(element);
-            //for (var i = 0; i < nodesEdges.length ; ++i) {
-            //    graph.addLink(nodeEdges[i].source, nodeEdge[i].target);
-            //}
-            d3.select(element).append("h2").text("We did it!!!");
+        
+        var data;
+        var nodeEdges;
+        function visualize(element, length) {
+            graph = new Visualizer(element);
+            d3.select(element).append("h3").text(nodeEdges[0].source);
+            for (var i = 0; i < length ; ++i) {
+                //graph.addLink(nodeEdges[i].source, nodeEdge[i].target);
+                d3.select(element).append("h3").text(nodeEdges[i].source);
+            }
+            //d3.select(element).selectAll("h2").data(nodeEdges).enter().append("h2").text(function (d) { return "We did it: " + d});
         }
 
 

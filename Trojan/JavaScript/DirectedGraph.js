@@ -177,13 +177,14 @@
     update();
 }
 
-var nodeEdges = [];
+//var nodeEdges = [1,2,3,4];
 
 
 function visualize(element) {
-    graph = new Visualizer(element);
-    for (var i = 0; i < nodesEdges.length ; ++i) {
-        graph.addLink(nodeEdges[i].source, nodeEdge[i].target);
-    }
-    //d3.select(element).append("h2").text("We did it!!!");
+    var nodeEdges = [1, 2, 3, 4];
+    //graph = new Visualizer(element);
+    //for (var i = 0; i < nodesEdges.length ; ++i) {
+    //    graph.addLink(nodeEdges[i].source, nodeEdge[i].target);
+    //}
+    d3.select(element).selectAll("h2").data(nodeEdges).enter().append("h2").text(function (d) { return "We did it " + d;});
 }

@@ -726,9 +726,6 @@ namespace Trojan
             {
                 virusId = usersVirus.GetVirusId();
             }
-            
-            
-            
             try
             {
                 if (db.Connections.Any(o => o.VirusId == virusId))
@@ -739,9 +736,15 @@ namespace Trojan
                         //visrep.Visible = true;
                         var x = from b in db.Connections where (b.VirusId == virusId) select b;
                         Connections = x.ToList();
-                        var json = JsonConvert.SerializeObject(Connections.ToList());
-                        ClientScript.RegisterArrayDeclaration("nodeEdges", json);
-                        ScriptManager.RegisterStartupScript(this.Page,Page.GetType(), "id","visualize('#visrep')", true);
+                        string json;
+                        foreach (Connection Con in Connections)
+                        {
+                            json = JsonConvert.SerializeObject(Con);
+                            ClientScript.RegisterArrayDeclaration("nodeEdges", json);
+                        }
+                        //var json = JsonConvert.SerializeObject(Connections);
+                        //ClientScript.RegisterArrayDeclaration("data", json);
+                        ScriptManager.RegisterStartupScript(this.Page,Page.GetType(), "id","visualize('#visrep', "+ Connections.Count +")", true);
                     }
                     catch (Exception exp)
                     {
