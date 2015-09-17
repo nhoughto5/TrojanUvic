@@ -695,7 +695,7 @@ namespace Trojan
         }
         protected List<Connection> Connection_Sorting(List<Connection> List)
         {
-            List<Connection> SortedList = List.OrderBy(p => p.source).ThenBy(c => c.destination).ToList();
+            List<Connection> SortedList = List.OrderBy(p => p.source).ThenBy(c => c.target).ToList();
             return SortedList;
         }
         protected List<Trojan.Models.Attribute> Attribute_Sorting(List<Trojan.Models.Attribute> List)
@@ -705,7 +705,7 @@ namespace Trojan
         }
         protected bool Connection_Check(List<Connection> List, int source_, int dest, bool TF, string virusId){
             foreach(Connection X in List){
-                if (X.source == source_ && X.destination == dest && X.direct == TF && X.VirusId == virusId) return true;
+                if (X.source == source_ && X.target == dest && X.direct == TF && X.VirusId == virusId) return true;
             }
             return false;
         }
@@ -717,11 +717,52 @@ namespace Trojan
             }
             return false;
         }
+        
+        //Checks to see if the list of nodes containts the Id Y
+        protected bool NodeCheck(List<Node> Nodes, int Y)
+        {
+            foreach (Node X in Nodes)
+            {
+                if (X.nodeID == Y) return true;
+            }
+            return false;
+        }
+        
+        //Takes the list of connections generated and returns a list of all the nodes
+        private List<Node> edgesToNodes(List<Connection> Connections)
+        {
+            List<Node> Nodes = new List<Node>();
+            foreach (Connection F in Connections)
+            {
+                if (!NodeCheck(Nodes, F.source))
+                {
+                    if (F.source <= 5) Nodes.Add(new Node(F.source, "Chip Life Cycle"));
+                    else if ((5 < F.source) && (F.source <= 11)) Nodes.Add(new Node(F.source, "Abstraction"));
+                    else if ((11 < F.source) && (F.source <= 28)) Nodes.Add(new Node(F.source, "Properties"));
+                    else
+                    {
+                        Nodes.Add(new Node(F.source, "Location"));
+                    }
+                }
+                if (!NodeCheck(Nodes, F.target))
+                {
+                    if (F.target <= 5) Nodes.Add(new Node(F.target, "Chip Life Cycle"));
+                    else if ((5 < F.target) && (F.target <= 11)) Nodes.Add(new Node(F.target, "Abstraction"));
+                    else if ((11 < F.target) && (F.target <= 28)) Nodes.Add(new Node(F.target, "Properties"));
+                    else
+                    {
+                        Nodes.Add(new Node(F.target, "Location"));
+                    }
+                }
+            }
+            return Nodes.OrderBy(p => p.nodeID).ToList();
+        } 
 
         protected void VisualizeBtn_Click(object sender, EventArgs e)
         {
             string virusId;
-            List<Connection> Connections = new List<Connection>();  
+            List<Connection> Connections = new List<Connection>();
+            List<Node> Nodes = new List<Node>();
             using (VirusDescriptionActions usersVirus = new VirusDescriptionActions())
             {
                 virusId = usersVirus.GetVirusId();
@@ -735,16 +776,22 @@ namespace Trojan
                         //visJumboContainer.Visible = true;
                         //visrep.Visible = true;
                         var x = from b in db.Connections where (b.VirusId == virusId) select b;
-                        Connections = x.ToList();
+                        Connections = x.ToList().OrderBy(p => p.source).ThenBy(c => c.target).ToList();
+                        Nodes = edgesToNodes(Connections);
                         string json;
                         foreach (Connection Con in Connections)
                         {
                             json = JsonConvert.SerializeObject(Con);
-                            ClientScript.RegisterArrayDeclaration("nodeEdges", json);
+                            ClientScript.RegisterArrayDeclaration("edges", json);
+                        }
+                        foreach (Node N in Nodes)
+                        {
+                            json = JsonConvert.SerializeObject(N);
+                            ClientScript.RegisterArrayDeclaration("nod", json);
                         }
                         //var json = JsonConvert.SerializeObject(Connections);
                         //ClientScript.RegisterArrayDeclaration("data", json);
-                        ScriptManager.RegisterStartupScript(this.Page,Page.GetType(), "id","visualize('#visrep', "+ Connections.Count +")", true);
+                        ScriptManager.RegisterStartupScript(this.Page,Page.GetType(), "id","visualize('#visrep', "+ Connections.Count +","+ Nodes.Count +")", true);
                     }
                     catch (Exception exp)
                     {

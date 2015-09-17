@@ -467,6 +467,7 @@
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\Matrix.cs" />
     <Compile Include="Models\Matrix_Cell.cs" />
+    <Compile Include="Models\Node.cs" />
     <Compile Include="Models\TrojanContext.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\Virus.cs" />

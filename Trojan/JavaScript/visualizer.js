@@ -1,12 +1,4 @@
-﻿//var h = 250; var w = 500; var pad = 1;
-//var dataset = [5, 10, 15, 20, 25];
-//var svg = d3.select("#visrep").append("svg").attr("width", w).attr("height", h);
-
-//var circles = svg.selectAll("circle").data(dataset).enter().append("circle").attr("class", "pumpkin");
-
-//circles.attr("cx", function (d, i) {return (i * 50) + 25;}).attr("cy", h / 2).attr("r", function (d) { return d; });
-
-// set up SVG for D3
+﻿// set up SVG for D3
 var width = 960,
     height = 500,
     colors = d3.scale.category10();
