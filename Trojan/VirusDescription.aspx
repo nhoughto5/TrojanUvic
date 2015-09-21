@@ -192,7 +192,6 @@
             }
 
 
-
             // init D3 force layout
             var force = d3.layout.force()
                 .nodes(nodes)

@@ -204,6 +204,37 @@ namespace Trojan
             return db.Attributes.Where(b => b.AttributeId == ID).FirstOrDefault();
         }
 
+        private Trojan.Models.Category getCategory(int ID)
+        {
+            return db.Categories.Where(b => b.CategoryId == ID).FirstOrDefault();
+        }
+        private Trojan.Models.Category getCategoryFromAttr(int attr_ID)
+        {
+            int ID = getAttribute(attr_ID).CategoryId;
+            return db.Categories.Where(b => b.CategoryId == ID).FirstOrDefault();
+        }
+        private void CategoryCheck(string virusId)
+        {
+            List<Virus_Item> V_Items = new List<Virus_Item>();
+            try
+            {
+                var y = from b in db.Virus_Item where (b.VirusId == virusId) select b;
+                V_Items = y.ToList().OrderBy(p => p.AttributeId).ToList();
+            }
+            catch (Exception exp)
+            {
+                throw new Exception("ERROR: Fail on Category Check", exp);
+            }
+            foreach (Virus_Item X in V_Items)
+            {
+                if (X.Category == null)
+                {
+                    X.Category = getCategoryFromAttr(X.AttributeId);
+                }
+            }
+            db.SaveChanges();
+        }
+
         //Scan the row and return all column ID's with value 1
         private List<Matrix_Cell> scanRowTrue(int rowNum, string subM)
         {
@@ -365,15 +396,17 @@ namespace Trojan
             List<Trojan.Models.Attribute> Direct_Insertion = new List<Trojan.Models.Attribute>();
             List<Trojan.Models.Attribute> Indirect_Insertion = new List<Trojan.Models.Attribute>();
             List<Trojan.Models.Attribute> R2_Abstraction_Output = new List<Trojan.Models.Attribute>();
+            List<Trojan.Models.Attribute> PropertiesList = new List<Trojan.Models.Attribute>();
             List<Matrix_Cell> tempRow = new List<Matrix_Cell>();
             List<Connection> Connections = new List<Connection>();
+            string virusId;
             using (VirusDescriptionActions usersVirus = new VirusDescriptionActions())
             {
                 int total = usersVirus.GetOnCount();
                 if (total > 0)
                 {
                     setBuilt(true);
-                    string virusId = usersVirus.GetVirusId();
+                    virusId = usersVirus.GetVirusId();
                     List<Matrix_Cell> colTrue = new List<Matrix_Cell>();
                     VirusDescriptionActions.VirusDescriptionUpdates[] currentBuild = new VirusDescriptionActions.VirusDescriptionUpdates[DescriptionList.Rows.Count];
                     for (int i = 0; i < DescriptionList.Rows.Count; i++)
@@ -381,6 +414,7 @@ namespace Trojan
                         IOrderedDictionary rowValues = new OrderedDictionary();
                         rowValues = GetValues(DescriptionList.Rows[i]);
                         currentBuild[i].AttributeId = Convert.ToInt32(rowValues["AttributeId"]);
+                        PropertiesList.Add(getAttribute(currentBuild[i].AttributeId));
 
                         //If current attribute is turned on
                         if (usersVirus.Get_OnOff(virusId, currentBuild[i].AttributeId))
@@ -547,9 +581,10 @@ namespace Trojan
                         ConnectionsResults.Visible = false;
                         ConnectionsGrid.Visible = false;
                     }
+                    List<Models.Attribute> Locations = new List<Models.Attribute>();
                     if (R34_Results.Count > 0)
                     {
-                        List<Models.Attribute> Locations = new List<Models.Attribute>();
+                        
                         foreach (int u in R34_Results)
                         {
                             Locations.Add(getAttribute(u));
@@ -562,11 +597,30 @@ namespace Trojan
                     {
                         LocationGrid.Visible = Locationlbl.Visible = false;
                     }
+
+                    //Add the connections to the DB
                     foreach (Connection Q in Connections)
                     {
                         db.Connections.Add(Q);
                     }
+
+                    //Add the Locations to the Virus_Item table
+                    foreach (Models.Attribute X in Locations)
+                    {
+                        db.Virus_Item.Add(new Virus_Item(virusId, X.AttributeId, X, getCategory(X.CategoryId)));
+                    }
+                    List<Node> Nodes = edgesToNodes(Connections);
+                    foreach (Node N in Nodes)
+                    {
+                        db.Virus_Item.Add(new Virus_Item(virusId, N.nodeID, getAttribute(N.nodeID), getCategoryFromAttr(N.nodeID)));
+                    }
+                    ////Add the Properties to the Virus_Item table
+                    //foreach (Models.Attribute X in PropertiesList)
+                    //{
+                    //    db.Virus_Item.Add(new Virus_Item(virusId, X.AttributeId, X, getCategory(X.CategoryId)));
+                    //}
                     db.SaveChanges();
+                    CategoryCheck(virusId);
                 }
                 //Total <= 0
                 else
@@ -762,6 +816,7 @@ namespace Trojan
         {
             string virusId;
             List<Connection> Connections = new List<Connection>();
+            List<Models.Virus_Item> V_Items = new List<Models.Virus_Item>();
             List<Node> Nodes = new List<Node>();
             using (VirusDescriptionActions usersVirus = new VirusDescriptionActions())
             {
@@ -773,30 +828,36 @@ namespace Trojan
                 {
                     try
                     {
-                        //visJumboContainer.Visible = true;
-                        //visrep.Visible = true;
                         var x = from b in db.Connections where (b.VirusId == virusId) select b;
                         Connections = x.ToList().OrderBy(p => p.source).ThenBy(c => c.target).ToList();
-                        Nodes = edgesToNodes(Connections);
-                        string json;
-                        foreach (Connection Con in Connections)
-                        {
-                            json = JsonConvert.SerializeObject(Con);
-                            ClientScript.RegisterArrayDeclaration("edges", json);
-                        }
-                        foreach (Node N in Nodes)
-                        {
-                            json = JsonConvert.SerializeObject(N);
-                            ClientScript.RegisterArrayDeclaration("nod", json);
-                        }
-                        //var json = JsonConvert.SerializeObject(Connections);
-                        //ClientScript.RegisterArrayDeclaration("data", json);
-                        ScriptManager.RegisterStartupScript(this.Page,Page.GetType(), "id","visualize('#visrep', "+ Connections.Count +","+ Nodes.Count +")", true);
+                        var y = from b in db.Virus_Item where (b.VirusId == virusId) select b;
+                        V_Items = y.ToList().OrderBy(p => p.AttributeId).ToList();
                     }
                     catch (Exception exp)
                     {
                         throw new Exception("ERROR: Unable to receive Connections for this virusd - " + exp.Message.ToString(), exp);
                     }
+
+
+                    foreach (Virus_Item X in V_Items)
+                    {
+                        Nodes.Add(new Node(X.AttributeId, X.Category.CategoryName));
+                    }                 
+                    string json;
+                    foreach (Connection Con in Connections)
+                    {
+                        json = JsonConvert.SerializeObject(Con);
+                        ClientScript.RegisterArrayDeclaration("edges", json);
+                    }
+                    foreach (Node N in Nodes)
+                    {
+                        json = JsonConvert.SerializeObject(N);
+                        ClientScript.RegisterArrayDeclaration("nod", json);
+                    }
+                    //var json = JsonConvert.SerializeObject(Connections);
+                    //ClientScript.RegisterArrayDeclaration("data", json);
+                    ScriptManager.RegisterStartupScript(this.Page,Page.GetType(), "id","visualize('#visrep', "+ Connections.Count +","+ Nodes.Count +")", true);
+                    
                 }
                 else
                 {
