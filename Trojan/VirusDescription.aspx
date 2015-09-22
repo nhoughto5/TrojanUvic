@@ -155,11 +155,8 @@
                 height = 500,
                 colors = d3.scale.category10();
 
-            var svg = d3.select("#visrep")
-              .append('svg')
-              .attr('oncontextmenu', 'return false;')
-              .attr('width', width)
-              .attr('height', height);
+            var svg = d3.select("#visrep").append('svg').attr('oncontextmenu', 'return false;').attr('width', width).attr('height', height);
+            var force = d3.layout.force().gravity(0.05).distance(100).charge(-100).size([width, height]);
 
             // set up initial nodes and links
             //  - nodes are known by 'id', not by index in array.
@@ -173,12 +170,33 @@
             ],
               lastNodeId = 2;
             nodes = [];
-            for (var i = 0; i < numNodes; ++i) {
-                nodes.push({ id: nod[i].nodeID, reflexive: true });
+            var count = 0, lineLimit = 10;
+            for (var i = 0; i < numNodes; i++) {
+                if (nod[i].nodeID < lineLimit) count++;
+            }
+            var L = 16, r = 12;
+            var d = 2 * r + L;
+            var R = (count - 1) * d;
+            var m = width / 2;
+            var X;
+            alert("L: " + L + " r: " + r + " d: " + d + " R: " + R + " m: " + m);
+            for (var i = 0; i < numNodes; i++) {
+                
+                if (nod[i].nodeID <= lineLimit) {
+                    X = m - (R / 2) + (i * d);
+                    alert("doing node: " + nod[i].nodeID + "   at => " + X);
+                    nodes.push({ x: X, y: (height)/3, id: nod[i].nodeID, reflexive: true });
+                }
+                else {
+                    X = m + (R / 2) - (i * d);
+                    alert("doing node: " + nod[i].nodeID + " at => " + X);
+                    nodes.push({ x: m + (R / 2) - (i * d), y: (height * 2) / 3, id: nod[i].nodeID, reflexive: true });
+                }
+                
                 //d3.select(element).append("h3").text("Node: " + nodes[i].id);
             }
             for (var i = 0; i < numNodes; ++i) {
-                d3.select(element).append("h3").text("Node "+i+": " + nodes[i].id);
+                d3.select(element).append("h3").text("Node " + i + ": " + nodes[i].id);
             }
             lastNodeId = numNodes - 1;
             var links = [
@@ -192,6 +210,58 @@
             }
 
 
+            //========== Look to http://jsfiddle.net/nrabinowitz/yPfJH/ For example =====//
+
+        //    var nodeContainer = svg.append('g'), linkContainer = svg.append('g'), textContainer = svg.append('g');
+        //    force.nodes(nodes).links(links);
+
+        //    compute a static layout
+        //    force.start();
+        //    for (var i = 0; i < 500; i++) force.tick();
+        //    force.stop();
+
+        //    var link = linkContainer.selectAll(".link").data(links).enter().append("g").attr("class", "link");
+        //    var node = nodeContainer.selectAll(".node").data(nodes).enter().append("g").attr("class", "node");
+
+        //    function circleId(d) {
+        //        return 'circle' + d.nodeID;
+        //    }
+
+        //    function maskId(d) {
+        //        return 'mask' + d.nodeID;
+        //    }
+
+        //    var groupMap = d3.nest().key(function (d) { return d.Category; }).map(nodes);
+
+        //    var mask = node.append('mask').attr('id', maskId);
+
+        //    mask.append('use').attr('xlink:href', function (d) { return '#' + circleId(d); }).attr('fill', 'white').attr('stroke-width', 2).attr('stroke', 'white');
+
+        //    mask.selectAll('use.other').data(function (d) {
+        //        return groupMap[d.group].filter(function (other) {
+        //            return other.name != d.name;
+        //        });
+        //    }).enter().append('use').attr('class', 'other').attr('xlink:href', function (d) { return '#' + circleId(d); }).attr('fill', 'black');
+
+        //    node.append('use').attr('xlink:href', function (d) { return '#' + circleId(d); }).attr('mask', function (d) { return 'url(#' + maskId(d) + ')'; }).style('fill', 'white').style('stroke', function (d) { return color(d.Category) });
+
+        //    textContainer.selectAll('text').data(json.nodes).enter().append("text").attr("dx", 2).attr("dy", ".35em").attr("text-anchor", "middle").attr("style", function (d) { return "font-size:" + d.fontsize }).text(function (d) { return d.name }).style('fill', function (d) { return color(d.group) });
+
+        //     reposition circle defs
+        //    nodeContainer.selectAll('circle')
+        //        .attr("transform", function (d) { return "translate(" + d.x + "," + d.y + ")" });
+
+        //     reposition text
+        //    textContainer.selectAll('text')
+        //        .attr("transform", function (d) { return "translate(" + d.x + "," + d.y + ")" });
+
+        //}
+
+            //===========================================================================//
+
+
+
+
             // init D3 force layout
             var force = d3.layout.force()
                 .nodes(nodes)
@@ -200,6 +270,7 @@
                 .linkDistance(150)
                 .charge(-500)
                 .on('tick', tick)
+
 
             // define arrow markers for graph links
             svg.append('svg:defs').append('svg:marker')
@@ -246,6 +317,29 @@
                 mousedown_link = null;
             }
 
+            var n = nodes.length; nodes.forEach(function (d, i) {
+                if (d.Category == "Chip Life Cycle") {
+                    //d.x = (width / (n * i)) + 10;
+                    //d.y = height * 0.75;
+                    d.fixed = true;
+                }
+                else if (d.Category == "Abstraction") {
+                    //d.x = (width / (n * i)) + 10;
+                    //d.y = height * 0.75;
+                    d.fixed = true;
+                }
+                else if (d.Category == "Properties") {
+                    //d.x = (width / (n * i)) + 10;
+                    //d.y = height * 0.4;
+                    d.fixed = true;
+                }
+                else {
+                    //d.x = (width / (n * i)) + 10;
+                    //d.y = height * 0.4;
+                    d.fixed = true;
+                }
+                ++i;
+            });
             // update force layout (called automatically each iteration)
             function tick() {
                 // draw directed edges with proper padding from node centers
