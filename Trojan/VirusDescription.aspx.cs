@@ -203,6 +203,10 @@ namespace Trojan
         {
             return db.Attributes.Where(b => b.AttributeId == ID).FirstOrDefault();
         }
+        private Trojan.Models.Matrix_Cell getCell(int row, int col)
+        {
+            return db.Matrix_Cell.Where(b => (b.RowId == row) && (b.ColumnId == col)).FirstOrDefault();
+        }
 
         private Trojan.Models.Category getCategory(int ID)
         {
@@ -269,7 +273,7 @@ namespace Trojan
             
         }
 
-        //Scan the row and return all column ID's with value 1
+        //Scan the row and return all column ID's
         private List<Matrix_Cell> getRow(int rowNum, string subM)
         {
             //Scan row in specific subMatrix
@@ -284,8 +288,8 @@ namespace Trojan
                 var X = from b in db.Matrix_Cell where (b.RowId == rowNum) select b;
                 return X.ToList();
             }
-
         }
+
         //Return all of the matrix cells in a particulat column that are in a particular submatrix
         private List<Matrix_Cell> getColumn(int Id, string subM)
         {
@@ -472,6 +476,7 @@ namespace Trojan
                     List<Matrix_Cell> R1 = new List<Matrix_Cell>();
                     List<Matrix_Cell> R12 = new List<Matrix_Cell>();
                     List<Matrix_Cell> tempCols = new List<Matrix_Cell>();
+                    List<Matrix_Cell> tempCols2 = new List<Matrix_Cell>();
                     
                     List<int> IndirectBuilder = new List<int>(abstraction);
                     Trojan.Models.Attribute tempAttribute = new Trojan.Models.Attribute(); 
@@ -482,31 +487,12 @@ namespace Trojan
                         R12 = scanColumnTrue(A, "R12");
                         R2_Abstraction_Output.Add(getAttribute(A));
 
-                        //Direct Link
-                        foreach (Matrix_Cell B in R12)
-                        {
-                            tempAttribute = getAttribute(B.RowId);
-                            if (!Attribute_Check(Direct_Insertion, B.RowId))
-                            {
-                                Direct_Insertion.Add(tempAttribute);
-                            }
-                            if(B.RowId != tempAttribute.AttributeId){
-                                if (!Connection_Check(Connections, B.RowId, tempAttribute.AttributeId, true, virusId))
-                                {
-                                    Connections.Add(new Connection(B.RowId, tempAttribute.AttributeId, true, virusId));
-                                }
-                            }
-                        }
-                        //Step Link
+                        //Find the step Links
                         foreach (Matrix_Cell B in R2)
                         {
                             if (!IndirectBuilder.Contains(B.RowId))
                             {
                                 IndirectBuilder.Add(B.RowId);
-                            }
-                            if (!Connection_Check(Connections, B.RowId, A, false, virusId))
-                            {
-                                Connections.Add(new Connection(B.RowId, A, false, virusId));
                             }
                         }
                         //Indirect Link
@@ -515,19 +501,45 @@ namespace Trojan
                             tempCols = scanColumnTrue(C, null);
                             foreach (Matrix_Cell D in tempCols)
                             {
-                                if (!IndirectBuilder.Contains(D.RowId)) IndirectBuilder.Add(D.RowId);
-                                if (!Connection_Check(Connections, D.RowId, C, false, virusId))
-                                {
-                                    Connections.Add(new Connection(D.RowId, C, false, virusId));
-                                }
                                 if (!Attribute_Check(Indirect_Insertion, D.RowId))
                                 {
                                     Indirect_Insertion.Add(getAttribute(D.RowId));
                                 }
-                                
                             }
                             tempCols.Clear();
                         }
+                    }
+
+                    for (var x = 0; x < IndirectBuilder.Count; x++)
+                    {
+                        tempCols = scanColumnTrue(IndirectBuilder[x], "R12");
+                        foreach (Matrix_Cell B in tempCols)
+                        {
+                            tempAttribute = getAttribute(B.RowId);
+                            if (!Attribute_Check(Direct_Insertion, B.RowId))
+                            {
+                                Direct_Insertion.Add(tempAttribute);
+                            }
+                        }
+                    }
+                    IndirectBuilder.Clear();
+
+                    //Make Connections
+                    foreach(Trojan.Models.Attribute X in Indirect_Insertion){
+                        Connections.Add(new Connection(X.AttributeId, X.AttributeId + 1, false, virusId));
+                    }
+                    foreach (Trojan.Models.Attribute Y in Direct_Insertion)
+                    {
+                        List<Matrix_Cell> row = scanRowTrue(Y.AttributeId, "R12");
+                        foreach (Matrix_Cell M in row)
+                        {
+                            if (!Connection_Check(Connections, Y.AttributeId, M.ColumnId, false, virusId))
+                            {
+                                Connections.Add(new Connection(Y.AttributeId, M.ColumnId, true, virusId));
+                            }
+                            
+                        }
+                        
                     }
                     R2.Clear(); R1.Clear(); R12.Clear();
                     if (Direct_Insertion.Count > 0)
@@ -614,11 +626,7 @@ namespace Trojan
                     {
                         db.Virus_Item.Add(new Virus_Item(virusId, N.nodeID, getAttribute(N.nodeID), getCategoryFromAttr(N.nodeID)));
                     }
-                    ////Add the Properties to the Virus_Item table
-                    //foreach (Models.Attribute X in PropertiesList)
-                    //{
-                    //    db.Virus_Item.Add(new Virus_Item(virusId, X.AttributeId, X, getCategory(X.CategoryId)));
-                    //}
+                    
                     db.SaveChanges();
                     CategoryCheck(virusId);
                 }
@@ -759,7 +767,7 @@ namespace Trojan
         }
         protected bool Connection_Check(List<Connection> List, int source_, int dest, bool TF, string virusId){
             foreach(Connection X in List){
-                if (X.source == source_ && X.target == dest && X.direct == TF && X.VirusId == virusId) return true;
+                if (X.source == source_ && X.target == dest && X.VirusId == virusId) return true;
             }
             return false;
         }
@@ -786,32 +794,36 @@ namespace Trojan
         private List<Node> edgesToNodes(List<Connection> Connections)
         {
             List<Node> Nodes = new List<Node>();
+            Trojan.Models.Attribute tempAttribute;
             foreach (Connection F in Connections)
             {
+                
                 if (!NodeCheck(Nodes, F.source))
                 {
-                    if (F.source <= 5) Nodes.Add(new Node(F.source, "Chip Life Cycle"));
-                    else if ((5 < F.source) && (F.source <= 11)) Nodes.Add(new Node(F.source, "Abstraction"));
-                    else if ((11 < F.source) && (F.source <= 28)) Nodes.Add(new Node(F.source, "Properties"));
+                    tempAttribute = getAttribute(F.source);
+                    if (F.source <= 5) Nodes.Add(new Node(F.source, "Chip Life Cycle",tempAttribute.F_in, tempAttribute.F_out));
+                    else if ((5 < F.source) && (F.source <= 11)) Nodes.Add(new Node(F.source, "Abstraction", tempAttribute.F_in, tempAttribute.F_out));
+                    else if ((11 < F.source) && (F.source <= 28)) Nodes.Add(new Node(F.source, "Properties", tempAttribute.F_in, tempAttribute.F_out));
                     else
                     {
-                        Nodes.Add(new Node(F.source, "Location"));
+                        Nodes.Add(new Node(F.source, "Location", tempAttribute.F_in, tempAttribute.F_out));
                     }
                 }
                 if (!NodeCheck(Nodes, F.target))
                 {
-                    if (F.target <= 5) Nodes.Add(new Node(F.target, "Chip Life Cycle"));
-                    else if ((5 < F.target) && (F.target <= 11)) Nodes.Add(new Node(F.target, "Abstraction"));
-                    else if ((11 < F.target) && (F.target <= 28)) Nodes.Add(new Node(F.target, "Properties"));
+                    tempAttribute = getAttribute(F.target);
+                    if (F.target <= 5) Nodes.Add(new Node(F.target, "Chip Life Cycle", tempAttribute.F_in, tempAttribute.F_out));
+                    else if ((5 < F.target) && (F.target <= 11)) Nodes.Add(new Node(F.target, "Abstraction", tempAttribute.F_in, tempAttribute.F_out));
+                    else if ((11 < F.target) && (F.target <= 28)) Nodes.Add(new Node(F.target, "Properties", tempAttribute.F_in, tempAttribute.F_out));
                     else
                     {
-                        Nodes.Add(new Node(F.target, "Location"));
+                        Nodes.Add(new Node(F.target, "Location", tempAttribute.F_in, tempAttribute.F_out));
                     }
                 }
             }
             return Nodes.OrderBy(p => p.nodeID).ToList();
-        } 
-
+        }
+        
         protected void VisualizeBtn_Click(object sender, EventArgs e)
         {
             string virusId;
@@ -838,10 +850,9 @@ namespace Trojan
                         throw new Exception("ERROR: Unable to receive Connections for this virusd - " + exp.Message.ToString(), exp);
                     }
 
-
                     foreach (Virus_Item X in V_Items)
                     {
-                        Nodes.Add(new Node(X.AttributeId, X.Category.CategoryName));
+                        Nodes.Add(new Node(X.AttributeId, X.Category.CategoryName, X.Attribute.F_in, X.Attribute.F_out));
                     }                 
                     string json;
                     foreach (Connection Con in Connections)
@@ -856,7 +867,7 @@ namespace Trojan
                     }
                     //var json = JsonConvert.SerializeObject(Connections);
                     //ClientScript.RegisterArrayDeclaration("data", json);
-                    ScriptManager.RegisterStartupScript(this.Page,Page.GetType(), "id","visualize('#visrep', "+ Connections.Count +","+ Nodes.Count +")", true);
+                    ScriptManager.RegisterStartupScript(this.Page, Page.GetType(), "id", "visualize('#visrep', " + Connections.Count + "," + Nodes.Count + ")", true);
                     
                 }
                 else

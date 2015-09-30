@@ -9,11 +9,14 @@ namespace Trojan.Models
     {
         public int nodeID;
         public string Category;
-
-        public Node(int ID, string Cat)
+        public int F_in;
+        public int F_out;
+        public Node(int ID, string Cat, int Fin, int Fout)
         {
             nodeID = ID;
             Category = Cat;
+            F_in = Fin;
+            F_out = Fout;
         }
         public Node()
         {
