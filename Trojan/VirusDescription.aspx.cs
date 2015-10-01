@@ -479,68 +479,104 @@ namespace Trojan
                     List<Matrix_Cell> tempCols2 = new List<Matrix_Cell>();
                     
                     List<int> IndirectBuilder = new List<int>(abstraction);
-                    Trojan.Models.Attribute tempAttribute = new Trojan.Models.Attribute(); 
-                    foreach (int A in abstraction)
+                    Trojan.Models.Attribute tempAttribute = new Trojan.Models.Attribute();
+                    abstraction.OrderByDescending(i => i);
+                    int Max = abstraction.Max();
+                    for (int i = Max; i > 0; --i)
                     {
-                        R1 = scanColumnTrue(A, "R1"); //Find each true value in R1
-                        R2 = scanColumnTrue(A, "R2"); //Find each true value in R2
-                        R12 = scanColumnTrue(A, "R12");
-                        R2_Abstraction_Output.Add(getAttribute(A));
-
-                        //Find the step Links
-                        foreach (Matrix_Cell B in R2)
-                        {
-                            if (!IndirectBuilder.Contains(B.RowId))
+                        R2_Abstraction_Output.Add(getAttribute(i));
+                        tempCols = scanColumnTrue(i, null);
+                        foreach(Matrix_Cell X in tempCols){
+                            //Direct Connection
+                            if ((X.submatrix == "R12") && ((X.RowId) != (i - 1)))
                             {
-                                IndirectBuilder.Add(B.RowId);
-                            }
-                        }
-                        //Indirect Link
-                        for(var x = 0; x < IndirectBuilder.Count; x++){
-                            int C = IndirectBuilder[x];
-                            tempCols = scanColumnTrue(C, null);
-                            foreach (Matrix_Cell D in tempCols)
-                            {
-                                if (!Attribute_Check(Indirect_Insertion, D.RowId))
+                                if (!Connection_Check(Connections, X.RowId, X.ColumnId, true, virusId))
                                 {
-                                    Indirect_Insertion.Add(getAttribute(D.RowId));
+                                    Connections.Add(new Connection(X.RowId, X.ColumnId, true, virusId));
+                                }
+                                if (!Attribute_Check(Direct_Insertion, X.RowId))
+                                {
+                                    Direct_Insertion.Add(getAttribute(X.RowId));
                                 }
                             }
-                            tempCols.Clear();
-                        }
-                    }
-
-                    for (var x = 0; x < IndirectBuilder.Count; x++)
-                    {
-                        tempCols = scanColumnTrue(IndirectBuilder[x], "R12");
-                        foreach (Matrix_Cell B in tempCols)
-                        {
-                            tempAttribute = getAttribute(B.RowId);
-                            if (!Attribute_Check(Direct_Insertion, B.RowId))
+                            //Step Connection
+                            else
                             {
-                                Direct_Insertion.Add(tempAttribute);
+                                if (!Connection_Check(Connections, X.RowId, X.ColumnId, false, virusId))
+                                {
+                                    Connections.Add(new Connection(X.RowId, X.ColumnId, false, virusId));
+                                }
+                                if (!Attribute_Check(Indirect_Insertion, X.RowId))
+                                {
+                                    Indirect_Insertion.Add(getAttribute(X.RowId));
+                                }
                             }
                         }
                     }
-                    IndirectBuilder.Clear();
 
-                    //Make Connections
-                    foreach(Trojan.Models.Attribute X in Indirect_Insertion){
-                        Connections.Add(new Connection(X.AttributeId, X.AttributeId + 1, false, virusId));
-                    }
-                    foreach (Trojan.Models.Attribute Y in Direct_Insertion)
-                    {
-                        List<Matrix_Cell> row = scanRowTrue(Y.AttributeId, "R12");
-                        foreach (Matrix_Cell M in row)
-                        {
-                            if (!Connection_Check(Connections, Y.AttributeId, M.ColumnId, false, virusId))
-                            {
-                                Connections.Add(new Connection(Y.AttributeId, M.ColumnId, true, virusId));
-                            }
+
+                        //foreach (int A in abstraction)
+                        //{
+                        //    R1 = scanColumnTrue(A, "R1"); //Find each true value in R1
+                        //    R2 = scanColumnTrue(A, "R2"); //Find each true value in R2
+                        //    R12 = scanColumnTrue(A, "R12");
+                        //    R2_Abstraction_Output.Add(getAttribute(A));
+
+                        //    //Find the step Links
+                        //    foreach (Matrix_Cell B in R2)
+                        //    {
+                        //        if (!IndirectBuilder.Contains(B.RowId))
+                        //        {
+                        //            IndirectBuilder.Add(B.RowId);
+                        //        }
+                        //    }
+                        //    //Indirect Link
+                        //    for(var x = 0; x < IndirectBuilder.Count; x++){
+                        //        int C = IndirectBuilder[x];
+                        //        tempCols = scanColumnTrue(C, null);
+                        //        foreach (Matrix_Cell D in tempCols)
+                        //        {
+                        //            if (!Attribute_Check(Indirect_Insertion, D.RowId))
+                        //            {
+                        //                Indirect_Insertion.Add(getAttribute(D.RowId));
+                        //            }
+                        //        }
+                        //        tempCols.Clear();
+                        //    }
+                        //}
+
+                        //for (var x = 0; x < IndirectBuilder.Count; x++)
+                        //{
+                        //    tempCols = scanColumnTrue(IndirectBuilder[x], "R12");
+                        //    foreach (Matrix_Cell B in tempCols)
+                        //    {
+                        //        tempAttribute = getAttribute(B.RowId);
+                        //        if (!Attribute_Check(Direct_Insertion, B.RowId))
+                        //        {
+                        //            Direct_Insertion.Add(tempAttribute);
+                        //        }
+                        //    }
+                        //}
+                        //IndirectBuilder.Clear();
+
+                        //Make Connections
+                    //    foreach (Trojan.Models.Attribute X in Indirect_Insertion)
+                    //    {
+                    //        Connections.Add(new Connection(X.AttributeId, X.AttributeId + 1, false, virusId));
+                    //    }
+                    //foreach (Trojan.Models.Attribute Y in Direct_Insertion)
+                    //{
+                    //    List<Matrix_Cell> row = scanRowTrue(Y.AttributeId, "R12");
+                    //    foreach (Matrix_Cell M in row)
+                    //    {
+                    //        if (!Connection_Check(Connections, Y.AttributeId, M.ColumnId, false, virusId))
+                    //        {
+                    //            Connections.Add(new Connection(Y.AttributeId, M.ColumnId, true, virusId));
+                    //        }
                             
-                        }
+                    //    }
                         
-                    }
+                    //}
                     R2.Clear(); R1.Clear(); R12.Clear();
                     if (Direct_Insertion.Count > 0)
                     {

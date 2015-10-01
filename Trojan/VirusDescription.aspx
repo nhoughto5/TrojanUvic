@@ -262,7 +262,7 @@
                 }
                 else if (nod[i-1].Category == "Location") {
                     X = (maxX - (10 * propertiesRadius)) + (locationRadius * Math.cos((2 * Z * Math.PI) / numLocations));
-                    Y = ((height) / 2) + (20 * numLocations) + (propertiesRadius * Math.sin((2 * Z * Math.PI) / numLocations));
+                    Y = ((height) / 2) + (20 * numProperties) + (locationRadius * Math.sin((2 * Z * Math.PI) / numLocations));
                     console.log("Location " + nod[i-1].nodeID + ": " + X + " " + Y);
                     ++Z;
                 }
@@ -352,6 +352,7 @@
             }
             else return false;
         }
+        var numOfDirects = 1;
         function linkPath(d) {
             var str;
             if (d.direct != true) {
@@ -361,7 +362,8 @@
             else {
                 
                 var direction = -1;
-                var distance = radius * (d.target.id);
+                var distance = 40 * (numOfDirects);
+                ++numOfDirects;
                 //console.log("Direct: " + d.source.id + " to " + d.target.id + " height: " + distance);
                 var dy = direction * distance;
                 var height = d.source.y + dy;
