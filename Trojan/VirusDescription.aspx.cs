@@ -42,6 +42,7 @@ namespace Trojan
                     LocationGrid.Visible = Locationlbl.Visible = false;
                     //visJumboContainer.Visible = false;
                     notBuilt.Visible = false;
+                    abstractionEmpty.Visible = false;
                 }
                 if (totalNumberofAttributes > 0)
                 {
@@ -56,6 +57,7 @@ namespace Trojan
                     notes.Visible = false;
                     canNot.Visible = false;
                     buttonTable.Visible = true;
+                    abstractionEmpty.Visible = false;
                     lblTotal.Text = String.Format("{0:d}", totalNumberofAttributes);
                     VirusDescriptionTitle.InnerText = "Current Virus Total";
                     if (totalF_in > 0)
@@ -165,7 +167,7 @@ namespace Trojan
                     total = usersVirus.GetCount();
                     if (total == 0)
                     {
-                        noneSelected();
+                        //noneSelected();
                         return usersVirus.GetDescriptionItems();
                     }
                     else
@@ -313,30 +315,20 @@ namespace Trojan
             indirectNone.Visible = indirectGrid.Visible = indirect.Visible = false;
             ColumnGrid.Visible = ColumnResults.Visible = false;
             RowGrid.Visible = RowResults.Visible = false;
-            UpdateCartItems();
+            
             using (VirusDescriptionActions usersVirus = new VirusDescriptionActions())
             {
-                setBuilt(false);
+                string id = usersVirus.GetVirusId();
+                UpdateCartItems();
+                
                 if (usersVirus.GetCount() > 0)
                 {
                     VirusDescriptionTitle.InnerText = "Current Virus Total";
                 }
                 else
                 {
-                    VirusDescriptionTitle.InnerText = "No Attributes Selected";
-                    LabelTotalText.Text = "";
-                    lblTotal.Text = "";
-                    LabelTotalF_in.Text = "";
-                    lblTotalF_in.Text = "";
-                    LabelTotalF_out.Text = "";
-                    lblTotalF_out.Text = "";
-                    UpdateBtn.Visible = false;
-                    BuildCombo.Visible = false;
-                    BuildRow.Visible = false;
-                    BuildCol.Visible = false;
-                    abstractionGrid.Visible = abstractionResults.Visible = false;
-                    directNone.Visible = direct.Visible = directGrid.Visible = false;
-                    indirectNone.Visible = indirectGrid.Visible = indirect.Visible = false;
+                    noneSelected();
+                    setBuilt(false);
                 }
             }
         }
@@ -369,16 +361,7 @@ namespace Trojan
                 ColumnResults.Visible = ColumnGrid.Visible = false;
                 ConnectionsResults.Visible = false;
                 ConnectionsGrid.Visible = false;
-                LocationGrid.Visible = Locationlbl.Visible = false;
-
-                try
-                {
-                    db.Connections.RemoveRange(db.Connections.Where(c => c.VirusId == usersVirus.GetVirusId()));
-                }
-                catch (Exception exp)
-                {
-                    throw new Exception("ERROR: Can not remove connections for this virus from DB -> " + exp.Message.ToString(), exp);
-                }
+                LocationGrid.Visible = Locationlbl.Visible = false;                
             }
         }
 
@@ -465,206 +448,156 @@ namespace Trojan
                                 }
                             }
                         }
-                        
+                    }
+                    if (abstraction.Count != 0)
+                    {
+                        //For combination trojans all of the properties attributes have now been looked at
+                        //The resulting life cycle or abstraction properties found from submatrix R23 are stored in list abstraction
+                        //Start Building Connections
+                        List<Matrix_Cell> R2 = new List<Matrix_Cell>();
+                        List<Matrix_Cell> R1 = new List<Matrix_Cell>();
+                        List<Matrix_Cell> R12 = new List<Matrix_Cell>();
+                        List<Matrix_Cell> tempCols = new List<Matrix_Cell>();
+                        List<Matrix_Cell> tempCols2 = new List<Matrix_Cell>();
 
-                    }
-
-                    //For combination trojans all of the properties attributes have now been looked at
-                    //The resulting life cycle or abstraction properties found from submatrix R23 are stored in list abstraction
-                    //Start Building Connections
-                    List<Matrix_Cell> R2 = new List<Matrix_Cell>();
-                    List<Matrix_Cell> R1 = new List<Matrix_Cell>();
-                    List<Matrix_Cell> R12 = new List<Matrix_Cell>();
-                    List<Matrix_Cell> tempCols = new List<Matrix_Cell>();
-                    List<Matrix_Cell> tempCols2 = new List<Matrix_Cell>();
-                    
-                    List<int> IndirectBuilder = new List<int>(abstraction);
-                    Trojan.Models.Attribute tempAttribute = new Trojan.Models.Attribute();
-                    abstraction.OrderByDescending(i => i);
-                    int Max = abstraction.Max();
-                    for (int i = Max; i > 0; --i)
-                    {
-                        R2_Abstraction_Output.Add(getAttribute(i));
-                        tempCols = scanColumnTrue(i, null);
-                        foreach(Matrix_Cell X in tempCols){
-                            //Direct Connection
-                            if ((X.submatrix == "R12") && ((X.RowId) != (i - 1)))
-                            {
-                                if (!Connection_Check(Connections, X.RowId, X.ColumnId, true, virusId))
-                                {
-                                    Connections.Add(new Connection(X.RowId, X.ColumnId, true, virusId));
-                                }
-                                if (!Attribute_Check(Direct_Insertion, X.RowId))
-                                {
-                                    Direct_Insertion.Add(getAttribute(X.RowId));
-                                }
-                            }
-                            //Step Connection
-                            else
-                            {
-                                if (!Connection_Check(Connections, X.RowId, X.ColumnId, false, virusId))
-                                {
-                                    Connections.Add(new Connection(X.RowId, X.ColumnId, false, virusId));
-                                }
-                                if (!Attribute_Check(Indirect_Insertion, X.RowId))
-                                {
-                                    Indirect_Insertion.Add(getAttribute(X.RowId));
-                                }
-                            }
-                        }
-                    }
-
-
-                        //foreach (int A in abstraction)
-                        //{
-                        //    R1 = scanColumnTrue(A, "R1"); //Find each true value in R1
-                        //    R2 = scanColumnTrue(A, "R2"); //Find each true value in R2
-                        //    R12 = scanColumnTrue(A, "R12");
-                        //    R2_Abstraction_Output.Add(getAttribute(A));
-
-                        //    //Find the step Links
-                        //    foreach (Matrix_Cell B in R2)
-                        //    {
-                        //        if (!IndirectBuilder.Contains(B.RowId))
-                        //        {
-                        //            IndirectBuilder.Add(B.RowId);
-                        //        }
-                        //    }
-                        //    //Indirect Link
-                        //    for(var x = 0; x < IndirectBuilder.Count; x++){
-                        //        int C = IndirectBuilder[x];
-                        //        tempCols = scanColumnTrue(C, null);
-                        //        foreach (Matrix_Cell D in tempCols)
-                        //        {
-                        //            if (!Attribute_Check(Indirect_Insertion, D.RowId))
-                        //            {
-                        //                Indirect_Insertion.Add(getAttribute(D.RowId));
-                        //            }
-                        //        }
-                        //        tempCols.Clear();
-                        //    }
-                        //}
-
-                        //for (var x = 0; x < IndirectBuilder.Count; x++)
-                        //{
-                        //    tempCols = scanColumnTrue(IndirectBuilder[x], "R12");
-                        //    foreach (Matrix_Cell B in tempCols)
-                        //    {
-                        //        tempAttribute = getAttribute(B.RowId);
-                        //        if (!Attribute_Check(Direct_Insertion, B.RowId))
-                        //        {
-                        //            Direct_Insertion.Add(tempAttribute);
-                        //        }
-                        //    }
-                        //}
-                        //IndirectBuilder.Clear();
-
-                        //Make Connections
-                    //    foreach (Trojan.Models.Attribute X in Indirect_Insertion)
-                    //    {
-                    //        Connections.Add(new Connection(X.AttributeId, X.AttributeId + 1, false, virusId));
-                    //    }
-                    //foreach (Trojan.Models.Attribute Y in Direct_Insertion)
-                    //{
-                    //    List<Matrix_Cell> row = scanRowTrue(Y.AttributeId, "R12");
-                    //    foreach (Matrix_Cell M in row)
-                    //    {
-                    //        if (!Connection_Check(Connections, Y.AttributeId, M.ColumnId, false, virusId))
-                    //        {
-                    //            Connections.Add(new Connection(Y.AttributeId, M.ColumnId, true, virusId));
-                    //        }
-                            
-                    //    }
-                        
-                    //}
-                    R2.Clear(); R1.Clear(); R12.Clear();
-                    if (Direct_Insertion.Count > 0)
-                    {
-                        directGrid.DataSource = Attribute_Sorting(Direct_Insertion);
-                        directGrid.DataBind();
-                        direct.Visible = directGrid.Visible = true;
-                        directNone.Visible = false;
-                    }
-                    else
-                    {
-                        directNone.Visible = true;
-                        direct.Visible = false;
-                        notes.Visible = true;
-                    }
-                    if (Indirect_Insertion.Count > 0)
-                    {
-                        indirectGrid.DataSource = Attribute_Sorting(Indirect_Insertion);
-                        indirectGrid.DataBind();
-                        indirect.Visible = indirectGrid.Visible = true;
-                        indirectNone.Visible = false;
-                    }
-                    else
-                    {
-                        indirectNone.Visible = true;
-                        indirect.Visible = false;
-                        notes.Visible = true;
-                    }
-                    if (R2_Abstraction_Output.Count > 0)
-                    {
-                        abstractionGrid.DataSource = Attribute_Sorting(R2_Abstraction_Output);
-                        abstractionGrid.DataBind();
-                        abstractionGrid.Visible = abstractionResults.Visible = true;
-                        abstractionNone.Visible = false;
-                    }
-                    else
-                    {
-                        abstractionNone.Visible = true;
-                        abstractionResults.Visible = false;
-                        notes.Visible = true;
-                    }
-                    if (Connections.Count > 0)
-                    {
-                        ConnectionsGrid.DataSource = Connection_Sorting(Connections);
-                        ConnectionsGrid.DataBind();
-                        ConnectionsResults.Visible = true;
-                        ConnectionsGrid.Visible = true;
-                    }
-                    else
-                    {
-                        ConnectionsResults.Visible = false;
-                        ConnectionsGrid.Visible = false;
-                    }
-                    List<Models.Attribute> Locations = new List<Models.Attribute>();
-                    if (R34_Results.Count > 0)
-                    {
-                        
-                        foreach (int u in R34_Results)
+                        foreach (int A in abstraction)
                         {
-                            Locations.Add(getAttribute(u));
+                            R2_Abstraction_Output.Add(getAttribute(A));
                         }
-                        LocationGrid.Visible = Locationlbl.Visible = true;
-                        LocationGrid.DataSource = Locations;
-                        LocationGrid.DataBind();
+                        Trojan.Models.Attribute tempAttribute = new Trojan.Models.Attribute();
+                        abstraction.OrderByDescending(i => i);
+                        int Max = abstraction.Max();
+                        for (int i = Max; i > 0; --i)
+                        {
+                            tempCols = scanColumnTrue(i, null);
+                            foreach(Matrix_Cell X in tempCols){
+                                //Direct Connection
+                                if ((X.submatrix == "R12") && ((X.RowId) != (i - 1)))
+                                {
+                                    if (!Connection_Check(Connections, X.RowId, X.ColumnId, true, virusId))
+                                    {
+                                        Connections.Add(new Connection(X.RowId, X.ColumnId, true, virusId));
+                                    }
+                                    if (!Attribute_Check(Direct_Insertion, X.RowId))
+                                    {
+                                        Direct_Insertion.Add(getAttribute(X.RowId));
+                                    }
+                                }
+                                //Step Connection
+                                else
+                                {
+                                    if (!Connection_Check(Connections, X.RowId, X.ColumnId, false, virusId))
+                                    {
+                                        Connections.Add(new Connection(X.RowId, X.ColumnId, false, virusId));
+                                    }
+                                    if (!Attribute_Check(Indirect_Insertion, X.RowId))
+                                    {
+                                        Indirect_Insertion.Add(getAttribute(X.RowId));
+                                    }
+                                }
+                            }
+                        }
+
+                        R2.Clear(); R1.Clear(); R12.Clear();
+                        if (Direct_Insertion.Count > 0)
+                        {
+                            directGrid.DataSource = Attribute_Sorting(Direct_Insertion);
+                            directGrid.DataBind();
+                            direct.Visible = directGrid.Visible = true;
+                            directNone.Visible = false;
+                        }
+                        else
+                        {
+                            directNone.Visible = true;
+                            direct.Visible = false;
+                            notes.Visible = true;
+                        }
+                        if (Indirect_Insertion.Count > 0)
+                        {
+                            indirectGrid.DataSource = Attribute_Sorting(Indirect_Insertion);
+                            indirectGrid.DataBind();
+                            indirect.Visible = indirectGrid.Visible = true;
+                            indirectNone.Visible = false;
+                        }
+                        else
+                        {
+                            indirectNone.Visible = true;
+                            indirect.Visible = false;
+                            notes.Visible = true;
+                        }
+                        if (R2_Abstraction_Output.Count > 0)
+                        {
+                            abstractionGrid.DataSource = Attribute_Sorting(R2_Abstraction_Output);
+                            abstractionGrid.DataBind();
+                            abstractionGrid.Visible = abstractionResults.Visible = true;
+                            abstractionNone.Visible = false;
+                        }
+                        else
+                        {
+                            abstractionNone.Visible = true;
+                            abstractionResults.Visible = false;
+                            notes.Visible = true;
+                        }
+                        if (Connections.Count > 0)
+                        {
+                            ConnectionsGrid.DataSource = Connection_Sorting(Connections);
+                            ConnectionsGrid.DataBind();
+                            ConnectionsResults.Visible = true;
+                            ConnectionsGrid.Visible = true;
+                        }
+                        else
+                        {
+                            ConnectionsResults.Visible = false;
+                            ConnectionsGrid.Visible = false;
+                        }
+                        List<Models.Attribute> Locations = new List<Models.Attribute>();
+                        if (R34_Results.Count > 0)
+                        {
+                            foreach (int u in R34_Results)
+                            {
+                                Locations.Add(getAttribute(u));
+                            }
+                            LocationGrid.Visible = Locationlbl.Visible = true;
+                            LocationGrid.DataSource = Locations;
+                            LocationGrid.DataBind();
+                        }
+                        else
+                        {
+                            LocationGrid.Visible = Locationlbl.Visible = false;
+                        }
+
+                        //Add the connections to the DB
+                        foreach (Connection Q in Connections)
+                        {
+                            db.Connections.Add(Q);
+                        }
+
+                        //Add the Locations to the Virus_Item table
+                        foreach (Models.Attribute X in Locations)
+                        {
+                            db.Virus_Item.Add(new Virus_Item(virusId, X.AttributeId, X, getCategory(X.CategoryId), false));
+                        }
+                        List<Node> Nodes = edgesToNodes(Connections);
+                        foreach (Node N in Nodes)
+                        {
+                            db.Virus_Item.Add(new Virus_Item(virusId, N.nodeID, getAttribute(N.nodeID), getCategoryFromAttr(N.nodeID), false));
+                        }
+                    
+                        db.SaveChanges();
+                        CategoryCheck(virusId);
                     }
                     else
                     {
-                        LocationGrid.Visible = Locationlbl.Visible = false;
+                        setBuilt(false);
+                        notes.Visible = true;
+                        canNot.Visible = false;
+                        abstractionEmpty.Visible = true;
+                        abstractionNone.Visible = abstractionNone.Visible = abstractionResults.Visible = abstractionGrid.Visible = false;
+                        directNone.Visible = direct.Visible = directGrid.Visible = false;
+                        indirectNone.Visible = indirectGrid.Visible = indirect.Visible = false;
+                        RowResults.Visible = RowGrid.Visible = false;
+                        ColumnResults.Visible = ColumnGrid.Visible = false;
                     }
-
-                    //Add the connections to the DB
-                    foreach (Connection Q in Connections)
-                    {
-                        db.Connections.Add(Q);
-                    }
-
-                    //Add the Locations to the Virus_Item table
-                    foreach (Models.Attribute X in Locations)
-                    {
-                        db.Virus_Item.Add(new Virus_Item(virusId, X.AttributeId, X, getCategory(X.CategoryId)));
-                    }
-                    List<Node> Nodes = edgesToNodes(Connections);
-                    foreach (Node N in Nodes)
-                    {
-                        db.Virus_Item.Add(new Virus_Item(virusId, N.nodeID, getAttribute(N.nodeID), getCategoryFromAttr(N.nodeID)));
-                    }
-                    
-                    db.SaveChanges();
-                    CategoryCheck(virusId);
                 }
                 //Total <= 0
                 else
@@ -676,7 +609,7 @@ namespace Trojan
                     directNone.Visible = direct.Visible = directGrid.Visible = false;
                     indirectNone.Visible = indirectGrid.Visible = indirect.Visible = false;
                     RowResults.Visible = RowGrid.Visible = false;
-                    ColumnResults.Visible = ColumnGrid.Visible = false; 
+                    ColumnResults.Visible = ColumnGrid.Visible = false;
                 }
             }
         }
@@ -837,23 +770,23 @@ namespace Trojan
                 if (!NodeCheck(Nodes, F.source))
                 {
                     tempAttribute = getAttribute(F.source);
-                    if (F.source <= 5) Nodes.Add(new Node(F.source, "Chip Life Cycle",tempAttribute.F_in, tempAttribute.F_out));
-                    else if ((5 < F.source) && (F.source <= 11)) Nodes.Add(new Node(F.source, "Abstraction", tempAttribute.F_in, tempAttribute.F_out));
-                    else if ((11 < F.source) && (F.source <= 28)) Nodes.Add(new Node(F.source, "Properties", tempAttribute.F_in, tempAttribute.F_out));
+                    if (F.source <= 5) Nodes.Add(new Node(F.source, tempAttribute.AttributeName, "Chip Life Cycle", tempAttribute.F_in, tempAttribute.F_out));
+                    else if ((5 < F.source) && (F.source <= 11)) Nodes.Add(new Node(F.source, tempAttribute.AttributeName, "Abstraction", tempAttribute.F_in, tempAttribute.F_out));
+                    else if ((11 < F.source) && (F.source <= 28)) Nodes.Add(new Node(F.source, tempAttribute.AttributeName, "Properties", tempAttribute.F_in, tempAttribute.F_out));
                     else
                     {
-                        Nodes.Add(new Node(F.source, "Location", tempAttribute.F_in, tempAttribute.F_out));
+                        Nodes.Add(new Node(F.source, tempAttribute.AttributeName, "Location", tempAttribute.F_in, tempAttribute.F_out));
                     }
                 }
                 if (!NodeCheck(Nodes, F.target))
                 {
                     tempAttribute = getAttribute(F.target);
-                    if (F.target <= 5) Nodes.Add(new Node(F.target, "Chip Life Cycle", tempAttribute.F_in, tempAttribute.F_out));
-                    else if ((5 < F.target) && (F.target <= 11)) Nodes.Add(new Node(F.target, "Abstraction", tempAttribute.F_in, tempAttribute.F_out));
-                    else if ((11 < F.target) && (F.target <= 28)) Nodes.Add(new Node(F.target, "Properties", tempAttribute.F_in, tempAttribute.F_out));
+                    if (F.target <= 5) Nodes.Add(new Node(F.target, tempAttribute.AttributeName, "Chip Life Cycle", tempAttribute.F_in, tempAttribute.F_out));
+                    else if ((5 < F.target) && (F.target <= 11)) Nodes.Add(new Node(F.target, tempAttribute.AttributeName, "Abstraction", tempAttribute.F_in, tempAttribute.F_out));
+                    else if ((11 < F.target) && (F.target <= 28)) Nodes.Add(new Node(F.target, tempAttribute.AttributeName, "Properties", tempAttribute.F_in, tempAttribute.F_out));
                     else
                     {
-                        Nodes.Add(new Node(F.target, "Location", tempAttribute.F_in, tempAttribute.F_out));
+                        Nodes.Add(new Node(F.target, tempAttribute.AttributeName, "Location", tempAttribute.F_in, tempAttribute.F_out));
                     }
                 }
             }
@@ -888,7 +821,7 @@ namespace Trojan
 
                     foreach (Virus_Item X in V_Items)
                     {
-                        Nodes.Add(new Node(X.AttributeId, X.Category.CategoryName, X.Attribute.F_in, X.Attribute.F_out));
+                        Nodes.Add(new Node(X.AttributeId, X.Attribute.AttributeName, X.Category.CategoryName, X.Attribute.F_in, X.Attribute.F_out));
                     }                 
                     string json;
                     foreach (Connection Con in Connections)

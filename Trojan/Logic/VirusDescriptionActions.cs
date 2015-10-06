@@ -33,7 +33,8 @@ namespace Trojan.Logic
                     Attribute = _db.Attributes.SingleOrDefault(
                      p => p.AttributeId == id),
                     On_Off = false,
-                    DateCreated = DateTime.Now
+                    DateCreated = DateTime.Now,
+                    userAdded = true
                 };
 
                 _db.Virus_Item.Add(virItem);
@@ -132,7 +133,7 @@ namespace Trojan.Logic
 
             // Get the count of each item in the cart and sum them up
             int? count = 0;
-            count = (int?)(from virusItems in _db.Virus_Item where virusItems.VirusId == VirusDescriptionID select (int?)(virusItems.AttributeId)).Count();
+            count = (int?)(from virusItems in _db.Virus_Item where ((virusItems.VirusId == VirusDescriptionID) && (virusItems.userAdded == true)) select (int?)(virusItems.AttributeId)).Count();
             
             // Return 0 if all entries are null         
             return count ?? 0;
@@ -143,7 +144,7 @@ namespace Trojan.Logic
 
             // Get the count of each item in the cart and sum them up
             int? count = 0;
-            count = (int?)(from virusItems in _db.Virus_Item where (virusItems.VirusId == VirusDescriptionID) && (virusItems.On_Off == true) select (int?)(virusItems.AttributeId)).Count();
+            count = (int?)(from virusItems in _db.Virus_Item where ((virusItems.VirusId == VirusDescriptionID) && (virusItems.On_Off == true) && (virusItems.userAdded == true)) select (int?)(virusItems.AttributeId)).Count();
 
             // Return 0 if all entries are null         
             return count ?? 0;
@@ -235,12 +236,19 @@ namespace Trojan.Logic
         public void EmptyVirus()
         {
             VirusDescriptionID = GetVirusId();
-            var cartItems = _db.Virus_Item.Where(
-                c => c.VirusId == VirusDescriptionID);
+            var cartItems = _db.Virus_Item.Where(c => c.VirusId == VirusDescriptionID);
             foreach (var cartItem in cartItems)
             {
                 _db.Virus_Item.Remove(cartItem);
             }
+
+
+            var cons = _db.Connections.Where(c => c.VirusId == VirusDescriptionID);
+            foreach (var cartItem in cons)
+            {
+                _db.Connections.Remove(cartItem);
+            }
+
             // Save changes.             
             _db.SaveChanges();
         }

@@ -172,6 +172,7 @@
     <div>&nbsp</div>
     <div id="notes" runat="server" class="Content"><h2>**Notes**</h2></div>
     <div id="canNot" runat="server" class="Content"><h4>Select attributes to build a virus</h4></div>
+    <div id="abstractionEmpty" runat="server" class="Content"><h4>There are no access points to Abstraction Category</h4></div>
     <div id="notBuilt" runat="server" class="Content"><h4>Virus must be built before visualization</h4></div>
     <div id="directNone" runat="server" class="Content"><h4>No Direct Connections to Insertion</h4></div>
     <div id="indirectNone" runat="server" class="Content"><h4>No Indirect Connections to Insertion</h4></div>
@@ -195,6 +196,7 @@
         markerHeight = 4,
         refX = radius + (markerWidth) + 1,
         refY = 0;
+        var step = 35;
 
         function initVis (element, numNodes, numEdges) {
             
@@ -235,11 +237,20 @@
             var d = 2 * r + L;
             var R = (numOnLine - 1) * d;
             var m = width / 2;
+            var lineHeight = height / 3;
             var X, Y;
             var propertiesRadius = 0.5 * (radius * numProperties);
             var locationRadius = 0.5 * (radius * numLocations);
+            
+            var dropDown = (5 * step);
             var W = 0, Z = 0;
-            var maxX = 0;
+
+            var locationCentX = width / 3;
+            var propertiesCentX = 2 * locationCentX;
+            var propertiesCentY = (lineHeight) + dropDown;
+            var locationCentY = propertiesCentY;
+
+            //Create Node Data
             nodes = d3.range(numNodes+1).map(function () {
                 if (i == 0) {
                     ++i;
@@ -255,25 +266,19 @@
                     }
                 }
                 else if (nod[i-1].Category == "Properties") {
-                    X = maxX + (propertiesRadius * Math.cos((2 * W * Math.PI) / numProperties));
-                    Y = ((height) / 2) + (20 * numProperties) + (propertiesRadius * Math.sin((2 * W * Math.PI) / numProperties));
-                    console.log("Properties " + nod[i-1].nodeID +": " + X + " " + Y);
+                    X = propertiesCentX + (propertiesRadius * Math.cos((2 * W * Math.PI) / numProperties));
+                    Y = (lineHeight + dropDown + (propertiesRadius * Math.sin((2 * W * Math.PI) / numProperties)));
                     ++W;
                 }
                 else if (nod[i-1].Category == "Location") {
-                    X = (maxX - (10 * propertiesRadius)) + (locationRadius * Math.cos((2 * Z * Math.PI) / numLocations));
-                    Y = ((height) / 2) + (20 * numProperties) + (locationRadius * Math.sin((2 * Z * Math.PI) / numLocations));
-                    console.log("Location " + nod[i-1].nodeID + ": " + X + " " + Y);
+                    X = (locationCentX + (locationRadius * Math.cos((2 * Z * Math.PI) / numLocations)));
+                    Y = (lineHeight + dropDown + (locationRadius * Math.sin((2 * Z * Math.PI) / numLocations)));
                     ++Z;
                 }
                 //Insertion or Abstraction
                 else {
                     X = m - (R / 2) + (i * d) - 100;
-                    if (X > maxX) {
-                        maxX = X;
-                    }
-                    Y = (height) / 2;
-                    console.log("Insert or Abs " + nod[i-1].nodeID + ": " + X + " " + Y);
+                    Y = lineHeight;
                 }
                 ++i;
                 return {
@@ -284,100 +289,161 @@
                     r: radius,
                     Fin: nod[i - 2].F_in,
                     Fout: nod[i - 2].F_out,
-                    Category: nod[i - 2].Category
+                    Category: nod[i - 2].Category,
+                    name: nod[i - 2].nodeName
                 };
             });
-            var propertiesCentX = maxX;
-            var propertiesCentY = ((height) / 2) + (20 * numProperties);
-            var locationCentX = (maxX - (10 * propertiesRadius));
-            var locationCentY = propertiesCentY;
-            //console.log("Setting properties center: " + propertiesCentX + " " + propertiesCentY);
-            //console.log("Setting locations centerL " + locationCentX + " " + locationCentY);
-            for (var i = 0; i < numNodes; ++i) {
-                d3.select(element).append("h3").text("Node " + i + ": " + nodes[i].id + " X " + nodes[i].x);
-            }
+
+            //Create Link Data
+            var sources = []; var targets = [];
             i = 0;
+            var under = false;
             links = d3.range(numEdges).map(function () {
                 i++;
+                if(edges[i - 1].direct == true){
+                    if (!isPresent(sources, edges[i - 1].source)) {
+                        sources.push(edges[i - 1].source);
+                    }
+                    else {
+                        under = !under;
+                    }
+                    if (!isPresent(targets, edges[i - 1].target)) {
+                        targets.push(edges[i - 1].target);
+                    }
+                    else {
+                        under = !under;
+                    }
+                }
+
                 return {
                     source: nodes[edges[i-1].source],
                     target: nodes[edges[i-1].target],
                     direct: edges[i-1].direct,
                     left: false,
-                    right: true
+                    right: true,
+                    under: under
                 }
-            });
-            for (var i = 0; i < numEdges; ++i) {
-                d3.select(element).append("h3").text("Source: " + nodes[edges[i].source - 1].id + " Target: " + nodes[edges[i].target - 1].id);
-            }
+            });            
 
+            //Add the paths between nodes to the page
             var path = svg.append("svg:g").selectAll("path").data(links).enter().append("svg:path").attr("class", "link").attr("d", function (d) { return linkPath(d) }).attr('marker-end', 'url(#arrow)');
 
+            //Add Nodes to page
             var circleGroup = svg.selectAll("g").data(nodes);
             var groupEnter = circleGroup.enter().append("g").attr("transform", function (d) {
-                console.log("Drawing node " + d.id + ": " + d.x)
-                return "translate(" + [d.x, d.y] + ")";
-            }).style("cursor", "pointer");
-            var circle = groupEnter.append("circle").attr("cx", 0).attr("cy", 0).attr("r", radius).attr("class", function (d) { return classSelector(d) }).append("svg:title").text(function (d) { return d.x; });
+                                                        return "translate(" + [d.x, d.y] + ")";
+                                                    }).style("cursor", "pointer");
+            var circle = groupEnter.append("circle").attr("cx", 0).attr("cy", 0).attr("r", radius).attr("class", function (d) { return classSelector(d) }).append("svg:title").text(function (d) {return labelGen(d);});
             var label = circleGroup.append("text").attr("y", 5).text(function (d) { return d.id; }).attr({ "alignment-baseline": "middle", "text-anchor": "middle" }).style("class", "id");
+
             var propOuterRadius = (propertiesRadius + (radius * 2));
             var locationOuterRadius = (locationRadius + (radius * 2));
 
+            //Add highlight circle for properties category
             var propertiesCircle = svg.append("circle").attr("class", "circle").attr("cx", propertiesCentX).attr("cy", propertiesCentY).attr("r", propOuterRadius);
             var propertiesPath = svg.append("svg:g").append("svg:path")
                                     .attr("class", "link").attr("d", function () {
                                         var distance = 1.5 * propOuterRadius;
                                         var start = "M " + (nodes[numOnLine].x + radius) + ", " + nodes[numOnLine].y;
                                         var p1 = "L " + (nodes[numOnLine].x + distance) + ", " + nodes[numOnLine].y;
-                                        var p2 = "L " + (nodes[numOnLine].x + distance) + ", " + propertiesCentY;
+                                        var p2 = "L " + (nodes[numOnLine].x + distance) + ", " + (propertiesCentY);
                                         var end = "L " + (propertiesCentX + (propertiesRadius + (radius * 2))) + ", " + propertiesCentY;
                                         var str = start + p1 + p2 + end;
                                         //console.log("Properties String: " + str);
                                         return str;
                                     }).attr('marker-end', 'url(#arrow2)');
 
+            //Add highlight circle for Location category
             var locationCircle = svg.append("circle").attr("class", "circle").attr("cx", locationCentX).attr("cy", locationCentY).attr("r", locationOuterRadius);
             var locationPath = svg.append("svg:g").append("svg:path").attr("class", "link").attr("d", function (d) {
-                                        var start = "M " + (propertiesCentX - propOuterRadius) + "," + locationCentY;
-                                        var end = "L " + (locationCentX + locationOuterRadius)+ "," + locationCentY
-                                        //console.log("Location String: " + start + end);
-                                        return (start + end);
-                                    }).attr('marker-end', 'url(#arrow2)');
+                var start = "M " + (propertiesCentX - propOuterRadius) + "," + locationCentY;
+                var end = "L " + (locationCentX + locationOuterRadius) + "," + locationCentY
+                return (start + end);
+            }).attr('marker-end', 'url(#arrow2)');
+            
 
         }
 
-        function onTheLine(d) {
-            if ((d.Category == "Chip Life Cycle") || (d.Category == "Abstraction")) {
-                return true;
-            }
-            else return false;
+        //Create the labels for mouse-over
+        function labelGen(d) {
+            var str = "Attribute: " + d.name + "\n" + "Category: " + d.Category + "\n"+ "F_in: " + d.Fin + "\n" + "F_out: " + d.Fout;
+            return str;
         }
-        var numOfDirects = 1;
+        
+        var direction = 1;
+        var numOfUps = 1; var numOfDowns = 1;
+        var linksThatGoUnder = false;
+
+        //Generate the string required to direct paths
         function linkPath(d) {
             var str;
             if (d.direct != true) {
-                //console.log("Not direct: " + d.source.id + " to " + d.target.id);
                 str = "M " + d.source.x + ", " + d.source.y + " L " + (d.target.x - radius) + ", " + d.target.y;
             }
             else {
                 
-                var direction = -1;
-                var distance = 40 * (numOfDirects);
-                ++numOfDirects;
-                //console.log("Direct: " + d.source.id + " to " + d.target.id + " height: " + distance);
+                var distance;
+                if(d.under == true){
+                    direction = 1; //Goes under the line
+                    distance = step * calcStep(numOfDowns);
+                    numOfDowns++;
+                }
+                else {
+                    direction = -1;
+                    distance = step * calcStep(numOfUps);
+                    ++numOfUps;
+                }
                 var dy = direction * distance;
                 var height = d.source.y + dy;
                 var p1 = "M " + d.source.x + ", " + (d.source.y + (radius * direction));
                 var p2 = " L " + d.source.x + ", " + (height);
                 var p3 = " L " + d.target.x + ", " + height;
                 var p4 = " L " + d.target.x + ", " + (d.target.y + (direction * radius));
+
                 //M(source.x, source.y) + L(source.x, height) + L(target.x, height) + L(target.x, target.y);
-                //p1 + p2 + p3 + p4
                 str = p1 + p2 + p3 + p4;
             }
             return str;
-
         }
+
+        //Calculate the height of each link
+        function calcStep(x){
+            if(x == 1){
+                return x;
+            }
+            else if (x == 2) {
+                return 1.5;
+            }
+            else if(x == 3){
+                return 2;
+            }
+            else if(x == 4){
+                return 2.5;
+            }
+            else if (x == 5){
+                return 3;
+            }
+            else if (x == 6){
+                return 3.5;
+            }
+            else if (x == 7) {
+                return 4;
+            }
+            else if (x == 8) {
+                return 4.5;
+            }
+            else return 5;
+        }
+
+        //Check to see if a particular node is in an array
+        function isPresent(list, x) {
+            for (var i = 0; i < list.length; ++i) {
+                if (list[i] == x) return true;
+            }
+            return false;
+        }
+
+        //Return the css class desired
         function classSelector(d) {
             if (d.Category == "Chip Life Cycle") {
                 return "Chip";
@@ -393,16 +459,10 @@
             }
         }
 
-                
+        //Called by Server - Starts Javascript         
         function visualize(element, numEdges, numNodes) {
             svg = d3.selectAll(element).append('svg').attr('width', width).attr('height', height);
-
             initVis(element, numNodes, numEdges);
         }
-
-        function dblclick(d) {
-            d.fixed = false;
-        }
-
     </script>
 </asp:Content>

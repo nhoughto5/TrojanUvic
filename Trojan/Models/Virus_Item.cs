@@ -22,7 +22,9 @@ namespace Trojan.Models
 
         public virtual Category Category { get; set; }
 
-        public Virus_Item(string V_Id, int A_Id, Attribute Attr, Category Category_)
+        public bool userAdded { get; set; }
+
+        public Virus_Item(string V_Id, int A_Id, Attribute Attr, Category Category_, bool user)
         {
             ItemId = Guid.NewGuid().ToString();
             VirusId = V_Id;
@@ -31,6 +33,7 @@ namespace Trojan.Models
             AttributeId = A_Id;
             Attribute = Attr;
             Category = Category_;
+            userAdded = user;
         }
 
         public Virus_Item()
