@@ -162,6 +162,7 @@
     <Content Include="Account\TwoFactorAuthenticationSignIn.aspx" />
     <Content Include="Account\VerifyPhoneNumber.aspx" />
     <Content Include="AddToDescription.aspx" />
+    <Content Include="Attacks.aspx" />
     <Content Include="AttributeDetails.aspx" />
     <Content Include="AttributeList.aspx" />
     <Content Include="Catalog\Images\eight.png" />
@@ -230,14 +231,26 @@
     <Content Include="Catalog\Images\twenty_three.png" />
     <Content Include="Catalog\Images\twenty_two.png" />
     <Content Include="Catalog\Images\two.png" />
+    <Content Include="Categorization.aspx" />
     <Content Include="Contact.aspx" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\Site.css" />
     <Content Include="Content\visualizer.css" />
+    <Content Include="Detection.aspx" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Images\engBuild.jpg" />
+    <Content Include="Images\fayezImg.jpg" />
+    <Content Include="Images\HW_trojan.png" />
+    <Content Include="Images\IC_life_cycle.png" />
+    <Content Include="Images\linkedIn.png" />
+    <Content Include="Images\logo-uvic.jpg" />
     <Content Include="Images\logo.jpg" />
+    <Content Include="Images\Nickimg.jpg" />
+    <Content Include="Images\smerimg.jpg" />
     <Content Include="Images\TrojanLogo.png" />
+    <Content Include="Images\trojan_life_cycle.png" />
+    <Content Include="Images\University_of_Victoria_Logo_and_Wordmark.png" />
     <Content Include="JavaScript\DirectedGraph.js" />
     <Content Include="JavaScript\REference.js" />
     <Content Include="JavaScript\visualizer.js" />
@@ -428,6 +441,13 @@
     <Compile Include="App_Start\IdentityConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
+    <Compile Include="Attacks.aspx.cs">
+      <DependentUpon>Attacks.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Attacks.aspx.designer.cs">
+      <DependentUpon>Attacks.aspx</DependentUpon>
+    </Compile>
     <Compile Include="AttributeDetails.aspx.cs">
       <DependentUpon>AttributeDetails.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -442,6 +462,13 @@
     <Compile Include="AttributeList.aspx.designer.cs">
       <DependentUpon>AttributeList.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Categorization.aspx.cs">
+      <DependentUpon>Categorization.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Categorization.aspx.designer.cs">
+      <DependentUpon>Categorization.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Contact.aspx.cs">
       <DependentUpon>Contact.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -455,6 +482,13 @@
     </Compile>
     <Compile Include="Default.aspx.designer.cs">
       <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Detection.aspx.cs">
+      <DependentUpon>Detection.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Detection.aspx.designer.cs">
+      <DependentUpon>Detection.aspx</DependentUpon>
     </Compile>
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>

@@ -39,13 +39,6 @@
                                       <%#:Item.AttributeName%>
                                     </a>
                                     <br />
-                                    <span>
-                                        <b>F_in: </b><%#:String.Format("{0:d}", Item.F_in)%>
-                                    </span>
-                                    <span>
-                                        <b>F_out: </b><%#:String.Format("{0:d}", Item.F_out)%>
-                                    </span>
-                                    <br />
                                     <a href="/AddToDescription.aspx?AttributeID=<%#:Item.AttributeId %>">               
                                         <span class="AttributeListItem">
                                             <b>Add To Virus Description<b>

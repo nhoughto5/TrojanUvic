@@ -4,8 +4,8 @@
 
     <div class="jumbotron">
         <h1><%: Title %></h1>
-        <p class="lead">Welcome to the Uvic ECE hardware Trojan detection project.</p>
-        <p><a href="http://www.asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
+        <p class="lead">Welcome to the Uvic ECE hardware security project.</p>
+        <p><a href="About.aspx" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
     </div>
 
     <div class="row">
@@ -15,25 +15,25 @@
                 The hardware trojan categorization tool is an effective method for virus detection, prevention and strategic planning.
             </p>
             <p>
-                <a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301948">Learn more &raquo;</a>
+                <a class="btn btn-default" href="Categorization.aspx">Learn more &raquo;</a>
             </p>
         </div>
         <div class="col-md-4">
-            <h2>Hardware Attack Database</h2>
+            <h2>Virus Detection</h2>
             <p>
-                Log attack vectors and reference the hardware attack database.
+                A new method for detection of hardware viruses.
             </p>
             <p>
-                <a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301949">Learn more &raquo;</a>
+                <a class="btn btn-default" href="Detection.aspx">Learn more &raquo;</a>
             </p>
         </div>
         <div class="col-md-4">
-            <h2>The Team</h2>
+            <h2>Hardware Trojan Attacks</h2>
             <p>
-                Meet the development team behind the hardware trojan detection system.
+                Analysis of strength of hardware attacks.
             </p>
             <p>
-                <a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301950">Learn more &raquo;</a>
+                <a class="btn btn-default" href="Attacks.aspx">Learn more &raquo;</a>
             </p>
         </div>
     </div>
