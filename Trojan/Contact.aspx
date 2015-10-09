@@ -10,7 +10,7 @@
                 <div class="col-xs-11">
                     <ul class="list-group">
                         <li class="list-group-item" data-toggle="modal" data-target="#nickModal">Nick Houghton</li>
-                        <li class="list-group-item" data-toggle="modal" data-target="#samerModal">Samer Moien</li>
+                        <li class="list-group-item" data-toggle="modal" data-target="#samerModal">Samer Moein</li>
                         <li class="list-group-item" data-toggle="modal" data-target="#fayezModal">Fayez Gebali</li>
                     </ul>
                 </div>
@@ -66,7 +66,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Samer Moien</h4>
+                    <h4 class="modal-title">Samer Moein</h4>
                 </div>
                 <div class="modal-body" style="overflow:auto">
                     <div class="row-fluid">

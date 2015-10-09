@@ -318,9 +318,10 @@ namespace Trojan
             
             using (VirusDescriptionActions usersVirus = new VirusDescriptionActions())
             {
+                usersVirus.CleanVirus();
                 string id = usersVirus.GetVirusId();
                 UpdateCartItems();
-                
+                int total = usersVirus.GetCount();
                 if (usersVirus.GetCount() > 0)
                 {
                     VirusDescriptionTitle.InnerText = "Current Virus Total";
@@ -389,6 +390,7 @@ namespace Trojan
             string virusId;
             using (VirusDescriptionActions usersVirus = new VirusDescriptionActions())
             {
+                usersVirus.CleanVirus();
                 int total = usersVirus.GetOnCount();
                 if (total > 0)
                 {
@@ -516,7 +518,7 @@ namespace Trojan
                         {
                             indirectGrid.DataSource = Attribute_Sorting(Indirect_Insertion);
                             indirectGrid.DataBind();
-                            indirect.Visible = indirectGrid.Visible = true;
+                            indirect.Visible = indirectGrid.Visible = false;
                             indirectNone.Visible = false;
                         }
                         else
@@ -542,8 +544,8 @@ namespace Trojan
                         {
                             ConnectionsGrid.DataSource = Connection_Sorting(Connections);
                             ConnectionsGrid.DataBind();
-                            ConnectionsResults.Visible = true;
-                            ConnectionsGrid.Visible = true;
+                            ConnectionsResults.Visible = false;
+                            ConnectionsGrid.Visible = false;
                         }
                         else
                         {
@@ -629,6 +631,8 @@ namespace Trojan
                 if (total > 0)
                 {
                     List<Matrix_Cell> rowTrue = new List<Matrix_Cell>();
+                    var removedSet = new HashSet<int>();
+                    List<int> resultsInt = new List<int>();
                     List<Trojan.Models.Attribute> results = new List<Trojan.Models.Attribute>();
                     Trojan.Models.Attribute temp = new Trojan.Models.Attribute();
                     String virusId = usersVirus.GetVirusId();
@@ -641,17 +645,27 @@ namespace Trojan
 
                         if (usersVirus.Get_OnOff(virusId, currentBuild[i].AttributeId))
                         {
-                            rowTrue = scanRowTrue(currentBuild[i].AttributeId, null);
+                            rowTrue = getRow(currentBuild[i].AttributeId, null);
                             foreach (Matrix_Cell A in rowTrue)
                             {
-                                temp = getAttribute(A.ColumnId);
-                                if (!results.Contains(temp))
+                                if (A.value == false)
                                 {
-                                    results.Add(temp);
+                                    removedSet.Add(A.ColumnId);
+                                    if (resultsInt.Contains(A.ColumnId))
+                                    {
+                                        resultsInt.Remove(A.ColumnId);
+                                    }
                                 }
-                                temp = null;
+                                if ((A.value == true) && (!removedSet.Contains(A.ColumnId)) && (!resultsInt.Contains(A.ColumnId)))
+                                {
+                                    resultsInt.Add(A.ColumnId);
+                                }
                             }
                         }
+                    }
+                    foreach (int X in resultsInt)
+                    {
+                        results.Add(getAttribute(X));
                     }
                     RowGrid.DataSource = Attribute_Sorting(results);
                     RowGrid.DataBind();
@@ -687,6 +701,8 @@ namespace Trojan
                 if (total > 0)
                 {
                     List<Trojan.Models.Attribute> results = new List<Trojan.Models.Attribute>();
+                    var removedSet = new HashSet<int>();
+                    List<int> resultsInt = new List<int>();
                     String virusId = usersVirus.GetVirusId();
                     VirusDescriptionActions.VirusDescriptionUpdates[] currentBuild = new VirusDescriptionActions.VirusDescriptionUpdates[DescriptionList.Rows.Count];
                     for (int i = 0; i < DescriptionList.Rows.Count; i++)
@@ -697,17 +713,27 @@ namespace Trojan
 
                         if (usersVirus.Get_OnOff(virusId, currentBuild[i].AttributeId))
                         {
-                            colTrue = scanColumnTrue(currentBuild[i].AttributeId, null);
+                            colTrue = getColumn(currentBuild[i].AttributeId, null);
                             foreach (Matrix_Cell A in colTrue)
                             {
-                                temp = getAttribute(A.RowId);
-                                if (!results.Contains(temp))
+                                if (A.value == false)
                                 {
-                                    results.Add(temp);
+                                    removedSet.Add(A.RowId);
+                                    if (resultsInt.Contains(A.RowId))
+                                    {
+                                        resultsInt.Remove(A.RowId);
+                                    }
                                 }
-                                temp = null;
+                                if ((A.value == true) && (!removedSet.Contains(A.RowId)) && (!resultsInt.Contains(A.RowId)))
+                                {
+                                    resultsInt.Add(A.RowId);
+                                }
                             }
                         }
+                    }
+                    foreach (int X in resultsInt)
+                    {
+                        results.Add(getAttribute(X));
                     }
                     ColumnGrid.DataSource = Attribute_Sorting(results);
                     ColumnGrid.DataBind();

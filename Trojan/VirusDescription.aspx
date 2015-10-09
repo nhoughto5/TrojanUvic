@@ -135,7 +135,7 @@
             <asp:BoundField DataField="CategoryName" HeaderText="Category" />
         </Columns>
     </asp:GridView>
-    <div id="RowResults" runat="server" class="ContentHead"><h1>Row Analysis Results</h1></div>
+    <div id="RowResults" runat="server" class="ContentHead"><h1>Row Analysis Results</h1><h4>Attributes shared by each row</h4></div>
     <asp:GridView ID="RowGrid" runat="server" AutoGenerateColumns="false" ShowFooter="false" GridLines="Vertical" CellPadding="4" ItemType="Trojan.Models.Attribute" CssClass="table table-striped table-bordered">
         <Columns>
             <asp:BoundField DataField="AttributeId" HeaderText="ID" SortExpression="AttributeId" />
@@ -143,7 +143,7 @@
             <asp:BoundField DataField="CategoryName" HeaderText="Category" />
         </Columns>
     </asp:GridView>
-    <div id="ColumnResults" runat="server" class="ContentHead"><h1>Column Analysis Results</h1></div>
+    <div id="ColumnResults" runat="server" class="ContentHead"><h1>Column Analysis Results</h1><h4>Attributes shared by each column</h4></div>
     <asp:GridView ID="ColumnGrid" runat="server" AutoGenerateColumns="false" ShowFooter="false" GridLines="Vertical" CellPadding="4" ItemType="Trojan.Models.Attribute" CssClass="table table-striped table-bordered">
         <Columns>
             <asp:BoundField DataField="AttributeId" HeaderText="ID" SortExpression="AttributeId" />
@@ -334,7 +334,7 @@
                                                         return "translate(" + [d.x, d.y] + ")";
                                                     }).style("cursor", "pointer");
             var circle = groupEnter.append("circle").attr("cx", 0).attr("cy", 0).attr("r", radius).attr("class", function (d) { return classSelector(d) }).append("svg:title").text(function (d) {return labelGen(d);});
-            var label = circleGroup.append("text").attr("y", 5).text(function (d) { return d.id; }).attr({ "alignment-baseline": "middle", "text-anchor": "middle" }).style("class", "id");
+            var label = circleGroup.append("text").attr("y", 1).attr("x", -1).text(function (d) { return d.id; }).attr({ "alignment-baseline": "middle", "text-anchor": "middle" }).style("class", "id");
 
             var propOuterRadius = (propertiesRadius + (radius * 2));
             var locationOuterRadius = (locationRadius + (radius * 2));

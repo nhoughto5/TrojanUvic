@@ -1086,7 +1086,7 @@ namespace Trojan.Models
                 new Matrix_Cell{ 
 					//Id = 134,
                     RowId = 8, ColumnId = 20,
-                    value = false, submatrix = "R23", MatrixName = "Default"
+                    value = true, submatrix = "R23", MatrixName = "Default"
                 },
                 new Matrix_Cell{ 
 					//Id = 135,

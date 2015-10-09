@@ -252,6 +252,25 @@ namespace Trojan.Logic
             // Save changes.             
             _db.SaveChanges();
         }
+        public void CleanVirus()
+        {
+            VirusDescriptionID = GetVirusId();
+            var cartItems = _db.Virus_Item.Where(c => (c.VirusId == VirusDescriptionID) && (c.userAdded == false));
+            foreach (var cartItem in cartItems)
+            {
+                _db.Virus_Item.Remove(cartItem);
+            }
+
+
+            var cons = _db.Connections.Where(c => c.VirusId == VirusDescriptionID);
+            foreach (var cartItem in cons)
+            {
+                _db.Connections.Remove(cartItem);
+            }
+
+            // Save changes.             
+            _db.SaveChanges();
+        }
 
         public struct VirusDescriptionUpdates
         {
