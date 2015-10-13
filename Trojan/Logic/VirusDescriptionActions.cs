@@ -260,8 +260,6 @@ namespace Trojan.Logic
             {
                 _db.Virus_Item.Remove(cartItem);
             }
-
-
             var cons = _db.Connections.Where(c => c.VirusId == VirusDescriptionID);
             foreach (var cartItem in cons)
             {

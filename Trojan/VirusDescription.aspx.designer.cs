@@ -103,6 +103,24 @@ namespace Trojan {
         protected global::System.Web.UI.WebControls.Label lblTotalF_out;
         
         /// <summary>
+        /// notPossible control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl notPossible;
+        
+        /// <summary>
+        /// startOverBtn control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button startOverBtn;
+        
+        /// <summary>
         /// buttonTable control.
         /// </summary>
         /// <remarks>
@@ -218,6 +236,24 @@ namespace Trojan {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.GridView indirectGrid;
+        
+        /// <summary>
+        /// nodesDiv control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl nodesDiv;
+        
+        /// <summary>
+        /// nodesGrid control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.GridView nodesGrid;
         
         /// <summary>
         /// RowResults control.
@@ -353,5 +389,14 @@ namespace Trojan {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl abstractionNone;
+        
+        /// <summary>
+        /// jumboWrap control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl jumboWrap;
     }
 }

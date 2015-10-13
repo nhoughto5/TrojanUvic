@@ -40,7 +40,7 @@
     </style>
     <link rel="stylesheet" type="text/css" href="Content/visualizer.css" />
     <div id="VirusDescriptionTitle" runat="server" class="ContentHead"><h1>Virus Description</h1></div>
-    <div id="NoSelected" align="center" runat="server" class="ContentHead"><h1>&nbsp&nbsp</h1><h3>No Attributes Selected</h3></div>
+    <div id="NoSelected" align="center" runat="server" class="ContentHead"><h1>&nbsp&nbsp</h1><h3>** No Attributes Selected **</h3></div>
     <asp:GridView ID="DescriptionList" runat="server" AutoGenerateColumns="False" ShowFooter="True" GridLines="Vertical" CellPadding="4"
         ItemType="Trojan.Models.Virus_Item" SelectMethod="GetVirusDescription" 
         CssClass="table table-striped table-bordered" EnableCaching ="true">   
@@ -87,6 +87,12 @@
         </strong>
     </div>
     <br />
+    <div id="notPossible" runat="server" align="center" class="Content">
+        <h4>** This Combination Has No Result **</h4>
+        <br />
+        <asp:Button ID="startOverBtn" class="btn btn-primary" runat="server" Text="Start Over" OnClick="ClearBtn_Click" />
+    </div>
+    <br />
     <table id="buttonTable" runat="server" style="margin: 0 auto; border-collapse: separate; border-spacing: 5px; font-weight: bold;"> 
     <tr>
         <td>
@@ -109,7 +115,7 @@
         </td>
     </tr>
     </table>
-
+    
     <div id="abstractionResults" runat="server" class="ContentHead"><h1>Abstraction Results</h1></div>
     <asp:GridView ID="abstractionGrid" runat="server" AutoGenerateColumns="false" ShowFooter="false" GridLines="Vertical" CellPadding="4" ItemType="Trojan.Models.Attribute" CssClass="table table-striped table-bordered">
         <Columns>
@@ -135,6 +141,18 @@
             <asp:BoundField DataField="CategoryName" HeaderText="Category" />
         </Columns>
     </asp:GridView>
+
+
+    <div id="nodesDiv" runat="server" class="ContentHead"><h1>Attributes</h1></div>
+    
+    <asp:GridView ID="nodesGrid" runat="server" AutoGenerateColumns="false" ShowFooter="false" GridLines="Vertical" CellPadding="4" ItemType="Trojan.Models.Attribute" CssClass="table table-striped table-bordered">
+        <Columns>
+            <asp:BoundField DataField="AttributeId" HeaderText="ID" SortExpression="AttributeId" />
+            <asp:BoundField DataField="AttributeName" HeaderText="Name" />        
+            <asp:BoundField DataField="CategoryName" HeaderText="Category" />
+        </Columns>
+    </asp:GridView>
+
     <div id="RowResults" runat="server" class="ContentHead"><h1>Row Analysis Results</h1><h4>Attributes shared by each row</h4></div>
     <asp:GridView ID="RowGrid" runat="server" AutoGenerateColumns="false" ShowFooter="false" GridLines="Vertical" CellPadding="4" ItemType="Trojan.Models.Attribute" CssClass="table table-striped table-bordered">
         <Columns>
@@ -170,6 +188,7 @@
     <div>&nbsp</div>
     <div>&nbsp</div>
     <div>&nbsp</div>
+    
     <div id="notes" runat="server" class="Content"><h2>**Notes**</h2></div>
     <div id="canNot" runat="server" class="Content"><h4>Select attributes to build a virus</h4></div>
     <div id="abstractionEmpty" runat="server" class="Content"><h4>There are no access points to Abstraction Category</h4></div>
@@ -177,11 +196,15 @@
     <div id="directNone" runat="server" class="Content"><h4>No Direct Connections to Insertion</h4></div>
     <div id="indirectNone" runat="server" class="Content"><h4>No Indirect Connections to Insertion</h4></div>
     <div id="abstractionNone" runat="server" class="Content"><h4>No Results for Abstraction Category</h4></div>
-    <div>&nbsp</div>
     
-    <div id="visJumboContainer" class="jumbotron">
-        <div id="visrep" class="ContentHead"></div>
+    <div>&nbsp</div>
+    <div id="jumboWrap" runat="server">
+        <div id="visJumboContainer" class="jumbotron">
+            <div id="visrep" class="ContentHead"></div>
+        </div>
     </div>
+
+    
     <script src="http://marvl.infotech.monash.edu/webcola/cola.v3.min.js"></script>
     <script type="text/javascript">
 
