@@ -71,7 +71,6 @@ namespace Trojan
                 else
                 {
                     noneSelected();
-                    
                 }
             }
         }
@@ -535,7 +534,7 @@ namespace Trojan
                         Connections.Add(new Connection(X.RowId, i, tempDirect, virusId));
                     }
                 }
-                List<int> Nodes = nodeSet.ToList().Concat(LocationIDs).ToList().Concat(propertyIDs).ToList();
+                List<int> Nodes = nodeSet.ToList().Concat(LocationIDs).ToList();
                 Nodes.Sort();
                 displayResults(Nodes, Connections);
                 saveToDB(Nodes, Connections, virusId);
@@ -546,9 +545,10 @@ namespace Trojan
         private void saveToDB(List<int> NodeInt, List<Connection> Edges, string virusId)
         {
             List<Models.Attribute> Nodes = intToAttr(NodeInt);
+            List<Virus_Item> currentItems = (from c in db.Virus_Item where (c.VirusId == virusId) select c).ToList();
             using (VirusDescriptionActions usersVirus = new VirusDescriptionActions())
-            { 
-                usersVirus.EmptyVirus(); 
+            {
+                usersVirus.EmptyVirus();
             }
             foreach (Connection Q in Edges)
             {
@@ -557,6 +557,10 @@ namespace Trojan
             foreach (Models.Attribute N in Nodes)
             {
                 db.Virus_Item.Add(new Virus_Item(virusId, N.AttributeId, N, getCategoryFromAttr(N.AttributeId), false));
+            }
+            foreach (Virus_Item V in currentItems)
+            {
+                db.Virus_Item.Add(V);
             }
             db.SaveChanges();
         }
@@ -814,58 +818,52 @@ namespace Trojan
             {
                 virusId = usersVirus.GetVirusId();
             }
-            try
+            bool test = db.Connections.Any(o => o.VirusId == virusId);
+            if (test)
             {
-                if (db.Connections.Any(o => o.VirusId == virusId))
+                try
                 {
-                    try
-                    {
-                        var x = from b in db.Connections where (b.VirusId == virusId) select b;
-                        Connections = x.ToList().OrderBy(p => p.source).ThenBy(c => c.target).ToList();
-                        var y = from b in db.Virus_Item where (b.VirusId == virusId) select b;
-                        V_Items = y.ToList().OrderBy(p => p.AttributeId).ToList();
-                    }
-                    catch (Exception exp)
-                    {
-                        throw new Exception("ERROR: Unable to receive Connections for this virusd - " + exp.Message.ToString(), exp);
-                    }
-
-                    foreach (Virus_Item X in V_Items)
-                    {
-                        Nodes.Add(new Node(X.AttributeId, X.Attribute.AttributeName, X.Category.CategoryName, X.Attribute.F_in, X.Attribute.F_out));
-                    }
-                    string json;
-                    foreach (Connection Con in Connections)
-                    {
-                        json = JsonConvert.SerializeObject(Con);
-                        ClientScript.RegisterArrayDeclaration("edges", json);
-                    }
-                    foreach (Node N in Nodes)
-                    {
-                        json = JsonConvert.SerializeObject(N);
-                        ClientScript.RegisterArrayDeclaration("nod", json);
-                    }
-                    //var json = JsonConvert.SerializeObject(Connections);
-                    //ClientScript.RegisterArrayDeclaration("data", json);
-                    ScriptManager.RegisterStartupScript(this.Page, Page.GetType(), "id", "visualize('#visrep', " + Connections.Count + "," + Nodes.Count + ")", true);
-
+                    var x = from b in db.Connections where (b.VirusId == virusId) select b;
+                    Connections = x.ToList().OrderBy(p => p.source).ThenBy(c => c.target).ToList();
+                    var y = from b in db.Virus_Item where (b.VirusId == virusId) select b;
+                    V_Items = y.ToList().OrderBy(p => p.AttributeId).ToList();
                 }
-                else
+                catch (Exception exp)
                 {
-                    notes.Visible = true;
-                    canNot.Visible = false;
-                    notBuilt.Visible = true;
-                    //visJumboContainer.Visible = false;
-                    abstractionNone.Visible = abstractionNone.Visible = abstractionResults.Visible = abstractionGrid.Visible = false;
-                    directNone.Visible = direct.Visible = directGrid.Visible = false;
-                    indirectNone.Visible = indirectGrid.Visible = indirect.Visible = false;
-                    RowResults.Visible = RowGrid.Visible = false;
-                    ColumnResults.Visible = ColumnGrid.Visible = false;
+                    throw new Exception("ERROR: Unable to receive Connections for this virusd - " + exp.Message.ToString(), exp);
                 }
+
+                foreach (Virus_Item X in V_Items)
+                {
+                    Nodes.Add(new Node(X.AttributeId, X.Attribute.AttributeName, getCategoryFromAttr(X.AttributeId).CategoryName, X.Attribute.F_in, X.Attribute.F_out));
+                }
+                string json;
+                foreach (Connection Con in Connections)
+                {
+                    json = JsonConvert.SerializeObject(Con);
+                    ClientScript.RegisterArrayDeclaration("edges", json);
+                }
+                foreach (Node N in Nodes)
+                {
+                    json = JsonConvert.SerializeObject(N);
+                    ClientScript.RegisterArrayDeclaration("nod", json);
+                }
+                //var json = JsonConvert.SerializeObject(Connections);
+                //ClientScript.RegisterArrayDeclaration("data", json);
+                ScriptManager.RegisterStartupScript(this.Page, Page.GetType(), "id", "visualize('#visrep', " + Connections.Count + "," + Nodes.Count + ")", true);
+
             }
-            catch (Exception exp2)
+            else
             {
-                throw new Exception("ERROR: Unable to check Edges table for content - " + exp2.Message.ToString(), exp2);
+                notes.Visible = true;
+                canNot.Visible = false;
+                notBuilt.Visible = true;
+                //visJumboContainer.Visible = false;
+                abstractionNone.Visible = abstractionNone.Visible = abstractionResults.Visible = abstractionGrid.Visible = false;
+                directNone.Visible = direct.Visible = directGrid.Visible = false;
+                indirectNone.Visible = indirectGrid.Visible = indirect.Visible = false;
+                RowResults.Visible = RowGrid.Visible = false;
+                ColumnResults.Visible = ColumnGrid.Visible = false;
             }
         }
     }
