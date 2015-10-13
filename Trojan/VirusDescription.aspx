@@ -200,7 +200,7 @@
     <div>&nbsp</div>
     <div id="jumboWrap" runat="server">
         <div id="visJumboContainer" class="jumbotron">
-            <div id="visrep" class="ContentHead"></div>
+            <div id="visrep" style="text-align:center"></div>
         </div>
     </div>
 
@@ -288,13 +288,24 @@
                         Category: "Filler"
                     }
                 }
-                else if (nod[i-1].Category == "Properties") {
-                    X = propertiesCentX + (propertiesRadius * Math.cos((2 * W * Math.PI) / numProperties));
+                else if (nod[i - 1].Category == "Properties") {
+                    if (numProperties == 1) {
+                        X = propertiesCentX;
+                    }
+                    else {
+                        X = propertiesCentX + (propertiesRadius * Math.cos((2 * W * Math.PI) / numProperties));
+                    }
+                    
                     Y = (lineHeight + dropDown + (propertiesRadius * Math.sin((2 * W * Math.PI) / numProperties)));
                     ++W;
                 }
-                else if (nod[i-1].Category == "Location") {
-                    X = (locationCentX + (locationRadius * Math.cos((2 * Z * Math.PI) / numLocations)));
+                else if (nod[i - 1].Category == "Location") {
+                    if (numLocations == 1) {
+                        X = locationCentX;
+                    }
+                    else {
+                        X = (locationCentX + (locationRadius * Math.cos((2 * Z * Math.PI) / numLocations)));
+                    }
                     Y = (lineHeight + dropDown + (locationRadius * Math.sin((2 * Z * Math.PI) / numLocations)));
                     ++Z;
                 }
@@ -347,10 +358,12 @@
                     under: under
                 }
             });            
-
+            var propOuterRadius = (propertiesRadius + (radius * 2));
+            var locationOuterRadius = (locationRadius + (radius * 2));
             //Add the paths between nodes to the page
             var path = svg.append("svg:g").selectAll("path").data(links).enter().append("svg:path").attr("class", "link").attr("d", function (d) { return linkPath(d) }).attr('marker-end', 'url(#arrow)');
-
+            var propertiesCircle = svg.append("circle").attr("class", "circle").attr("cx", propertiesCentX).attr("cy", propertiesCentY).attr("r", propOuterRadius);
+            var locationCircle = svg.append("circle").attr("class", "circle").attr("cx", locationCentX).attr("cy", locationCentY).attr("r", locationOuterRadius);
             //Add Nodes to page
             var circleGroup = svg.selectAll("g").data(nodes);
             var groupEnter = circleGroup.enter().append("g").attr("transform", function (d) {
@@ -359,11 +372,11 @@
             var circle = groupEnter.append("circle").attr("cx", 0).attr("cy", 0).attr("r", radius).attr("class", function (d) { return classSelector(d) }).append("svg:title").text(function (d) {return labelGen(d);});
             var label = circleGroup.append("text").attr("y", 1).attr("x", -1).text(function (d) { return d.id; }).attr({ "alignment-baseline": "middle", "text-anchor": "middle" }).style("class", "id");
 
-            var propOuterRadius = (propertiesRadius + (radius * 2));
-            var locationOuterRadius = (locationRadius + (radius * 2));
+            //var propOuterRadius = (propertiesRadius + (radius * 2));
+            //var locationOuterRadius = (locationRadius + (radius * 2));
 
             //Add highlight circle for properties category
-            var propertiesCircle = svg.append("circle").attr("class", "circle").attr("cx", propertiesCentX).attr("cy", propertiesCentY).attr("r", propOuterRadius);
+            //var propertiesCircle = svg.append("circle").attr("class", "circle").attr("cx", propertiesCentX).attr("cy", propertiesCentY).attr("r", propOuterRadius);
             var propertiesPath = svg.append("svg:g").append("svg:path")
                                     .attr("class", "link").attr("d", function () {
                                         var distance = 1.5 * propOuterRadius;
@@ -377,7 +390,7 @@
                                     }).attr('marker-end', 'url(#arrow2)');
 
             //Add highlight circle for Location category
-            var locationCircle = svg.append("circle").attr("class", "circle").attr("cx", locationCentX).attr("cy", locationCentY).attr("r", locationOuterRadius);
+            
             var locationPath = svg.append("svg:g").append("svg:path").attr("class", "link").attr("d", function (d) {
                 var start = "M " + (propertiesCentX - propOuterRadius) + "," + locationCentY;
                 var end = "L " + (locationCentX + locationOuterRadius) + "," + locationCentY
