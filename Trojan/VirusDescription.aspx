@@ -228,7 +228,7 @@
             svg.append('svg:defs').append('svg:marker')
 			.attr("id", "arrow")
 			.attr("viewBox", "0 -5 10 10")
-			.attr("refX", 10)
+			.attr("refX", 9)
 			.attr("refY", refY)
 			.attr("markerWidth", markerWidth)
 			.attr("markerHeight", markerHeight)
@@ -239,7 +239,7 @@
             svg.append('svg:defs').append('svg:marker')
                 .attr("id", "arrow2")
                 .attr("viewBox", "0 -5 10 10")
-                .attr("refX", 10)
+                .attr("refX", 9)
                 .attr("refY", 0)
                 .attr("markerWidth", markerWidth)
                 .attr("markerHeight", markerHeight)
@@ -329,9 +329,9 @@
                     name: nod[i - 2].nodeName
                 };
             });
-            for (var i = 0; i < numEdges; ++i) {
-                d3.select(element).append("h3").text("Node " + i + ": " + nodes[i].id);
-            }
+            //for (var i = 0; i < numEdges; ++i) {
+            //    d3.select(element).append("h3").text("Node " + i + ": " + nodes[i].id);
+            //}
             lowestID = lowestID - 1;
 
 
@@ -365,9 +365,9 @@
                     under: under
                 }
             });
-            for (var i = 0; i < numEdges; ++i) {
-                d3.select(element).append("h3").text("Link " + i + ": " + edges[i].source);
-            }
+            //for (var i = 0; i < numEdges; ++i) {
+            //    d3.select(element).append("h3").text("Link " + i + ": " + edges[i].source);
+            //}
             var propOuterRadius = (propertiesRadius + (radius * 2));
             var locationOuterRadius = (locationRadius + (radius * 2));
             //Add the paths between nodes to the page
@@ -389,10 +389,10 @@
             //var propertiesCircle = svg.append("circle").attr("class", "circle").attr("cx", propertiesCentX).attr("cy", propertiesCentY).attr("r", propOuterRadius);
             var propertiesPath = svg.append("svg:g").append("svg:path")
                                     .attr("class", "link").attr("d", function () {
-                                        var distance = (1.5 * propOuterRadius) + Math.abs(propertiesCentX - maxX);
+                                        var turnPoint = pathDistanceCalc(propOuterRadius, nodes[numOnLine].x + radius, propertiesCentX)
                                         var start = "M " + (nodes[numOnLine].x + radius) + ", " + nodes[numOnLine].y;
-                                        var p1 = "L " + (nodes[numOnLine].x + distance) + ", " + nodes[numOnLine].y;
-                                        var p2 = "L " + (nodes[numOnLine].x + distance) + ", " + (propertiesCentY);
+                                        var p1 = "L " + turnPoint + ", " + nodes[numOnLine].y;
+                                        var p2 = "L " + turnPoint + ", " + (propertiesCentY);
                                         var end = "L " + (propertiesCentX + (propertiesRadius + (radius * 2))) + ", " + propertiesCentY;
                                         var str = start + p1 + p2 + end;
                                         //console.log("Properties String: " + str);
@@ -409,7 +409,16 @@
             
 
         }
-
+        function pathDistanceCalc(propOuterRadius, lastNodesEdge, propertiesCentX) {
+            var distance = propOuterRadius + propertiesCentX;
+            if (distance > lastNodesEdge) {
+                return distance + 2 * radius;
+            }
+            else {
+                var change = lastNodesEdge - distance;
+                return lastNodesEdge + 1.5 * change;
+            }
+        }
         //Create the labels for mouse-over
         function labelGen(d) {
             var str = "Attribute: " + d.name + "\n" + "Category: " + d.Category + "\n"+ "F_in: " + d.Fin + "\n" + "F_out: " + d.Fout;
