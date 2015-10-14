@@ -530,11 +530,11 @@ namespace Trojan
                     nodeSet.Add(i);
                     foreach (Matrix_Cell X in tempCol)
                     {
-                        tempDirect = directConnection(X, i);
+                        tempDirect = directConnectionBackwards(X, i);
                         Connections.Add(new Connection(X.RowId, i, tempDirect, virusId));
                     }
                 }
-                List<int> Nodes = nodeSet.ToList().Concat(LocationIDs).ToList();
+                List<int> Nodes = nodeSet.ToList().Concat(LocationIDs).ToList().Concat(propertyIDs).ToList();
                 Nodes.Sort();
                 displayResults(Nodes, Connections);
                 saveToDB(Nodes, Connections, virusId);
@@ -544,8 +544,15 @@ namespace Trojan
 
         private void saveToDB(List<int> NodeInt, List<Connection> Edges, string virusId)
         {
-            List<Models.Attribute> Nodes = intToAttr(NodeInt);
+            List<int> currentList = new List<int>();
+            var nodeSet = new HashSet<int>(NodeInt);
             List<Virus_Item> currentItems = (from c in db.Virus_Item where (c.VirusId == virusId) select c).ToList();
+            foreach (Virus_Item V in currentItems)
+            {
+                nodeSet.Add(V.AttributeId);
+                currentList.Add(V.AttributeId);
+            }
+            List<Models.Attribute> Nodes = intToAttr(nodeSet.ToList());
             using (VirusDescriptionActions usersVirus = new VirusDescriptionActions())
             {
                 usersVirus.EmptyVirus();
@@ -556,74 +563,71 @@ namespace Trojan
             }
             foreach (Models.Attribute N in Nodes)
             {
-                db.Virus_Item.Add(new Virus_Item(virusId, N.AttributeId, N, getCategoryFromAttr(N.AttributeId), false));
-            }
-            foreach (Virus_Item V in currentItems)
-            {
-                db.Virus_Item.Add(V);
+                if (currentList.Contains(N.AttributeId))
+                {
+                    db.Virus_Item.Add(new Virus_Item(virusId, N.AttributeId, N, getCategoryFromAttr(N.AttributeId), true));
+                }
+                else
+                {
+                    db.Virus_Item.Add(new Virus_Item(virusId, N.AttributeId, N, getCategoryFromAttr(N.AttributeId), false));
+                }
             }
             db.SaveChanges();
         }
-        private bool directConnection(Matrix_Cell X, int i)
+        //Determines if a rowId is a direct connection
+        //to the current Matrix_Cell when doing backwards propagation 
+        private bool directConnectionBackwards(Matrix_Cell X, int i)
         {
             if (Math.Abs(i - X.RowId) == 1) return false;
             else return true;
         }
+        //Determines if a colId is a direct connection
+        //to the current Matrix_Cell when doing backwards propagation 
+        private bool directConnectionForwards(Matrix_Cell X, int i)
+        {
+            if (Math.Abs(i - X.ColumnId) == 1) return false;
+            else return true;
+        }
 
         //Used when attributes chosen are all 'Insertion' or 'Abstraction'
-        private void forwardPropagation(List<Trojan.Models.Attribute> PropertiesList, string virusId)
+        private void forwardPropagation(List<Trojan.Models.Attribute> userChosen, string virusId)
         {
-            int highestAttr = PropertiesList[PropertiesList.Count - 1].AttributeId;
-            int currentAttr = PropertiesList[0].AttributeId;
+            int highestAttr = userChosen[userChosen.Count - 1].AttributeId;
+            int currentAttr = userChosen[0].AttributeId;
             Trojan.Models.Attribute tempAttr = new Models.Attribute();
             List<Connection> Connections = new List<Connection>();
             List<Matrix_Cell> tempRow = new List<Matrix_Cell>();
             List<Models.Virus_Item> V_Items = new List<Models.Virus_Item>();
             List<int> abstraction = new List<int>();
+            var nodeSet = new HashSet<int>();
             bool tempDirect = false;
-            int i = 0;
+
             while (currentAttr <= highestAttr)
             {
-                //Add to abstraction list
-                if (PropertiesList[i].CategoryName == "Abstraction")
+                nodeSet.Add(currentAttr);
+                if (currentAttr >= 6)
                 {
                     abstraction.Add(currentAttr);
                 }
-
-                //Create a new virus item, check if it was user chosen or not
-                if (Attribute_Check(PropertiesList, currentAttr))
-                {
-                    tempAttr = getAttribute(currentAttr);
-                    V_Items.Add(new Virus_Item(virusId, currentAttr, tempAttr, getCategoryFromAttr(currentAttr), true));
-                }
-                else
-                {
-                    tempAttr = getAttribute(currentAttr);
-                    V_Items.Add(new Virus_Item(virusId, currentAttr, tempAttr, getCategoryFromAttr(currentAttr), false));
-                }
-
-                tempRow = scanRowTrue(currentAttr, "null");
+                tempRow = scanRowTrue(currentAttr, null);
                 foreach (Matrix_Cell M in tempRow)
                 {
-                    tempDirect = false;
-                    if(M.submatrix == "R12"){
-                        tempDirect = true;
-                    }
+                    tempDirect = directConnectionForwards(M, currentAttr);
+                    //Only adds connections that are less than the highest 
+                    //Attribute number chosen by the user
                     if (M.ColumnId <= highestAttr)
                     {
                         Connections.Add(new Connection(currentAttr, M.ColumnId, tempDirect, virusId));
-
                     }
                 }
-
                 ++currentAttr;
-                ++i;
             }
-            foreach (int X in abstraction)
-            {
-                tempRow = scanRowTrue(X, "R23");
-
-            }
+            List<int> Properties = testRow(abstraction, "R23");
+            List<int> Locations = testRow(Properties, "R34");
+            List<int> Nodes = nodeSet.ToList().Concat(Locations).ToList().Concat(Properties).ToList();
+            Nodes.Sort();
+            displayResults(Nodes, Connections);
+            saveToDB(Nodes, Connections, virusId);
         }
 
         //Used when attributes chosen are a mix of all Categories
@@ -632,6 +636,8 @@ namespace Trojan
 
         }
 
+        //Receives a list of column numbers and determines which rows
+        //The columns have in common
         private List<int> testColumn(List<int> list, string subMatrix)
         {
             List<int> resultsInt = new List<int>();
@@ -658,6 +664,9 @@ namespace Trojan
             }
             return resultsInt;
         }
+
+        //Receives a list of row numbers and determines which columns
+        //The rows have in common
         private List<int> testRow(List<int> list, string subMatrix)
         {
             List<int> resultsInt = new List<int>();

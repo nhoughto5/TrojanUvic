@@ -272,7 +272,7 @@
             var propertiesCentX = 2 * locationCentX;
             var propertiesCentY = (lineHeight) + dropDown;
             var locationCentY = propertiesCentY;
-
+            var lowestID = 100, maxX = 0;
             //Create Node Data
             nodes = d3.range(numNodes+1).map(function () {
                 if (i == 0) {
@@ -314,6 +314,8 @@
                     X = m - (R / 2) + (i * d) - 100;
                     Y = lineHeight;
                 }
+                if (nod[i - 1].nodeID < lowestID) lowestID = nod[i - 1].nodeID;
+                if(X > maxX) maxX = X;
                 ++i;
                 return {
                     x: X,
@@ -327,6 +329,11 @@
                     name: nod[i - 2].nodeName
                 };
             });
+            for (var i = 0; i < numEdges; ++i) {
+                d3.select(element).append("h3").text("Node " + i + ": " + nodes[i].id);
+            }
+            lowestID = lowestID - 1;
+
 
             //Create Link Data
             var sources = []; var targets = [];
@@ -350,14 +357,17 @@
                 }
 
                 return {
-                    source: nodes[edges[i-1].source],
-                    target: nodes[edges[i-1].target],
+                    source: nodes[edges[i-1].source - lowestID],
+                    target: nodes[edges[i-1].target - lowestID],
                     direct: edges[i-1].direct,
                     left: false,
                     right: true,
                     under: under
                 }
-            });            
+            });
+            for (var i = 0; i < numEdges; ++i) {
+                d3.select(element).append("h3").text("Link " + i + ": " + edges[i].source);
+            }
             var propOuterRadius = (propertiesRadius + (radius * 2));
             var locationOuterRadius = (locationRadius + (radius * 2));
             //Add the paths between nodes to the page
@@ -379,7 +389,7 @@
             //var propertiesCircle = svg.append("circle").attr("class", "circle").attr("cx", propertiesCentX).attr("cy", propertiesCentY).attr("r", propOuterRadius);
             var propertiesPath = svg.append("svg:g").append("svg:path")
                                     .attr("class", "link").attr("d", function () {
-                                        var distance = 1.5 * propOuterRadius;
+                                        var distance = (1.5 * propOuterRadius) + Math.abs(propertiesCentX - maxX);
                                         var start = "M " + (nodes[numOnLine].x + radius) + ", " + nodes[numOnLine].y;
                                         var p1 = "L " + (nodes[numOnLine].x + distance) + ", " + nodes[numOnLine].y;
                                         var p2 = "L " + (nodes[numOnLine].x + distance) + ", " + (propertiesCentY);

@@ -3,7 +3,7 @@ using System.Data.Entity;
 
 namespace Trojan.Models
 {
-    public class DatabaseInit : DropCreateDatabaseIfModelChanges<TrojanContext>
+    public class DatabaseInit : DropCreateDatabaseAlways<TrojanContext>
     {
 
         protected override void Seed(TrojanContext context)
