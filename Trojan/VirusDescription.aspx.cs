@@ -565,6 +565,8 @@ namespace Trojan
                     }
                 }
                 List<int> Nodes = nodeSet.ToList().Concat(LocationIDs).ToList().Concat(propertyIDs).ToList();
+                Nodes = nodeFilter(Nodes, Connections);
+                Connections = connectionFilter(Nodes, Connections);
                 Nodes.Sort();
                 displayResults(Nodes, Connections);
                 saveToDB(Nodes, Connections, virusId);
@@ -602,6 +604,8 @@ namespace Trojan
                     }
                 }
                 List<int> Nodes = nodeSet.ToList().Concat(locations).ToList().Concat(properties).ToList();
+                Nodes = nodeFilter(Nodes, Connections);
+                Connections = connectionFilter(Nodes, Connections);
                 Nodes.Sort();
                 displayResults(Nodes, Connections);
                 saveToDB(Nodes, Connections, virusId);
@@ -646,6 +650,8 @@ namespace Trojan
             List<int> properties = testRowTrue(absSet.ToList(), "R23");
             List<int> locations = testRowTrue(properties, "R34");
             List<int> Nodes = nodeSet.ToList().Concat(locations).ToList().Concat(properties).ToList();
+            Nodes = nodeFilter(Nodes, Connections);
+            Connections = connectionFilter(Nodes, Connections);
             Nodes.Sort();
             displayResults(Nodes, Connections);
             saveToDB(Nodes, Connections, virusId);
@@ -679,6 +685,8 @@ namespace Trojan
                     }
                 }
                 List<int> Nodes = nodeSet.ToList().Concat(locations).ToList().Concat(properties).ToList();
+                Nodes = nodeFilter(Nodes, Connections);
+                Connections = connectionFilter(Nodes, Connections);
                 Nodes.Sort();
                 displayResults(Nodes, Connections);
                 saveToDB(Nodes, Connections, virusId);
@@ -903,6 +911,8 @@ namespace Trojan
                         return;
                     }
                     List<int> Nodes = insertSet.ToList().Concat(locations).ToList().Concat(properties).ToList().Concat(abstraction).ToList();
+                    Nodes = nodeFilter(Nodes, Connections);
+                    Connections = connectionFilter(Nodes, Connections);
                     Nodes.Sort();
                     displayResults(Nodes, Connections);
                     saveToDB(Nodes, Connections, virusId);
@@ -910,7 +920,33 @@ namespace Trojan
                 }
             }
         }
-
+        private List<Connection> connectionFilter(List<int> nodes, List<Connection> Connections)
+        {
+            List<Connection> filteredConnections = new List<Connection>();
+            foreach (Connection C in Connections)
+            {
+                if (nodes.Contains(C.source) && nodes.Contains(C.target))
+                {
+                    filteredConnections.Add(C);
+                }
+            }
+            return filteredConnections;
+        }
+        private List<int> nodeFilter(List<int> nodes, List<Connection> Connections)
+        {
+            var filteredNodes = new HashSet<int>();
+            foreach (int X in nodes)
+            {
+                foreach (Connection C in Connections)
+                {
+                    if (C.target == X || !((5 < X) && (X < 12)))
+                    {
+                        filteredNodes.Add(X);
+                    }
+                }
+            }
+            return filteredNodes.ToList();
+        }
         private void forwardPropagationWithProperties(List<Trojan.Models.Attribute> userChosen, string virusId)
         {
             List<int> properties = new List<int>();
@@ -1071,6 +1107,8 @@ namespace Trojan
                     return;
                 }
                 List<int> Nodes = insertSet.ToList().Concat(locations).ToList().Concat(properties).ToList().Concat(abstraction).ToList();
+                Nodes = nodeFilter(Nodes, Connections);
+                Connections = connectionFilter(Nodes, Connections);
                 Nodes.Sort();
                 displayResults(Nodes, Connections);
                 saveToDB(Nodes, Connections, virusId);
@@ -1159,6 +1197,8 @@ namespace Trojan
                 return;
             }
             List<int> Nodes = insertSet.ToList().Concat(locations).ToList().Concat(properties).ToList().Concat(abstraction).ToList();
+            Nodes = nodeFilter(Nodes, Connections);
+            Connections = connectionFilter(Nodes, Connections);
             Nodes.Sort();
             displayResults(Nodes, Connections);
             saveToDB(Nodes, Connections, virusId);
