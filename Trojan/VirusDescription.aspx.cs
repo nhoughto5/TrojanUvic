@@ -326,7 +326,7 @@ namespace Trojan
         {
             noneSelected();
             NoSelected.Visible = false;
-            notPossible.Visible = true;
+            startOverDiv.Visible = true;
             VirusDescriptionTitle.Visible = false;
             buttonTable.Visible = false;
             UpdateBtn.Visible = false;
@@ -390,15 +390,45 @@ namespace Trojan
                 
             }
             PropertiesList = Attribute_Sorting(PropertiesList);
-            //Contains only Properties
-            if ((categorySet.Contains("Properties")) && (!categorySet.Contains("Chip Life Cycle")) && (!categorySet.Contains("Abstraction")) && (!categorySet.Contains("Location")))
+            //#1 Used for IAPL: 0010
+            if (!categorySet.Contains("Chip Life Cycle") && !categorySet.Contains("Abstraction") && categorySet.Contains("Properties") && !categorySet.Contains("Location"))
             {
-                backPropagation(PropertiesList, virusId);
+                propertiesOnly(PropertiesList, virusId);
             }
-            //Contains Insertion or Abstraction but not Location of Properties
-            else if (((categorySet.Contains("Chip Life Cycle")) || (categorySet.Contains("Abstraction"))) && ((!categorySet.Contains("Location")) || (!categorySet.Contains("Properties"))))
+            //#2 Used for IAPL: 0100
+            else if (!categorySet.Contains("Chip Life Cycle") && categorySet.Contains("Abstraction") && !categorySet.Contains("Properties") && !categorySet.Contains("Location"))
+            {
+                abstractionOnly(PropertiesList, virusId);
+            }
+            //#3 Used for IAPL: 0001
+            else if (!categorySet.Contains("Chip Life Cycle") && !categorySet.Contains("Abstraction") && !categorySet.Contains("Properties") && categorySet.Contains("Location"))
+            {
+                locationOnly(PropertiesList, virusId);
+            }
+            //#4 Used for IAPL: 1000
+            else if (categorySet.Contains("Chip Life Cycle") && !categorySet.Contains("Abstraction") && !categorySet.Contains("Properties") && !categorySet.Contains("Location"))
+            {
+                insertionOnly(PropertiesList, virusId);
+            }
+            //#5 Used for IAPL: 0101 1100 1101 => ( B . C'. D ) + ( A . B . C')
+            else if ((categorySet.Contains("Abstraction") && !categorySet.Contains("Properties") && categorySet.Contains("Location")) || (categorySet.Contains("Chip Life Cycle") && categorySet.Contains("Abstraction") && !categorySet.Contains("Properties")))
             {
                 forwardPropagation(PropertiesList, virusId);
+            }
+            //# 7 Used for IAPL: 0011 0110 0111 1010 1011 1110 1111 => ( C . D ) + ( B . C ) + ( A . C )
+            else if ((categorySet.Contains("Properties") && categorySet.Contains("Location")) || (categorySet.Contains("Abstraction") && categorySet.Contains("Properties")) || (categorySet.Contains("Chip Life Cycle") && categorySet.Contains("Properties")))
+            {
+                backPropagationWithAllFour(PropertiesList, virusId);
+            }
+            //#9 Used for IAPL: 1001 => ( A . B'. C'. D )
+            else if (categorySet.Contains("Chip Life Cycle") && !categorySet.Contains("Abstraction") && !categorySet.Contains("Properties") && categorySet.Contains("Location"))
+            {
+                splitPropagation(PropertiesList, virusId);
+            }
+            //#X Used for IAPL: 0000
+            else
+            {
+                selectionNotPossible();
             }
         }
         protected void BuildRowBtn_Click(object sender, EventArgs e)
@@ -431,7 +461,7 @@ namespace Trojan
                             userSubmitted.Add(currentBuild[i].AttributeId);
                         }
                     }
-                    resultsInt = testRow(userSubmitted, null);
+                    resultsInt = testRowTrue(userSubmitted, null);
                     foreach (int X in resultsInt)
                     {
                         results.Add(getAttribute(X));
@@ -483,7 +513,7 @@ namespace Trojan
                             userSubmitted.Add(currentBuild[i].AttributeId);
                         }
                     }
-                    resultsInt = testColumn(userSubmitted, null);
+                    resultsInt = testColumnTrue(userSubmitted, null);
                     foreach (int X in resultsInt)
                     {
                         results.Add(getAttribute(X));
@@ -509,11 +539,11 @@ namespace Trojan
             return SortedList;
         }
 
-        private void backPropagation(List<Trojan.Models.Attribute> PropertiesList, string virusId)
+        private void propertiesOnly(List<Trojan.Models.Attribute> PropertiesList, string virusId)
         {
             List<int> propertyIDs = attrToInt(PropertiesList);
-            List<int> LocationIDs = testRow(propertyIDs, "R34");
-            List<int> abstractionResults = testColumn(propertyIDs, "R23");
+            List<int> LocationIDs = testRowTrue(propertyIDs, "R34");
+            List<int> abstractionResults = testColumnTrue(propertyIDs, "R23");
             if (abstractionResults.Count == 0) selectionNotPossible();
             else
             {
@@ -542,6 +572,119 @@ namespace Trojan
             
         }
 
+        private void abstractionOnly(List<Trojan.Models.Attribute> userChosen, string virusId)
+        {
+            List<int> abstraction = attrToInt(userChosen);
+            List<int> properties = testRowTrue(abstraction, "R23");
+            List<int> locations = testRowTrue(properties, "R34");
+            if ((abstraction.Count == 0) || (properties.Count == 0) || (locations.Count == 0))
+            {
+                selectionNotPossible();
+                return;
+            }
+            else
+            {
+                List<Connection> Connections = new List<Connection>();
+                List<Matrix_Cell> tempCol = new List<Matrix_Cell>();
+                var nodeSet = new HashSet<int>();
+                bool tempDirect = false;
+                int maxAbstraction = abstraction.Max();
+
+                //Adds nodes in Abstraction and Insertion Category
+                for (int i = maxAbstraction; i > 0; --i)
+                {
+                    tempCol = scanColumnTrue(i, null);
+                    nodeSet.Add(i);
+                    foreach (Matrix_Cell X in tempCol)
+                    {
+                        tempDirect = directConnectionBackwards(X, i);
+                        Connections.Add(new Connection(X.RowId, i, tempDirect, virusId));
+                    }
+                }
+                List<int> Nodes = nodeSet.ToList().Concat(locations).ToList().Concat(properties).ToList();
+                Nodes.Sort();
+                displayResults(Nodes, Connections);
+                saveToDB(Nodes, Connections, virusId);
+            }
+        }
+        private void insertionOnly(List<Trojan.Models.Attribute> userChosen, string virusId)
+        {
+            List<int> insertion = attrToInt(userChosen);
+            var currentAttr = insertion.Min();
+            List<Matrix_Cell> tempRow = new List<Matrix_Cell>();
+            var nodeSet = new HashSet<int>();
+            var absSet = new HashSet<int>();
+            List<Connection> Connections = new List<Connection>();
+
+            //Scan through insertion attributes
+            for (int i = currentAttr; i < 6; ++i)
+            {
+                tempRow = scanRowTrue(i, null);
+                nodeSet.Add(i);
+                foreach (Matrix_Cell M in tempRow)
+                {
+                    
+                    if (M.submatrix == "R12")
+                    {
+                        absSet.Add(M.ColumnId);
+                    }
+                    Connections.Add(new Connection(i, M.ColumnId, directConnectionForwards(M, i), virusId));
+                }
+            }
+            int highestAbs = absSet.Max();
+
+            //Scan through abstraction attributes
+            for (int i = 6; i <= highestAbs; ++i)
+            {
+                nodeSet.Add(i); absSet.Add(i);
+                tempRow = scanRowTrue(i, "R2");
+                foreach (Matrix_Cell M in tempRow)
+                {
+                    Connections.Add(new Connection(i, M.ColumnId, directConnectionForwards(M, i), virusId));
+                }
+            }
+            List<int> properties = testRowTrue(absSet.ToList(), "R23");
+            List<int> locations = testRowTrue(properties, "R34");
+            List<int> Nodes = nodeSet.ToList().Concat(locations).ToList().Concat(properties).ToList();
+            Nodes.Sort();
+            displayResults(Nodes, Connections);
+            saveToDB(Nodes, Connections, virusId);
+        }
+        private void locationOnly(List<Trojan.Models.Attribute> userChosen, string virusId)
+        {
+            List<int> locations = attrToInt(userChosen);
+            List<int> properties = testColumnTrue(locations, "R34");
+            List<int> abstraction = testColumnTrue(properties, "R23");
+            if((locations.Count == 0)||(properties.Count == 0)||(abstraction.Count == 0)){
+                selectionNotPossible();
+                return;
+            }
+            else
+            {
+                List<Connection> Connections = new List<Connection>();
+                List<Matrix_Cell> tempCol = new List<Matrix_Cell>();
+                var nodeSet = new HashSet<int>();
+                bool tempDirect = false;
+                int maxAbstraction = abstraction.Max();
+
+                //Adds nodes in Abstraction and Insertion Category
+                for (int i = maxAbstraction; i > 0; --i)
+                {
+                    tempCol = scanColumnTrue(i, null);
+                    nodeSet.Add(i);
+                    foreach (Matrix_Cell X in tempCol)
+                    {
+                        tempDirect = directConnectionBackwards(X, i);
+                        Connections.Add(new Connection(X.RowId, i, tempDirect, virusId));
+                    }
+                }
+                List<int> Nodes = nodeSet.ToList().Concat(locations).ToList().Concat(properties).ToList();
+                Nodes.Sort();
+                displayResults(Nodes, Connections);
+                saveToDB(Nodes, Connections, virusId);
+            }
+
+        }
         private void saveToDB(List<int> NodeInt, List<Connection> Edges, string virusId)
         {
             List<int> currentList = new List<int>();
@@ -588,19 +731,208 @@ namespace Trojan
             if (Math.Abs(i - X.ColumnId) == 1) return false;
             else return true;
         }
-
-        //Used when attributes chosen are all 'Insertion' or 'Abstraction'
-        private void forwardPropagation(List<Trojan.Models.Attribute> userChosen, string virusId)
+        private bool directConnectionForwards(int X, int i)
         {
-            int highestAttr = userChosen[userChosen.Count - 1].AttributeId;
-            int currentAttr = userChosen[0].AttributeId;
-            Trojan.Models.Attribute tempAttr = new Models.Attribute();
-            List<Connection> Connections = new List<Connection>();
-            List<Matrix_Cell> tempRow = new List<Matrix_Cell>();
-            List<Models.Virus_Item> V_Items = new List<Models.Virus_Item>();
+            if (Math.Abs(i - X) == 1) return false;
+            else return true;
+        }
+
+        private void backPropagationWithPropertiesLocationAbstraction(List<Trojan.Models.Attribute> userChosen, string virusId)
+        {
+            List<int> properties = new List<int>();
+            List<int> locations = new List<int>();
             List<int> abstraction = new List<int>();
+            foreach (Trojan.Models.Attribute A in userChosen)
+            {
+                if (A.CategoryName == "Properties")
+                {
+                    properties.Add(A.AttributeId);
+                }
+                else if (A.CategoryName == "Abstraction")
+                {
+                    abstraction.Add(A.AttributeId);
+                }
+                else
+                {
+                    locations.Add(A.AttributeId);
+                }
+            }
+            List<int> scannedLocations = testRowTrue(properties, "R34");
+            List<int> scannedAbstraction = testColumnTrue(properties, "R23");
+            if(abstraction.Count == 0){
+                abstraction = scannedAbstraction;
+            }
+            if (!scannedAttributesCheck(scannedLocations, locations) || !scannedAttributesCheck(scannedAbstraction, abstraction))
+            {
+                selectionNotPossible();
+                return;
+            }
+            else
+            {
+                List<Connection> Connections = new List<Connection>();
+                List<Matrix_Cell> tempCol = new List<Matrix_Cell>();
+                var nodeSet = new HashSet<int>();
+                bool tempDirect = false;
+                int maxAbstraction = abstraction.Max();
+
+                //Adds nodes in Abstraction and Insertion Category
+                for (int i = maxAbstraction; i > 0; --i)
+                {
+                    tempCol = scanColumnTrue(i, null);
+                    nodeSet.Add(i);
+                    foreach (Matrix_Cell X in tempCol)
+                    {
+                        tempDirect = directConnectionBackwards(X, i);
+                        Connections.Add(new Connection(X.RowId, i, tempDirect, virusId));
+                    }
+                }
+                List<int> Nodes = nodeSet.ToList().Concat(scannedLocations).ToList().Concat(properties).ToList();
+                Nodes.Sort();
+                displayResults(Nodes, Connections);
+                saveToDB(Nodes, Connections, virusId);
+            }
+
+        }
+
+        private void backPropagationWithAllFour(List<Trojan.Models.Attribute> userChosen, string virusId)
+        {
+            List<int> properties = new List<int>();
+            List<int> locations = new List<int>();
+            List<int> insert = new List<int>();
+            List<int> abstraction = new List<int>();
+
+            foreach (Trojan.Models.Attribute A in userChosen)
+            {
+                if (A.CategoryName == "Properties")
+                {
+                    properties.Add(A.AttributeId);
+                }
+                else if (A.CategoryName == "Location")
+                {
+                    locations.Add(A.AttributeId);
+                }
+                else if (A.CategoryName == "Abstraction")
+                {
+                    abstraction.Add(A.AttributeId);
+                }
+                else
+                {
+                    insert.Add(A.AttributeId);
+                }
+            }
+            List<int> scannedAbstraction = testColumnTrue(properties, "R23");
+            if (abstraction.Count == 0)
+            {
+                abstraction = scannedAbstraction;
+            }
+            if (!scannedAttributesCheck(scannedAbstraction, abstraction))
+            {
+                selectionNotPossible();
+                return;
+            }
+            else
+            {
+                List<int> scannedLocation = testRowTrue(properties, "R34");
+                if (locations.Count == 0)
+                {
+                    locations = scannedLocation;
+                }
+                if (!scannedAttributesCheck(scannedLocation, locations))
+                {
+                    selectionNotPossible();
+                    return;
+                }
+                else
+                {
+                    var insertSet = new HashSet<int>();
+                    List<Connection> Connections = new List<Connection>();
+                    List<Matrix_Cell> testCol = new List<Matrix_Cell>();
+
+                    //Find Nodes
+                    foreach (int X in abstraction)
+                    {
+                        testCol = scanColumnTrue(X, null);
+                        foreach (Matrix_Cell M in testCol)
+                        {
+                            if (M.RowId <= 5)
+                            {
+                                insertSet.Add(M.RowId);
+                            }
+                        }
+                    }
+                    testCol.Clear();
+                    foreach (int X in insert)
+                    {
+                        if (!insertSet.Contains(X))
+                        {
+                            selectionNotPossible();
+                            return;
+                        }
+                        else
+                        {
+                            insertSet.Add(X);
+                        }
+                    }
+                    //Make Connections
+                    List<Matrix_Cell> testRow = new List<Matrix_Cell>();
+                    foreach (int X in insertSet)
+                    {
+                        testRow = scanRowTrue(X, null);
+                        foreach (Matrix_Cell M in testRow)
+                        {
+                            if (insertSet.Contains(M.ColumnId) || abstraction.Contains(M.ColumnId))
+                            {
+                                Connections.Add(new Connection(X, M.ColumnId, directConnectionForwards(M, X), virusId));
+                            }
+                        }
+                    }
+                    foreach (int X in abstraction)
+                    {
+                        testRow = scanRowTrue(X, "R2");
+                        foreach (Matrix_Cell M in testRow)
+                        {
+                            if (abstraction.Contains(M.ColumnId))
+                            {
+                                Connections.Add(new Connection(X, M.ColumnId, directConnectionForwards(M, X), virusId));
+                            }
+                        }
+                    }
+                    if (Connections.Count == 0)
+                    {
+                        selectionNotPossible();
+                        return;
+                    }
+                    List<int> Nodes = insertSet.ToList().Concat(locations).ToList().Concat(properties).ToList().Concat(abstraction).ToList();
+                    Nodes.Sort();
+                    displayResults(Nodes, Connections);
+                    saveToDB(Nodes, Connections, virusId);
+                    return;
+                }
+            }
+        }
+
+        private void forwardPropagationWithProperties(List<Trojan.Models.Attribute> userChosen, string virusId)
+        {
+            List<int> properties = new List<int>();
+            List<int> insertAbs = new List<int>();
+            foreach (Trojan.Models.Attribute A in userChosen)
+            {
+                if (A.CategoryName == "Properties")
+                {
+                    properties.Add(A.AttributeId);
+                }
+                else
+                {
+                    insertAbs.Add(A.AttributeId);
+                }
+            }
+            int currentAttr = insertAbs.Min();
+            int highestAttr = insertAbs.Max();
             var nodeSet = new HashSet<int>();
+            List<int> abstraction = new List<int>();
+            List<Matrix_Cell> tempRow = new List<Matrix_Cell>();
             bool tempDirect = false;
+            List<Connection> Connections = new List<Connection>();
 
             while (currentAttr <= highestAttr)
             {
@@ -622,23 +954,219 @@ namespace Trojan
                 }
                 ++currentAttr;
             }
-            List<int> Properties = testRow(abstraction, "R23");
-            List<int> Locations = testRow(Properties, "R34");
-            List<int> Nodes = nodeSet.ToList().Concat(Locations).ToList().Concat(Properties).ToList();
+
+            List<int> scannedProperties = testRowTrue(abstraction, "R23");
+            if (!scannedAttributesCheck(scannedProperties, properties))
+            {
+                selectionNotPossible();
+                return;
+            }
+            List<int> Locations = testRowTrue(scannedProperties, "R34");
+            List<int> Nodes = nodeSet.ToList().Concat(Locations).ToList().Concat(scannedProperties).ToList();
             Nodes.Sort();
             displayResults(Nodes, Connections);
             saveToDB(Nodes, Connections, virusId);
         }
 
-        //Used when attributes chosen are a mix of all Categories
-        private void mixedPropagation()
+        //Checks to see if each of the ints in 'properties' is contained in
+        //the list 'scannedProperties', if not. Returns false;
+        private bool scannedAttributesCheck(List<int> scannedProperties, List<int> properties)
         {
-
+            foreach (int X in properties)
+            {
+                if (!scannedProperties.Contains(X)) return false;
+            }
+            return true;
         }
+        private void forwardPropagation(List<Trojan.Models.Attribute> userChosen, string virusId)
+        {
+            List<int> locations = new List<int>();
+            List<int> insert = new List<int>();
+            List<int> abstraction = new List<int>();
 
+            foreach (Trojan.Models.Attribute A in userChosen)
+            {
+                if (A.CategoryName == "Location")
+                {
+                    locations.Add(A.AttributeId);
+                }
+                else if (A.CategoryName == "Abstraction")
+                {
+                    abstraction.Add(A.AttributeId);
+                }
+                else
+                {
+                    insert.Add(A.AttributeId);
+                }
+            }
+            List<int> properties = testRowTrue(abstraction, "R23");
+            List<int> scannedLocations = testRowTrue(properties, "R34");
+            if (locations.Count == 0)
+            {
+                locations = scannedLocations;
+            }
+            if (!scannedAttributesCheck(scannedLocations, locations))
+            {
+                selectionNotPossible();
+                return;
+            }
+            else
+            {
+                var insertSet = new HashSet<int>();
+                List<Connection> Connections = new List<Connection>();
+                List<Matrix_Cell> testCol = new List<Matrix_Cell>();
+
+                //Find Nodes
+                foreach (int X in abstraction)
+                {
+                    testCol = scanColumnTrue(X, null);
+                    foreach (Matrix_Cell M in testCol)
+                    {
+                        if (M.RowId <= 5)
+                        {
+                            insertSet.Add(M.RowId);
+                        }
+                    }
+                }
+                testCol.Clear();
+                foreach (int X in insert)
+                {
+                    if (!insertSet.Contains(X))
+                    {
+                        selectionNotPossible();
+                        return;
+                    }
+                    else
+                    {
+                        insertSet.Add(X);
+                    }
+                }
+                //Make Connections
+                List<Matrix_Cell> testRow = new List<Matrix_Cell>();
+                foreach (int X in insertSet)
+                {
+                    testRow = scanRowTrue(X, null);
+                    foreach (Matrix_Cell M in testRow)
+                    {
+                        if (insertSet.Contains(M.ColumnId) || abstraction.Contains(M.ColumnId))
+                        {
+                            Connections.Add(new Connection(X, M.ColumnId, directConnectionForwards(M, X), virusId));
+                        }
+                    }
+                }
+                foreach (int X in abstraction)
+                {
+                    testRow = scanRowTrue(X, "R2");
+                    foreach (Matrix_Cell M in testRow)
+                    {
+                        if (abstraction.Contains(M.ColumnId))
+                        {
+                            Connections.Add(new Connection(X, M.ColumnId, directConnectionForwards(M, X), virusId));
+                        }
+                    }
+                }
+                if (Connections.Count == 0)
+                {
+                    selectionNotPossible();
+                    return;
+                }
+                List<int> Nodes = insertSet.ToList().Concat(locations).ToList().Concat(properties).ToList().Concat(abstraction).ToList();
+                Nodes.Sort();
+                displayResults(Nodes, Connections);
+                saveToDB(Nodes, Connections, virusId);
+                return;
+            }
+        }
+        private void splitPropagation(List<Trojan.Models.Attribute> userChosen, string virusId)
+        {
+            List<int> locations = new List<int>();
+            List<int> insert = new List<int>();
+            
+            foreach (Trojan.Models.Attribute A in userChosen)
+            {
+                if (A.CategoryName == "Location")
+                {
+                    locations.Add(A.AttributeId);
+                }
+                else
+                {
+                    insert.Add(A.AttributeId);
+                }
+            }
+            List<int> properties = testColumnTrue(locations, "R34");
+            List<int> abstraction = testColumnTrue(properties, "R23");
+            if (abstraction.Count == 0 || properties.Count == 0)
+            {
+                selectionNotPossible();
+                return;
+            }
+            var insertSet = new HashSet<int>();
+            List<Connection> Connections = new List<Connection>();
+            List<Matrix_Cell> testCol = new List<Matrix_Cell>();
+
+            //Find Nodes
+            foreach (int X in abstraction)
+            {
+                testCol = scanColumnTrue(X, null);
+                foreach (Matrix_Cell M in testCol)
+                {
+                    if (M.RowId <= 5)
+                    {
+                        insertSet.Add(M.RowId);
+                    }
+                }
+            }
+            foreach (int X in insert)
+            {
+                if (!insertSet.Contains(X))
+                {
+                    selectionNotPossible();
+                    return;
+                }
+                else
+                {
+                    insertSet.Add(X);
+                }
+            }
+            testCol.Clear();
+            //Make Connections
+            List<Matrix_Cell> testRow = new List<Matrix_Cell>();
+            foreach (int X in insertSet)
+            {
+                testRow = scanRowTrue(X, null);
+                foreach (Matrix_Cell M in testRow)
+                {
+                    if (insertSet.Contains(M.ColumnId) || abstraction.Contains(M.ColumnId))
+                    {
+                        Connections.Add(new Connection(X, M.ColumnId, directConnectionForwards(M, X), virusId));
+                    }
+                }
+            }
+            foreach (int X in abstraction)
+            {
+                testRow = scanRowTrue(X, "R2");
+                foreach (Matrix_Cell M in testRow)
+                {
+                    if (abstraction.Contains(M.ColumnId))
+                    {
+                        Connections.Add(new Connection(X, M.ColumnId, directConnectionForwards(M, X), virusId));
+                    }
+                }
+            }
+            if (Connections.Count == 0)
+            {
+                selectionNotPossible();
+                return;
+            }
+            List<int> Nodes = insertSet.ToList().Concat(locations).ToList().Concat(properties).ToList().Concat(abstraction).ToList();
+            Nodes.Sort();
+            displayResults(Nodes, Connections);
+            saveToDB(Nodes, Connections, virusId);
+            return;
+        }
         //Receives a list of column numbers and determines which rows
-        //The columns have in common
-        private List<int> testColumn(List<int> list, string subMatrix)
+        //The columns have true value in common
+        private List<int> testColumnTrue(List<int> list, string subMatrix)
         {
             List<int> resultsInt = new List<int>();
             List<Matrix_Cell> colTrue = new List<Matrix_Cell>();
@@ -664,10 +1192,37 @@ namespace Trojan
             }
             return resultsInt;
         }
-
+        //Receives a list of column numbers and determines which rows
+        //The columns have false vaue in common
+        private List<int> testColumnFalse(List<int> list, string subMatrix)
+        {
+            List<int> resultsInt = new List<int>();
+            List<Matrix_Cell> colTrue = new List<Matrix_Cell>();
+            var removedSet = new HashSet<int>();
+            foreach (int X in list)
+            {
+                colTrue = getColumn(X, subMatrix);
+                foreach (Matrix_Cell A in colTrue)
+                {
+                    if (A.value == true)
+                    {
+                        removedSet.Add(A.RowId);
+                        if (resultsInt.Contains(A.RowId))
+                        {
+                            resultsInt.Remove(A.RowId);
+                        }
+                    }
+                    if ((A.value == false) && (!removedSet.Contains(A.RowId)) && (!resultsInt.Contains(A.RowId)))
+                    {
+                        resultsInt.Add(A.RowId);
+                    }
+                }
+            }
+            return resultsInt;
+        }
         //Receives a list of row numbers and determines which columns
-        //The rows have in common
-        private List<int> testRow(List<int> list, string subMatrix)
+        //The rows have value true in common
+        private List<int> testRowTrue(List<int> list, string subMatrix)
         {
             List<int> resultsInt = new List<int>();
             List<Matrix_Cell> rowTrue = new List<Matrix_Cell>();
@@ -693,13 +1248,41 @@ namespace Trojan
             }
             return resultsInt;
         }
+        //Receives a list of row numbers and determines which columns
+        //The rows have value false in common
+        private List<int> testRowFalse(List<int> list, string subMatrix)
+        {
+            List<int> resultsInt = new List<int>();
+            List<Matrix_Cell> rowTrue = new List<Matrix_Cell>();
+            var removedSet = new HashSet<int>();
+            foreach (int X in list)
+            {
+                rowTrue = getRow(X, subMatrix);
+                foreach (Matrix_Cell A in rowTrue)
+                {
+                    if (A.value == true)
+                    {
+                        removedSet.Add(A.ColumnId);
+                        if (resultsInt.Contains(A.ColumnId))
+                        {
+                            resultsInt.Remove(A.ColumnId);
+                        }
+                    }
+                    if ((A.value == false) && (!removedSet.Contains(A.ColumnId)) && (!resultsInt.Contains(A.ColumnId)))
+                    {
+                        resultsInt.Add(A.ColumnId);
+                    }
+                }
+            }
+            return resultsInt;
+        }
         
         private void displayResults(List<int> NodeInt, List<Connection> Edges){
             List<Models.Attribute> Nodes = intToAttr(NodeInt);
             if ((Nodes.Count == 0) || (Edges.Count == 0))
             {
                 notes.Visible = true;
-                notPossible.Visible = true;
+                startOverDiv.Visible = true;
             }
             else
             {
@@ -812,13 +1395,27 @@ namespace Trojan
             ConnectionsGrid.Visible = false;
             LocationGrid.Visible = Locationlbl.Visible = false;
             nodesDiv.Visible = nodesGrid.Visible = false;
-            notes.Visible = abstractionEmpty.Visible = notPossible.Visible = notBuilt.Visible = false;
+            notes.Visible = abstractionEmpty.Visible = startOverDiv.Visible = notBuilt.Visible = false;
             jumboWrap.Visible = false;
+        }
+        private void showVisButtons()
+        {
+            UpdateBtn.Visible = false;
+            BuildCombo.Visible = false;
+            BuildRow.Visible = false;
+            BuildCol.Visible = false;
+            VisualizeBtn.Visible = false;
+            ClearBtn.Visible = false;
+            buttonTable.Visible = false;
+            startOverDiv.Visible = true;
+            startOverBtn.Visible = true;
+            noResult.Visible = false;
         }
         protected void VisualizeBtn_Click(object sender, EventArgs e)
         {
             string virusId;
             hideResults();
+            showVisButtons();
             jumboWrap.Visible = true;
             List<Connection> Connections = new List<Connection>();
             List<Models.Virus_Item> V_Items = new List<Models.Virus_Item>();

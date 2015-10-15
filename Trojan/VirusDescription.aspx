@@ -87,9 +87,11 @@
         </strong>
     </div>
     <br />
-    <div id="notPossible" runat="server" align="center" class="Content">
-        <h4>** This Combination Has No Result **</h4>
-        <br />
+    <div id="startOverDiv" runat="server" align="center" class="Content">
+        <div id ="noResult" runat="server" align="center" class="Content">
+            <h4>** This Combination Has No Result **</h4>
+            <br />
+        </div>
         <asp:Button ID="startOverBtn" class="btn btn-primary" runat="server" Text="Start Over" OnClick="ClearBtn_Click" />
     </div>
     <br />
@@ -186,8 +188,6 @@
         </Columns>
     </asp:GridView>
     <div>&nbsp</div>
-    <div>&nbsp</div>
-    <div>&nbsp</div>
     
     <div id="notes" runat="server" class="Content"><h2>**Notes**</h2></div>
     <div id="canNot" runat="server" class="Content"><h4>Select attributes to build a virus</h4></div>
@@ -215,14 +215,13 @@
         var nodes = null, links = null;
         var nodesArray = null, linkArray = null;
         var circleGroup = null; var radius = 12;
-        var markerWidth = 6,
-        markerHeight = 4,
+        var markerWidth = 6, markerHeight = 4,
         refX = radius + (markerWidth) + 1,
         refY = 0;
-        var step = 35;
+        var step = 35, numberOfNodes = 0;
 
         function initVis (element, numNodes, numEdges) {
-            
+            numberOfNodes = numNodes;
             svg.selectAll('*').remove();
 
             svg.append('svg:defs').append('svg:marker')
@@ -355,15 +354,30 @@
                         under = !under;
                     }
                 }
-
-                return {
-                    source: nodes[edges[i-1].source - lowestID],
-                    target: nodes[edges[i-1].target - lowestID],
-                    direct: edges[i-1].direct,
-                    left: false,
-                    right: true,
-                    under: under
+                console.log("Link " + (i - 1) + ": " + edges[i - 1].source + "  =>  " + edges[i - 1].target);
+                console.log("Link " + getNode(edges[i - 1].source).id + " " + getNode(edges[i - 1].target).id)
+                if ((getNode(edges[i - 1].source).Category == "Properties") || (getNode(edges[i - 1].target).Category == "Properties")) {
+                    
+                    return {
+                        source: 0,
+                        target: 0,
+                        direct: false,
+                        left: false,
+                        right: true,
+                        under: under
+                    }
                 }
+                else {
+                    return {
+                        source: getNode(edges[i - 1].source),
+                        target: getNode(edges[i - 1].target),
+                        direct: edges[i - 1].direct,
+                        left: false,
+                        right: true,
+                        under: under
+                    }
+                }
+                
             });
             //for (var i = 0; i < numEdges; ++i) {
             //    d3.select(element).append("h3").text("Link " + i + ": " + edges[i].source);
@@ -371,7 +385,7 @@
             var propOuterRadius = (propertiesRadius + (radius * 2));
             var locationOuterRadius = (locationRadius + (radius * 2));
             //Add the paths between nodes to the page
-            var path = svg.append("svg:g").selectAll("path").data(links).enter().append("svg:path").attr("class", "link").attr("d", function (d) { return linkPath(d) }).attr('marker-end', 'url(#arrow)');
+            var path = svg.append("svg:g").selectAll("path").data(links).enter().append("svg:path").attr("class", "link").attr("d", function (d) { return linkPath(d) }).attr('marker-end', 'url(#arrow)').append("svg:title").text(function (d) { return pathTitle(d);});
             var propertiesCircle = svg.append("circle").attr("class", "circle").attr("cx", propertiesCentX).attr("cy", propertiesCentY).attr("r", propOuterRadius);
             var locationCircle = svg.append("circle").attr("class", "circle").attr("cx", locationCentX).attr("cy", locationCentY).attr("r", locationOuterRadius);
             //Add Nodes to page
@@ -397,7 +411,7 @@
                                         var str = start + p1 + p2 + end;
                                         //console.log("Properties String: " + str);
                                         return str;
-                                    }).attr('marker-end', 'url(#arrow2)');
+                                    }).attr('marker-end', 'url(#arrow2)').append("svg:title").text("Source: Abstraction \nTarget: Properties");
 
             //Add highlight circle for Location category
             
@@ -405,7 +419,7 @@
                 var start = "M " + (propertiesCentX - propOuterRadius) + "," + locationCentY;
                 var end = "L " + (locationCentX + locationOuterRadius) + "," + locationCentY
                 return (start + end);
-            }).attr('marker-end', 'url(#arrow2)');
+            }).attr('marker-end', 'url(#arrow2)').append("svg:title").text("Source: Properties \nTarget: Locations");
             
 
         }
@@ -424,10 +438,21 @@
             var str = "Attribute: " + d.name + "\n" + "Category: " + d.Category + "\n"+ "F_in: " + d.Fin + "\n" + "F_out: " + d.Fout;
             return str;
         }
-        
+        function pathTitle(d){
+            var str = "Source: " + d.source.id + "\nTarget: " + d.target.id + "\nDirect: " + d.direct;
+            return str;
+        }
         var direction = 1;
         var numOfUps = 1; var numOfDowns = 1;
         var linksThatGoUnder = false;
+
+        function getNode(d) {
+            for (var i = 0; i < numberOfNodes; ++i) {
+                if (d == nodes[i].id) {
+                    return nodes[i];
+                }
+            }
+        }
 
         //Generate the string required to direct paths
         function linkPath(d) {

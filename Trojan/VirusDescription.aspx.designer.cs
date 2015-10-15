@@ -103,13 +103,22 @@ namespace Trojan {
         protected global::System.Web.UI.WebControls.Label lblTotalF_out;
         
         /// <summary>
-        /// notPossible control.
+        /// startOverDiv control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl notPossible;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl startOverDiv;
+        
+        /// <summary>
+        /// noResult control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl noResult;
         
         /// <summary>
         /// startOverBtn control.
