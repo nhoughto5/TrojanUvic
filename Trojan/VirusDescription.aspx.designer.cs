@@ -184,15 +184,6 @@ namespace Trojan {
         protected global::System.Web.UI.WebControls.Button ClearBtn;
         
         /// <summary>
-        /// VisualizeBtn control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button VisualizeBtn;
-        
-        /// <summary>
         /// abstractionResults control.
         /// </summary>
         /// <remarks>
@@ -400,6 +391,15 @@ namespace Trojan {
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl abstractionNone;
         
         /// <summary>
+        /// visualRepLbl control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl visualRepLbl;
+        
+        /// <summary>
         /// jumboWrap control.
         /// </summary>
         /// <remarks>
@@ -407,5 +407,32 @@ namespace Trojan {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl jumboWrap;
+        
+        /// <summary>
+        /// chkBxDiv control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl chkBxDiv;
+        
+        /// <summary>
+        /// attrDropDownList control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList attrDropDownList;
+        
+        /// <summary>
+        /// Button1 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button Button1;
     }
 }

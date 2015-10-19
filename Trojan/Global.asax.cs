@@ -7,6 +7,7 @@ using System.Web.Routing;
 using System.Web.Security;
 using System.Web.SessionState;
 using System.Data.Entity;
+using System.Web.Http;
 using Trojan.Models;
 namespace Trojan
 {
@@ -18,6 +19,7 @@ namespace Trojan
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
             Database.SetInitializer(new DatabaseInit());
+            RouteTable.Routes.MapHttpRoute("DescriptionAPI", "api/{controller}/{id}");
         }
     }
 }

@@ -93,4 +93,12 @@ input[type="select"] {
   width: 40%;
   float: right;
 }
+.chkBoxList tr
+{
+   height:24px;
+}
 
+.chkBoxList td
+{
+   width:120px; /* or percent value: 25% */
+}

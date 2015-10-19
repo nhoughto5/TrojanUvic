@@ -71,7 +71,11 @@
                 <div class="modal-body" style="overflow:auto">
                     <div class="row-fluid">
                         <div id="addressSamer" style="float:left; width:60%">
-                            <p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo.</p>
+                            <p>Samer Moein received his B.Sc. and M.Sc. in computer engineering from Kuwait University,
+                                Kuwait. In 2013 he received a fellowship at the University of Victoria
+                                and began his PhD in the Department of
+                                Electrical and Computer Engineering. His research interests include hardware
+                                security, encryption algorithms and encryption processors.</p>
                         </div>
                         <img id="samerImage" src="Images/smerimg.jpg" style="float:right; width:30%; height:30%"/>
                     </div>

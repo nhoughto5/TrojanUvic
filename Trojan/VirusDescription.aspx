@@ -39,6 +39,7 @@
 
     </style>
     <link rel="stylesheet" type="text/css" href="Content/visualizer.css" />
+    <link rel="stylesheet" type="text/css" href="Content/Site.css" />
     <div id="VirusDescriptionTitle" runat="server" class="ContentHead"><h1>Virus Description</h1></div>
     <div id="NoSelected" align="center" runat="server" class="ContentHead"><h1>&nbsp&nbsp</h1><h3>** No Attributes Selected **</h3></div>
     <asp:GridView ID="DescriptionList" runat="server" AutoGenerateColumns="False" ShowFooter="True" GridLines="Vertical" CellPadding="4"
@@ -112,9 +113,9 @@
         <td>
             <asp:Button ID="ClearBtn" class="btn btn-danger" runat="server" Text="Clear" OnClick="ClearBtn_Click" />
         </td>
-        <td>
+        <%--<td>
             <asp:Button ID="VisualizeBtn" class="btn btn-danger" runat="server" Text="Visualize" OnClick="VisualizeBtn_Click" />
-        </td>
+        </td>--%>
     </tr>
     </table>
     
@@ -196,16 +197,28 @@
     <div id="directNone" runat="server" class="Content"><h4>No Direct Connections to Insertion</h4></div>
     <div id="indirectNone" runat="server" class="Content"><h4>No Indirect Connections to Insertion</h4></div>
     <div id="abstractionNone" runat="server" class="Content"><h4>No Results for Abstraction Category</h4></div>
-    
-    <div>&nbsp</div>
-    <div id="jumboWrap" runat="server">
-        <div id="visJumboContainer" class="jumbotron">
-            <div id="visrep" style="text-align:center"></div>
+
+    <div id="visualRepLbl" runat="server">
+        <h2>Visual Representation</h2>
+    </div>
+    <div id="jumboWrap" runat="server" class="jumbotron">
+        <div id="visJumboContainer" style="text-align:center" >
+            
+            <div id="visrep" ></div>
+        </div>
+        <br />
+        <br />
+        <div id="chkBxDiv" runat="server" class="panel panel-primary" style="width:960px; margin-left:auto; margin-right:auto;">
+            <div class="panel-heading" style="font-weight:bold;">Attribute Removal</div>
+            <div class="panel-body" style="text-align:center">
+                <asp:DropDownList ID="attrDropDownList" runat="server"></asp:DropDownList>
+                <asp:Button ID="Button1" class="btn btn-primary" runat="server" Text="Remove Selected Attribute" style="font-weight:bold;" OnClick="removeAttrBtn_Click"/>
+            </div>
         </div>
     </div>
-
     
     <script src="http://marvl.infotech.monash.edu/webcola/cola.v3.min.js"></script>
+    <script type="text/JavaScript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
     <script type="text/javascript">
 
         var width = 960, height = 500, colors = d3.scale.category10();
@@ -214,6 +227,7 @@
         var circle = null, path = null;
         var nodes = null, links = null;
         var nodesArray = null, linkArray = null;
+        var virusId = null;
         var circleGroup = null; var radius = 12;
         var markerWidth = 6, markerHeight = 4,
         refX = radius + (markerWidth) + 1,
@@ -343,19 +357,21 @@
                 if(edges[i - 1].direct == true){
                     if (!isPresent(sources, edges[i - 1].source)) {
                         sources.push(edges[i - 1].source);
+                        under = false;
                     }
                     else {
-                        under = !under;
+                        under = true;
                     }
                     if (!isPresent(targets, edges[i - 1].target)) {
                         targets.push(edges[i - 1].target);
+                        under = false;
                     }
                     else {
-                        under = !under;
+                        under = true;
                     }
                 }
-                console.log("Link " + (i - 1) + ": " + edges[i - 1].source + "  =>  " + edges[i - 1].target);
-                console.log("Link " + getNode(edges[i - 1].source).id + " " + getNode(edges[i - 1].target).id)
+                //console.log("Link " + (i - 1) + ": " + edges[i - 1].source + "  =>  " + edges[i - 1].target);
+                //console.log("Link " + getNode(edges[i - 1].source).id + " " + getNode(edges[i - 1].target).id)
                 if ((getNode(edges[i - 1].source).Category == "Properties") || (getNode(edges[i - 1].target).Category == "Properties")) {
                     
                     return {
@@ -391,9 +407,9 @@
             //Add Nodes to page
             var circleGroup = svg.selectAll("g").data(nodes);
             var groupEnter = circleGroup.enter().append("g").attr("transform", function (d) {
-                                                        return "translate(" + [d.x, d.y] + ")";
-                                                    }).style("cursor", "pointer");
-            var circle = groupEnter.append("circle").attr("cx", 0).attr("cy", 0).attr("r", radius).attr("class", function (d) { return classSelector(d) }).append("svg:title").text(function (d) {return labelGen(d);});
+                return "translate(" + [d.x, d.y] + ")";
+            }).style("cursor", "pointer");
+            var circle = groupEnter.append("circle").attr("cx", 0).attr("cy", 0).attr("r", radius).attr("class", function (d) { return classSelector(d) }).append("svg:title").text(function (d) { return labelGen(d); });
             var label = circleGroup.append("text").attr("y", 1).attr("x", -1).text(function (d) { return d.id; }).attr({ "alignment-baseline": "middle", "text-anchor": "middle" }).style("class", "id");
 
             //var propOuterRadius = (propertiesRadius + (radius * 2));
@@ -424,13 +440,12 @@
 
         }
         function pathDistanceCalc(propOuterRadius, lastNodesEdge, propertiesCentX) {
-            var distance = propOuterRadius + propertiesCentX;
-            if (distance > lastNodesEdge) {
-                return distance + 2 * radius;
+            var propertyCircleEdge = propOuterRadius + propertiesCentX;
+            if (propertyCircleEdge > lastNodesEdge) {
+                return propertyCircleEdge + 2 * radius;
             }
             else {
-                var change = lastNodesEdge - distance;
-                return lastNodesEdge + 1.5 * change;
+                return lastNodesEdge + 50;
             }
         }
         //Create the labels for mouse-over
@@ -538,7 +553,6 @@
                 return "Location";
             }
         }
-
         //Called by Server - Starts Javascript         
         function visualize(element, numEdges, numNodes) {
             svg = d3.selectAll(element).append('svg').attr('width', width).attr('height', height);
