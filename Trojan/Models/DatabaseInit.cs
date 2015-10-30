@@ -45,7 +45,7 @@ namespace Trojan.Models
                 {
                     AttributeId = 1,
                     AttributeName = "Specification",
-                    Description = "Insertion",
+                    Description = "Specification is the phase in which structure, behaviour and system features are initially described. The customer and design team often work together to layout the essential details of the hardware to be made. It is possible for attackers to infiltrate this phase and modify design requirements such as size, structure, type, intended function, power, timing or delay. Specification is grouped into the Insertion sub-category.",
                     ImagePath="one.png",
                     F_in = 0,
                     F_out = 3,
@@ -56,7 +56,7 @@ namespace Trojan.Models
                 {
                     AttributeId = 2,
                     AttributeName = "Design",
-                    Description = "Insertion",
+                    Description = "The design team is responsible for decisions concerning the logical, functional, timing and physical constraints. The sheer number of decisions made during the many stages of attack make the design phase a relatively vulnerable insertion point. Attackers have many opportunities to make modifications undetected. Due to the size of the design process designers often use third-party intellectual property blocks, design tools, standard cell libraries and templates in design of new hardware. These third-party mechanisms are frequently used as attack vectors. Design is grouped into the Insertion sub-category.",
                     ImagePath="two.png",
                     F_in = 1,
                     F_out = 2,
@@ -67,7 +67,7 @@ namespace Trojan.Models
                 {
                     AttributeId = 3,
                     AttributeName = "Fabrication",
-                    Description = "Insertion",
+                    Description = "The fabrication and production phase of an IC typically involves hundreds of steps that can be targeted by attackers. CAD tools are used to define the doping, metallization and glass region masks to transfer the design onto a silicon wafer. This process is repeated to embed the masks for the IC layers on the silicon. Each layer is tested for functionality and defective chips are discarded after the wafer is cut into individual ICs. The chips are then bonded to a mounting package and contact leads are attached. The mounting package is encapsulated with a plastic coating for protection and identifying part numbers and other data are added. Fabrication is grouped into the Insertion sub-category.",
                     ImagePath="three.png",
                     F_in = 1,
                     F_out = 2,
@@ -78,7 +78,7 @@ namespace Trojan.Models
                 {
                     AttributeId = 4,
                     AttributeName = "Testing",
-                    Description = "Insertion",
+                    Description = "Trojans can be inserted or concealed during the testing phase. It is a critical step as it is the primary avenue for discovery of fault or attack. Testing is grouped into the Insertion sub-category.",
                     ImagePath="four.png",
                     F_in = 1,
                     F_out = 3,
@@ -89,7 +89,7 @@ namespace Trojan.Models
                 {
                     AttributeId = 5,
                     AttributeName = "Assembly",
-                    Description = "Insertion",
+                    Description = "In the assembly phase, hardware components are interfaced on the chip. Every interface between components is a possible trojan insertion point. At an interface, improper termination or improper shielding against phenomena such as electromagnetic coupling makes the chip susceptible to exploitation by an attacker. Assembly is grouped into the Insertion sub-category.",
                     ImagePath="five.png",
                     F_in = 1,
                     F_out = 1,
@@ -100,7 +100,7 @@ namespace Trojan.Models
                 {
                     AttributeId = 6,
                     AttributeName = "System",
-                    Description = "Abstraction",
+                    Description = "A trojan can be introduced in the system level by altering interconnections, hardware modules of communication protocols. System is grouped into the Abstraction sub-category.",
                     ImagePath="six.png",
                     F_in = 3,
                     F_out = 7,
@@ -111,7 +111,7 @@ namespace Trojan.Models
                 {
                     AttributeId = 7,
                     AttributeName = "RTL",
-                    Description = "Abstraction",
+                    Description = "At the register-transfer level (RTL), signals, registers and boolean functions are described in the function modules. Trojan insertion opportunities are very high in this level since an attacker can gain control over the hardware functionality. RTL is grouped into the Abstraction sub-category.",
                     ImagePath="seven.png",
                     F_in = 2,
                     F_out = 11,
@@ -122,7 +122,7 @@ namespace Trojan.Models
                 {
                     AttributeId = 8,
                     AttributeName = "Environment",
-                    Description = "Abstraction",
+                    Description = "The development environment of an IC involves the simulation, verification, validation and synthesis. Software can be inserted into this abstraction level through CAD tools and scripts to hide the effects of hardware trojans. Environment is grouped into the Abstraction sub-category.",
                     ImagePath="eight.png",
                     F_in = 1,
                     F_out = 15,
@@ -133,7 +133,7 @@ namespace Trojan.Models
                 {
                     AttributeId = 9,
                     AttributeName = "Logic",
-                    Description = "Abstraction",
+                    Description = "The logic (gate level) is prone to trojan insertion but is considered relatively secure since tampering requires a high level of sophistication. Logic design alteration is possible at the gate level or the netlist design. Logic is grouped into the Abstraction sub-category.",
                     ImagePath="nine.png",
                     F_in = 2,
                     F_out = 9,
@@ -144,7 +144,7 @@ namespace Trojan.Models
                 {
                     AttributeId = 10,
                     AttributeName = "Transistor",
-                    Description = "Abstraction",
+                    Description = "The transistor level provides attackers with the opportunity to control circuit parameters such as power and timing, and trojans can be inserted by resizing or deleting existing transistors, or inserting new transistors, to modify the circuit functionality and characteristics. Transistor is grouped into the Abstraction sub-category.",
                     ImagePath="ten.png",
                     F_in = 1,
                     F_out = 10,
@@ -155,7 +155,7 @@ namespace Trojan.Models
                 {
                     AttributeId = 11,
                     AttributeName = "Physical",
-                    Description = "Abstraction",
+                    Description = "Modifications at the physical level involve the transistors and/or layout and are typically achieved by changing circuit parameters that affect the reliability and functionality. Physical is grouped into the Abstraction sub-category.",
                     ImagePath="eleven.png",
                     F_in = 2,
                     F_out = 12,
@@ -166,7 +166,7 @@ namespace Trojan.Models
                 {
                     AttributeId = 12,
                     AttributeName = "Change In Functionality",
-                    Description = "Effect",
+                    Description = "A change in functionality is caused by trojans that introduce new logic or bypass existing logic to produce unexpected results. This can also be achieved by deleting logic. Change in Functionality is grouped into the Effect sub-category.",
                     ImagePath="twelve.png",
                     F_in = 18,
                     F_out = 17,
@@ -177,7 +177,7 @@ namespace Trojan.Models
                 {
                     AttributeId = 13,
                     AttributeName = "Information Leakage",
-                    Description = "Effect",
+                    Description = "A trojan can also cause information leakage through a covert or existing channel. These channels may be radio frequency based or via JTAG or RS232 interfaces, and provide backdoor access to assist in compromising the chip. Information such as encryption keys can also be leaked through thermal or optical patterns created by the hardware. Information Leakage is grouped into the Effect sub-category.",
                     ImagePath="thirteen.png",
                     F_in = 10,
                     F_out = 13,
@@ -188,7 +188,7 @@ namespace Trojan.Models
                 {
                     AttributeId = 14,
                     AttributeName = "Reliability",
-                    Description = "Effect",
+                    Description = "Hardware trojans can also cause reduced reliability by altering interface, functional or circuit characteristics such as path delay and power consumption. Increased power consumption may cause the ambient temperature of the circuit to rise above normal operating levels and/or cause quicker battery depletion. Reduced Reliability is grouped into the Effect sub-category.",
                     ImagePath="fourteen.png",
                     F_in = 8,
                     F_out = 11,
@@ -199,7 +199,7 @@ namespace Trojan.Models
                 {
                     AttributeId = 15,
                     AttributeName = "Denial of Service",
-                    Description = "Effect",
+                    Description = "A denial of service (DOS) trojan modifies device parameters to exhaust on-board resources such as power or memory, or introduces computational delays to degrade performance or create malfunctions. Denial of Service is grouped into the Effect sub-category.",
                     ImagePath="fifteen.png",
                     F_in = 16,
                     F_out = 16,
@@ -210,7 +210,7 @@ namespace Trojan.Models
                 {
                     AttributeId = 16,
                     AttributeName = "Sequential",
-                    Description = "Logic Type",
+                    Description = "A sequential trojan is triggered by a sequence of conditions after a given period of operation. Sequential is grouped into the Logic Type sub-category.",
                     ImagePath="sixteen.png",
                     F_in = 13,
                     F_out = 15,
@@ -221,7 +221,7 @@ namespace Trojan.Models
                 {
                     AttributeId = 17,
                     AttributeName = "Combinational",
-                    Description = "Logic Type",
+                    Description = "A combinational trojan uses a particular logic value at one or more circuit locations as the trigger. Combinational is grouped into the Logic Type sub-category.",
                     ImagePath="seventeen.png",
                     F_in = 17,
                     F_out = 18,
@@ -232,7 +232,7 @@ namespace Trojan.Models
                 {
                     AttributeId = 18,
                     AttributeName = "Functional",
-                    Description = "Functionality",
+                    Description = "A functional trojan introduces a change in the functionality of the device. Functional is grouped into the Functionality sub-category.",
                     ImagePath="eighteen.png",
                     F_in = 19,
                     F_out = 18,
@@ -243,7 +243,7 @@ namespace Trojan.Models
                 {
                     AttributeId = 19,
                     AttributeName = "Parametric",
-                    Description = "Functionality",
+                    Description = "A parametric trojan exploits the parametric effects of the device circuitry such as power consumption, thermal and delay profiles. This is achieved by weakening transistors, modifying the length and/or thickness of wires, or changing physical geometries. Parametric is grouped into the Functionality sub-category.",
                     ImagePath="nineteen.png",
                     F_in = 9,
                     F_out = 9,
@@ -254,7 +254,7 @@ namespace Trojan.Models
                 {
                     AttributeId = 20,
                     AttributeName = "Always On",
-                    Description = "Activation",
+                    Description = "A trojan virus that is constantly activated. Always On is grouped into the Activation sub-category.",
                     ImagePath="twenty.png",
                     F_in = 19,
                     F_out = 18,
@@ -265,7 +265,7 @@ namespace Trojan.Models
                 {
                     AttributeId = 21,
                     AttributeName = "Internally Triggered",
-                    Description = "Activation",
+                    Description = "An internally triggered trojan waits for an internal condition which can be a sequence of one or more events that occur in the system. This condition is typically an internal logic state or a pattern of input/output signals. Internally Triggered is grouped into the Activation sub-category.",
                     ImagePath="twenty_one.png",
                     F_in = 13,
                     F_out = 15,
@@ -276,7 +276,7 @@ namespace Trojan.Models
                 {
                     AttributeId = 22,
                     AttributeName = "Externally Triggered",
-                    Description = "Activation",
+                    Description = "An externally triggered trojan is activated via an external signal received by an antenna or sensor that interacts with the outside world. Externally Triggered is grouped into the Activation sub-category.",
                     ImagePath="twenty_two.png",
                     F_in = 12,
                     F_out = 14,
@@ -287,7 +287,7 @@ namespace Trojan.Models
                 {
                     AttributeId = 23,
                     AttributeName = "Large",
-                    Description = "Physical Layout",
+                    Description = "A large trojan that often employs unused circuitry in the device to avoid detection. The size of trojans is determined by the number of deleted, added or compromised components in the chip. Large is grouped into the Physical Layout sub-category.",
                     ImagePath="twenty_three.png",
                     F_in = 14,
                     F_out = 13,
@@ -298,7 +298,7 @@ namespace Trojan.Models
                 {
                     AttributeId = 24,
                     AttributeName = "Small",
-                    Description = "Physical Layout",
+                    Description = "Some trojans are very small and thus are virtually undetectable by inspection of the power consumption or heat dissipation. The size of trojans is determined by the number of deleted, added or compromised components in the chip. Small is grouped into the Physical Layout sub-category.",
                     ImagePath="twenty_four.png",
                     F_in = 16,
                     F_out = 17,
@@ -309,7 +309,7 @@ namespace Trojan.Models
                 {
                     AttributeId = 25,
                     AttributeName = "Changed Layout",
-                    Description = "Physical Layout",
+                    Description = "Some trojans employ a changed layout structure where an existing layout is modified. Changed Layout is grouped into the Physical Layout sub-category.",
                     ImagePath="twenty_five.png",
                     F_in = 11,
                     F_out = 14,
@@ -320,7 +320,7 @@ namespace Trojan.Models
                 {
                     AttributeId = 26,
                     AttributeName = "Augmented",
-                    Description = "Physical Layout",
+                    Description = "The layout of the trojan is additional to the layout of the victim circuit. Augmented is grouped into the Physical Layout sub-category.",
                     ImagePath="twenty_six.png",
                     F_in = 19,
                     F_out = 21,
@@ -331,7 +331,7 @@ namespace Trojan.Models
                 {
                     AttributeId = 27,
                     AttributeName = "Clustered",
-                    Description = "Physical Layout",
+                    Description = "A clustered trojan has a topology in which the components are close to each other. Clustered is grouped into the Physical Layout sub-category.",
                     ImagePath="twenty_seven.png",
                     F_in = 17,
                     F_out = 19,
@@ -342,7 +342,7 @@ namespace Trojan.Models
                 {
                     AttributeId = 28,
                     AttributeName = "Distributed",
-                    Description = "Physical Layout",
+                    Description = "A distributed trojan has a sporadic topology and can be dispersed throughout the chip. Distributed is grouped into the Physical Layout sub-category.",
                     ImagePath="twenty_eight.png",
                     F_in = 14,
                     F_out = 17,
@@ -353,7 +353,7 @@ namespace Trojan.Models
                 {
                     AttributeId = 29,
                     AttributeName = "Processor",
-                    Description = "Location",
+                    Description = "A trojan injected into the processor can be located in the logical units so that it can change the instruction or execution cycles. Processor is grouped into the Location sub-category.",
                     ImagePath="twenty_nine.png",
                     F_in = 16,
                     F_out = 0,
@@ -364,7 +364,7 @@ namespace Trojan.Models
                 {
                     AttributeId = 30,
                     AttributeName = "Memory",
-                    Description = "Location",
+                    Description = "Trojans in the memory units or interfaces can create incorrect addresses, modify memory contents, or enable/disable read/write instructions. Memory is grouped into the Location sub-category.",
                     ImagePath="thirty.png",
                     F_in = 15,
                     F_out = 0,
@@ -375,7 +375,7 @@ namespace Trojan.Models
                 {
                     AttributeId = 31,
                     AttributeName = "IO",
-                    Description = "Location",
+                    Description = "The input/output peripherals have shared interfaces with external devices through communication and data buses such as serial ports. Trojans located here can modify the data or alter the way these devices communicate with the IC components. I/O is grouped into the Location sub-category.",
                     ImagePath="thirty_one.png",
                     F_in = 16,
                     F_out = 0,
@@ -386,7 +386,7 @@ namespace Trojan.Models
                 {
                     AttributeId = 32,
                     AttributeName = "Power Supply",
-                    Description = "Location",
+                    Description = "The power supply is a location where trojans can be placed to create effects such as denial of service or reduced reliability. These effects are produced by varying the current and/or voltage supply to the chip to cause malfunctions or abnormal behaviour. Power Supply is grouped into the Location sub-category.",
                     ImagePath="thirty_two.png",
                     F_in = 16,
                     F_out = 0,
@@ -397,7 +397,7 @@ namespace Trojan.Models
                 {
                     AttributeId = 33,
                     AttributeName = "Clock Grid",
-                    Description = "Location",
+                    Description = "A trojan in the clock grid can cause variations in the clock frequency, or skip or freeze the clock signals supplied to chip modules. Clock Grid is grouped into the Location sub-category.",
                     ImagePath="thirty_three.png",
                     F_in = 16,
                     F_out = 0,

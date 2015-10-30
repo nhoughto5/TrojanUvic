@@ -201,7 +201,7 @@
     <div id="visualRepLbl" runat="server">
         <h2>Visual Representation</h2>
     </div>
-    <div id="jumboWrap" runat="server" class="jumbotron">
+    <div id="jumboWrap" runat="server" >
         <div id="visJumboContainer" style="text-align:center" >
             
             <div id="visrep" ></div>
