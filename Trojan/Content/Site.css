@@ -102,3 +102,11 @@ input[type="select"] {
 {
    width:120px; /* or percent value: 25% */
 }
+
+.backgroungImg{
+    background: url('../Images/Circuits.jpg') no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    background-size: cover;
+    -o-background-size: cover;
+}

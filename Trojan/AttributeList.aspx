@@ -5,10 +5,11 @@
             <hgroup>
                 <h2><%: Page.Title %></h2>
             </hgroup>
-
-            <asp:ListView ID="attributeList" runat="server" 
+            
+            <div class="jumbotron" style="text-align:center">
+                <asp:ListView ID="attributeList" runat="server" 
                 DataKeyNames="AttributeID" style="align-items: center" GroupItemCount="4"
-                ItemType="Trojan.Models.Attribute" SelectMethod="GetAttributes">
+                ItemType="Trojan.Models.Attribute" SelectMethod="GetAttributes" >
                 <EmptyDataTemplate>
                     <table >
                         <tr>
@@ -26,24 +27,22 @@
                 </GroupTemplate>
                 <ItemTemplate>
                     <td runat="server">
-                        <table style="margin: 0 auto;">
+                        <table style="margin: 0 auto">
                             <tr>
                                 <td>
                                     <a href="AttributeDetails.aspx?AttributeId=<%#:Item.AttributeId%>">
-                                        <image src='/Catalog/Images/Thumbs/<%#:Item.ImagePath%>' width="100" height="75" border="1" /></a>
+                                        <image src='/Catalog/Images/Thumbs/<%#:Item.ImagePath%>' width="100" height="75" border="1" align="middle"/></a>
                                 </td>
                             </tr>
                             <tr>
                                 <td>
-                                    <a href="AttributeDetails.aspx?AttributeId=<%#:Item.AttributeId%>">
-                                      <%#:Item.AttributeName%>
-                                    </a>
-                                    <br />
-                                    <a href="/AddToDescription.aspx?AttributeID=<%#:Item.AttributeId %>">               
-                                        <span class="AttributeListItem">
-                                            <b>Add To Virus Description<b>
-                                        </span>           
-                                    </a>
+                                    <div runat="server" style="text-align:center">
+                                        <a  href="AttributeDetails.aspx?AttributeId=<%#:Item.AttributeId%>">
+                                            <%#:Item.AttributeName%>
+                                        </a>
+                                        <asp:CheckBox id="selectedChkBx" runat="server"/>
+                                    </div>
+                                    
                                 </td>
                             </tr>
                             <tr>
@@ -71,6 +70,8 @@
                     </table>
                 </LayoutTemplate>
             </asp:ListView>
+            <asp:Button ID="selectAttrs_Btn" CssClass="btn btn-primary" runat="server" Text="Add to Description" OnClick="selectAttrs_Btn_Click" />
+            </div>
         </div>
     </section>
 </asp:Content>

@@ -99,22 +99,22 @@
     <table id="buttonTable" runat="server" style="margin: 0 auto; border-collapse: separate; border-spacing: 5px; font-weight: bold;"> 
     <tr>
         <td>
-        <asp:Button ID="UpdateBtn" class="btn btn-danger" runat="server" Text="Update" OnClick="UpdateBtn_Click" />
+        <asp:Button ID="UpdateBtn" class="btn btn-primary" runat="server" Text="Update" OnClick="UpdateBtn_Click" />
         </td>
         <td>
-            <asp:Button ID="BuildCombo" class="btn btn-danger" runat="server" Text="Build Combo" OnClick="BuildComboBtn_Click" />
+            <asp:Button ID="BuildCombo" class="btn btn-primary" runat="server" Text="Build Combo" OnClick="BuildComboBtn_Click" />
         </td>
         <td>
-            <asp:Button ID="BuildRow" class="btn btn-danger" runat="server" Text="Build Row" OnClick="BuildRowBtn_Click" />
+            <asp:Button ID="BuildRow" class="btn btn-primary" runat="server" Text="Build Row" OnClick="BuildRowBtn_Click" />
         </td>
         <td>
-            <asp:Button ID="BuildCol" class="btn btn-danger" runat="server" Text="Build Column" OnClick="BuildColumnBtn_Click" />
+            <asp:Button ID="BuildCol" class="btn btn-primary" runat="server" Text="Build Column" OnClick="BuildColumnBtn_Click" />
         </td>
         <td>
-            <asp:Button ID="ClearBtn" class="btn btn-danger" runat="server" Text="Clear" OnClick="ClearBtn_Click" />
+            <asp:Button ID="ClearBtn" class="btn btn-primary" runat="server" Text="Clear" OnClick="ClearBtn_Click" />
         </td>
         <%--<td>
-            <asp:Button ID="VisualizeBtn" class="btn btn-danger" runat="server" Text="Visualize" OnClick="VisualizeBtn_Click" />
+            <asp:Button ID="VisualizeBtn" class="btn btn-primary" runat="server" Text="Visualize" OnClick="VisualizeBtn_Click" />
         </td>--%>
     </tr>
     </table>
@@ -298,7 +298,8 @@
                         r: radius,
                         Fin: 0,
                         Fout: 0,
-                        Category: "Filler"
+                        Category: "Filler",
+                        Description: "Filler"
                     }
                 }
                 else if (nod[i - 1].Category == "Properties") {
@@ -339,7 +340,8 @@
                     Fin: nod[i - 2].F_in,
                     Fout: nod[i - 2].F_out,
                     Category: nod[i - 2].Category,
-                    name: nod[i - 2].nodeName
+                    name: nod[i - 2].nodeName,
+                    Description: nod[i-2].Description
                 };
             });
             //for (var i = 0; i < numEdges; ++i) {
@@ -370,8 +372,6 @@
                         under = true;
                     }
                 }
-                //console.log("Link " + (i - 1) + ": " + edges[i - 1].source + "  =>  " + edges[i - 1].target);
-                //console.log("Link " + getNode(edges[i - 1].source).id + " " + getNode(edges[i - 1].target).id)
                 if ((getNode(edges[i - 1].source).Category == "Properties") || (getNode(edges[i - 1].target).Category == "Properties")) {
                     
                     return {
@@ -395,9 +395,6 @@
                 }
                 
             });
-            //for (var i = 0; i < numEdges; ++i) {
-            //    d3.select(element).append("h3").text("Link " + i + ": " + edges[i].source);
-            //}
             var propOuterRadius = (propertiesRadius + (radius * 2));
             var locationOuterRadius = (locationRadius + (radius * 2));
             //Add the paths between nodes to the page
@@ -410,13 +407,12 @@
                 return "translate(" + [d.x, d.y] + ")";
             }).style("cursor", "pointer");
             var circle = groupEnter.append("circle").attr("cx", 0).attr("cy", 0).attr("r", radius).attr("class", function (d) { return classSelector(d) }).append("svg:title").text(function (d) { return labelGen(d); });
-            var label = circleGroup.append("text").attr("y", 1).attr("x", -1).text(function (d) { return d.id; }).attr({ "alignment-baseline": "middle", "text-anchor": "middle" }).style("class", "id");
+            var label = circleGroup.append("text").attr("y", 2).attr("x", 0).text(function (d) { return d.id; }).attr({ "alignment-baseline": "middle", "text-anchor": "middle" }).style("class", "id");
 
             //var propOuterRadius = (propertiesRadius + (radius * 2));
             //var locationOuterRadius = (locationRadius + (radius * 2));
 
             //Add highlight circle for properties category
-            //var propertiesCircle = svg.append("circle").attr("class", "circle").attr("cx", propertiesCentX).attr("cy", propertiesCentY).attr("r", propOuterRadius);
             var propertiesPath = svg.append("svg:g").append("svg:path")
                                     .attr("class", "link").attr("d", function () {
                                         var turnPoint = pathDistanceCalc(propOuterRadius, nodes[numOnLine].x + radius, propertiesCentX)
@@ -450,7 +446,7 @@
         }
         //Create the labels for mouse-over
         function labelGen(d) {
-            var str = "Attribute: " + d.name + "\n" + "Category: " + d.Category + "\n"+ "F_in: " + d.Fin + "\n" + "F_out: " + d.Fout;
+            var str = "Attribute: " + d.name + "\n" + "Category: " + d.Category + "\n"+ "F_in: " + d.Fin + "\n" + "F_out: " + d.Fout + "\n" + "Description: " + d.Description;
             return str;
         }
         function pathTitle(d){

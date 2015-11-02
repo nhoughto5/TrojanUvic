@@ -93,8 +93,6 @@ namespace Trojan
 
         public List<Virus_Item> UpdateCartItems()
         {
-            //using (VirusDescriptionActions usersShoppingCart = new VirusDescriptionActions())
-            //{
             using (VirusDescriptionActions usersVirus = new VirusDescriptionActions())
             {
                 String virusId = usersVirus.GetVirusId();
@@ -1819,23 +1817,23 @@ namespace Trojan
                 if (!NodeCheck(Nodes, F.source))
                 {
                     tempAttribute = getAttribute(F.source);
-                    if (F.source <= 5) Nodes.Add(new Node(F.source, tempAttribute.AttributeName, "Chip Life Cycle", tempAttribute.F_in, tempAttribute.F_out));
-                    else if ((5 < F.source) && (F.source <= 11)) Nodes.Add(new Node(F.source, tempAttribute.AttributeName, "Abstraction", tempAttribute.F_in, tempAttribute.F_out));
-                    else if ((11 < F.source) && (F.source <= 28)) Nodes.Add(new Node(F.source, tempAttribute.AttributeName, "Properties", tempAttribute.F_in, tempAttribute.F_out));
+                    if (F.source <= 5) Nodes.Add(new Node(F.source, tempAttribute.AttributeName, "Chip Life Cycle", tempAttribute.F_in, tempAttribute.F_out, tempAttribute.Description));
+                    else if ((5 < F.source) && (F.source <= 11)) Nodes.Add(new Node(F.source, tempAttribute.AttributeName, "Abstraction", tempAttribute.F_in, tempAttribute.F_out, tempAttribute.Description));
+                    else if ((11 < F.source) && (F.source <= 28)) Nodes.Add(new Node(F.source, tempAttribute.AttributeName, "Properties", tempAttribute.F_in, tempAttribute.F_out, tempAttribute.Description));
                     else
                     {
-                        Nodes.Add(new Node(F.source, tempAttribute.AttributeName, "Location", tempAttribute.F_in, tempAttribute.F_out));
+                        Nodes.Add(new Node(F.source, tempAttribute.AttributeName, "Location", tempAttribute.F_in, tempAttribute.F_out, tempAttribute.Description));
                     }
                 }
                 if (!NodeCheck(Nodes, F.target))
                 {
                     tempAttribute = getAttribute(F.target);
-                    if (F.target <= 5) Nodes.Add(new Node(F.target, tempAttribute.AttributeName, "Chip Life Cycle", tempAttribute.F_in, tempAttribute.F_out));
-                    else if ((5 < F.target) && (F.target <= 11)) Nodes.Add(new Node(F.target, tempAttribute.AttributeName, "Abstraction", tempAttribute.F_in, tempAttribute.F_out));
-                    else if ((11 < F.target) && (F.target <= 28)) Nodes.Add(new Node(F.target, tempAttribute.AttributeName, "Properties", tempAttribute.F_in, tempAttribute.F_out));
+                    if (F.target <= 5) Nodes.Add(new Node(F.target, tempAttribute.AttributeName, "Chip Life Cycle", tempAttribute.F_in, tempAttribute.F_out, tempAttribute.Description));
+                    else if ((5 < F.target) && (F.target <= 11)) Nodes.Add(new Node(F.target, tempAttribute.AttributeName, "Abstraction", tempAttribute.F_in, tempAttribute.F_out, tempAttribute.Description));
+                    else if ((11 < F.target) && (F.target <= 28)) Nodes.Add(new Node(F.target, tempAttribute.AttributeName, "Properties", tempAttribute.F_in, tempAttribute.F_out, tempAttribute.Description));
                     else
                     {
-                        Nodes.Add(new Node(F.target, tempAttribute.AttributeName, "Location", tempAttribute.F_in, tempAttribute.F_out));
+                        Nodes.Add(new Node(F.target, tempAttribute.AttributeName, "Location", tempAttribute.F_in, tempAttribute.F_out, tempAttribute.Description));
                     }
                 }
             }
@@ -1884,7 +1882,7 @@ namespace Trojan
             foreach (int X in V_Items)
             {
                 tempAttr = getAttribute(X);
-                Nodes.Add(new Node(tempAttr.AttributeId, tempAttr.AttributeName, getCategoryFromAttr(X).CategoryName, tempAttr.F_in, tempAttr.F_out));
+                Nodes.Add(new Node(tempAttr.AttributeId, tempAttr.AttributeName, getCategoryFromAttr(X).CategoryName, tempAttr.F_in, tempAttr.F_out, tempAttr.Description));
             }
             string json;
             json = JsonConvert.SerializeObject(virusId);

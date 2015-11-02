@@ -36,12 +36,9 @@
                 <asp:ScriptReference Name="WebFormsBundle" />
                 <%--Site Scripts--%>
             </Scripts>
-            <%--<Services>
-                <asp:ServiceReference Path="~/updateGraph.asmx" />
-            </Services>--%>
         </asp:ScriptManager>
 
-        <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="navbar navbar-default navbar-fixed-top">
             <div class="container">
                 <div class="navbar-header">
                     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -80,7 +77,7 @@
         </div>
         <div id="TitleContent" style="text-align: center">
             <a runat="server" href="~/">
-                <asp:Image  ID="Image1" style="padding-top: 10px; padding-left: 10px" runat="server" ImageUrl="~/Images/TrojanLogo.png" BorderStyle="None" />
+                <asp:Image  ID="Image1" style="padding-top: 10px; padding-left: 10px" runat="server" ImageUrl="~/Images/trojanLogo2.png" BorderStyle="None" />
             </a>  
             <br />  
         </div>
@@ -90,13 +87,14 @@
                 runat="server"
                 SelectMethod="GetCategories" >
                 <ItemTemplate>
-                    <b style="font-size: large; font-style: normal;">
+                    <%--<b style="font-size: large; font-style: normal;">
                         <a href="/AttributeList.aspx?id=<%#: Item.CategoryId %>">
                         <%#: Item.CategoryName %>
                         </a>
-                    </b>
+                    </b>--%>
+                    <a class="btn btn-primary" style="box-shadow: 2px 2px 10px 2px black" href="/AttributeList.aspx?id=<%#: Item.CategoryId %>"><%#: Item.CategoryName %></a>
                 </ItemTemplate>
-                <ItemSeparatorTemplate>  |  </ItemSeparatorTemplate>
+               <%-- <ItemSeparatorTemplate>  |  </ItemSeparatorTemplate>--%>
             </asp:ListView>
         </div>
         <div class="container body-content">

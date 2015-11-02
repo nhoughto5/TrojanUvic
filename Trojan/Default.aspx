@@ -1,7 +1,6 @@
 ﻿<%@ Page Title="Home Page" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Default.aspx.cs" Inherits="Trojan._Default" %>
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
-
     <div class="jumbotron">
         <h1><%: Title %></h1>
         <p class="lead">Welcome to the Uvic ECE hardware security project.</p>
@@ -37,5 +36,4 @@
             </p>
         </div>
     </div>
-
 </asp:Content>

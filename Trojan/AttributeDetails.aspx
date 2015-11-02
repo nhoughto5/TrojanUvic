@@ -9,7 +9,7 @@
             <table>
                 <tr>
                     <td>
-                        <img src="/Catalog/Images/<%#:Item.ImagePath %>" style="border:solid; height:300px" alt="<%#:Item.AttributeName %>"/>
+                        <img src="/Catalog/Images/<%#:Item.ImagePath %>" style="border:solid; height:150px; margin-right: 30px" alt="<%#:Item.AttributeName %>"/>
                     </td>
                     <td>&nbsp;</td>  
                     <td style="vertical-align: top; text-align:left;">

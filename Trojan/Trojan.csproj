@@ -252,6 +252,7 @@
     <Content Include="Content\visualizer.css" />
     <Content Include="Detection.aspx" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Images\Circuits.jpg" />
     <Content Include="Images\engBuild.jpg" />
     <Content Include="Images\fayezImg.jpg" />
     <Content Include="Images\HW_trojan.png" />
@@ -262,6 +263,7 @@
     <Content Include="Images\Nickimg.jpg" />
     <Content Include="Images\smerimg.jpg" />
     <Content Include="Images\TrojanLogo.png" />
+    <Content Include="Images\trojanLogo2.png" />
     <Content Include="Images\trojan_life_cycle.png" />
     <Content Include="Images\University_of_Victoria_Logo_and_Wordmark.png" />
     <Content Include="JavaScript\DirectedGraph.js" />
