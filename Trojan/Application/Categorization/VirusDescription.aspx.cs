@@ -636,10 +636,15 @@ namespace Trojan
             {
                 forwardPropagation(PropertiesList, virusId);
             }
-            //# 7 Used for IAPL: 0011 0110 0111 1010 1011 1110 1111 => ( C . D ) + ( B . C ) + ( A . C )
-            else if ((categorySet.Contains("Properties") && categorySet.Contains("Location")) || (categorySet.Contains("Abstraction") && categorySet.Contains("Properties")) || (categorySet.Contains("Chip Life Cycle") && categorySet.Contains("Properties")))
+            //# 7 Used for IAPL: 0011 1010 1011 => ( B'. C . D ) + ( A . B'. C )
+            else if ((!categorySet.Contains("Abstraction") && categorySet.Contains("Properties") && categorySet.Contains("Location"))||(categorySet.Contains("Chip Life Cycle") && !categorySet.Contains("Abstraction") && categorySet.Contains("Properties")))
             {
-                backPropagationWithAllFour(PropertiesList, virusId);
+                backPropagationNoAbstraction(PropertiesList, virusId);
+            }
+            //#8 Used for IAPL: 0110 0111 1110 1111 => ( B . C )
+            else if (categorySet.Contains("Abstraction") && categorySet.Contains("Properties"))
+            {
+                backPropagationNoAbstraction(PropertiesList, virusId);
             }
             //#9 Used for IAPL: 1001 => ( A . B'. C'. D )
             else if (categorySet.Contains("Chip Life Cycle") && !categorySet.Contains("Abstraction") && !categorySet.Contains("Properties") && categorySet.Contains("Location"))
@@ -1072,7 +1077,7 @@ namespace Trojan
 
         }
 
-        private void backPropagationWithAllFour(List<Trojan.Models.Attribute> userChosen, string virusId)
+        private void backPropagationNoAbstraction(List<Trojan.Models.Attribute> userChosen, string virusId)
         {
             List<int> properties = new List<int>();
             List<int> locations = new List<int>();
@@ -1154,7 +1159,6 @@ namespace Trojan
                         }
                     }
                     int maxAbs = abstraction.Max();
-                    int minInsert = insertSet.Min();
 
                     for(int i = maxAbs; i >= 6; --i){
                         if (!abstraction.Contains(i))

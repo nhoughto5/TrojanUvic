@@ -1,7 +1,5 @@
-﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site.master.cs" Inherits="Trojan.SiteMaster" %>
-
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Categorization.Master.cs" Inherits="Trojan.Application.Categorization.Application" %>
 <!DOCTYPE html>
-
 <html lang="en">
 <head runat="server">
     <meta charset="utf-8" />
@@ -50,12 +48,11 @@
                 </div>
                 <div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav">
-                        <li><a runat="server" href="~/">Home</a></li>
-                        <li><a runat="server" href="~/About">About</a></li>
-                        <li><a runat="server" href="~/Contact">Contact</a></li>
-                        <%--<li><a runat="server" href="~/AttributeList">Attributes</a></li>--%>
-                        <%--<li><a runat="server" href="~/Application/VirusDescription.aspx" id ="currentCount">&nbsp</a></li>--%>
-                        <li><a runat="server" href="~/Application/ApplicationHome.aspx">Get Started</a></li>
+                        <li><asp:LinkButton ID="homeBtn" runat="server" OnClick="homeBtn_Click" Text="Home" /></li>
+                        <li><asp:LinkButton ID="aboutBtn" runat="server" OnClick="aboutBtn_Click" Text="About" /></li>
+                        <li><asp:LinkButton ID="contactBtn" runat="server" Text="Contact" OnClick="contactBtn_Click"/></li>
+                        <li><a runat="server" href="AttributeList.aspx">Attributes</a></li>
+                        <li><a runat="server" href="VirusDescription.aspx" id ="currentCount">&nbsp</a></li>
                     </ul>
                     <asp:LoginView runat="server" ViewStateMode="Disabled">
                         <AnonymousTemplate>
@@ -82,16 +79,22 @@
             </a>  
             <br />  
         </div>
-<%--        <div id="CategoryMenu" style="text-align: center">       
+        <div id="CategoryMenu" style="text-align: center">       
             <asp:ListView ID="categoryList"  
                 ItemType="Trojan.Models.Category" 
                 runat="server"
                 SelectMethod="GetCategories" >
                 <ItemTemplate>
-                    <a class="btn btn-primary" style="box-shadow: 2px 2px 10px 2px black" href="/AttributeList.aspx?id=<%#: Item.CategoryId %>"><%#: Item.CategoryName %></a>
+                    <%--<b style="font-size: large; font-style: normal;">
+                        <a href="/AttributeList.aspx?id=<%#: Item.CategoryId %>">
+                        <%#: Item.CategoryName %>
+                        </a>
+                    </b>--%>
+                    <a class="btn btn-primary" style="box-shadow: 2px 2px 10px 2px black" href="/Application/Categorization/AttributeList.aspx?id=<%#: Item.CategoryId %>"><%#: Item.CategoryName %></a>
                 </ItemTemplate>
+               <%-- <ItemSeparatorTemplate>  |  </ItemSeparatorTemplate>--%>
             </asp:ListView>
-        </div>--%>
+        </div>
         <div class="container body-content">
             <asp:ContentPlaceHolder ID="MainContent" runat="server">
             </asp:ContentPlaceHolder>
@@ -103,3 +106,4 @@
     </form>
 </body>
 </html>
+

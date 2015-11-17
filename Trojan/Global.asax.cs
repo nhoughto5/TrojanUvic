@@ -9,6 +9,8 @@ using System.Web.SessionState;
 using System.Data.Entity;
 using System.Web.Http;
 using Trojan.Models;
+using Trojan.Logic;
+
 namespace Trojan
 {
     public class Global : HttpApplication
@@ -19,7 +21,13 @@ namespace Trojan
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
             Database.SetInitializer(new DatabaseInit());
+            TrojanContext db = new TrojanContext();
+            db.Database.Initialize(true);
             RouteTable.Routes.MapHttpRoute("DescriptionAPI", "api/{controller}/{id}");
+
+            // Create the custom role and user.
+            RoleActions roleActions = new RoleActions();
+            roleActions.AddUserAndRole();
         }
     }
 }

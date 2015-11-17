@@ -1,6 +1,6 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="VirusDescription.aspx.cs" Inherits="Trojan.VirusDescription" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Application/Categorization/Categorization.Master" AutoEventWireup="true" CodeBehind="VirusDescription.aspx.cs" Inherits="Trojan.VirusDescription" %>
 <asp:Content ID="DescriptionContent" ContentPlaceHolderID="MainContent" runat="server">
-    <script type="text/javascript" src="Scripts/d3.js"></script>
+    <script type="text/javascript" src="../../Scripts/d3/d3.js"></script>
     <script type="text/javascript" src="JavaScript/DirectedGraph.js"></script>
     <style>
 

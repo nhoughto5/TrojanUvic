@@ -2,13 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using System.Web.Http;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
-namespace Trojan
+namespace Trojan.Admin
 {
-    public partial class Contact : Page
+    public partial class AdminPage : System.Web.UI.Page
     {
         protected void Page_Load(object sender, EventArgs e)
         {

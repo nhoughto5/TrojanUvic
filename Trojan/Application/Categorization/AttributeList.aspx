@@ -1,4 +1,4 @@
-﻿<%@ Page Title="Attributes" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="AttributeList.aspx.cs" Inherits="Trojan.AttributeList" %>
+﻿<%@ Page Title="Attributes" Language="C#" MasterPageFile="~/Application/Categorization/Categorization.Master" AutoEventWireup="true" CodeBehind="AttributeList.aspx.cs" Inherits="Trojan.AttributeList" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
     <section>
         <div>

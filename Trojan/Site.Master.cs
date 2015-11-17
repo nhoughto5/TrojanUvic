@@ -77,8 +77,8 @@ namespace Trojan
         {
             using (VirusDescriptionActions usersVirus = new VirusDescriptionActions())
             {
-                string cartStr = string.Format("Description ({0})", usersVirus.GetCount());
-                currentCount.InnerText = cartStr;
+                //string cartStr = string.Format("Description ({0})", usersVirus.GetCount());
+                //currentCount.InnerText = cartStr;
             }
         }
         public IQueryable<Category> GetCategories()

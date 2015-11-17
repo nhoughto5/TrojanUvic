@@ -22,7 +22,7 @@ namespace Trojan.Models
         public int CategoryId { get; set; }
         public string CategoryName { get; set; }
 
-        public virtual ICollection<Category> Categories { get; set; }
+        //public virtual ICollection<Category> Categories { get; set; }
         //public virtual ICollection<VirusDescriptionItem> VirusDescriptionItems { get; set; }
     }
 }
