@@ -2,6 +2,7 @@
 
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Trojan.Models
 {
@@ -24,6 +25,8 @@ namespace Trojan.Models
 
         public bool userAdded { get; set; }
 
+        public bool Saved { get; set; }
+
         public Virus_Item(string V_Id, int A_Id, Attribute Attr, Category Category_, bool user)
         {
             ItemId = Guid.NewGuid().ToString();
@@ -34,12 +37,14 @@ namespace Trojan.Models
             Attribute = Attr;
             Category = Category_;
             userAdded = user;
+            Saved = false;
         }
 
         public Virus_Item()
         {
-
+            Saved = false;
         }
 
+        public virtual Virus Virus { get; set; }
     }
 }

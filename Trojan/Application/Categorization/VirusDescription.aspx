@@ -206,13 +206,20 @@
             
             <div id="visrep" ></div>
         </div>
-        <br />
-        <br />
         <div id="chkBxDiv" runat="server" class="panel panel-primary" style="width:960px; margin-left:auto; margin-right:auto;">
             <div class="panel-heading" style="font-weight:bold;">Attribute Removal</div>
             <div class="panel-body" style="text-align:center">
                 <asp:DropDownList ID="attrDropDownList" runat="server"></asp:DropDownList>
                 <asp:Button ID="Button1" class="btn btn-primary" runat="server" Text="Remove Selected Attribute" style="font-weight:bold;" OnClick="removeAttrBtn_Click"/>
+            </div>
+        </div>
+        <br />
+        <h3>Severity Rating</h3>
+        <hr />
+        <div class="well">
+            <asp:GridView ID="sevGrid" runat="server" AutoGenerateColumns="true" CssClass="table table-striped table-bordered"></asp:GridView>
+            <div style="text-align: center">
+                <asp:Button ID="saveBtn" runat="server" Text="Save Virus" CssClass="btn btn-primary" OnClick="saveBtn_Click"/>
             </div>
         </div>
     </div>

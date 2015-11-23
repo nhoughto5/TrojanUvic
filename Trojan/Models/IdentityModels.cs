@@ -30,7 +30,7 @@ namespace Trojan.Models
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public ApplicationDbContext()
-            : base("DefaultConnection", throwIfV1Schema: false)
+            : base("Trojan", throwIfV1Schema: false)
         {
         }
 

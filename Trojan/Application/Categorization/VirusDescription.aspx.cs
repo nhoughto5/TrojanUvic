@@ -27,16 +27,10 @@ namespace Trojan
                 int totalNumberofAttributes = 0;
                 int totalF_in = 0;
                 int totalF_out = 0;
-                //Built = false;
-                //Built = getBuiltStatus();
                 totalNumberofAttributes = usersVirus.getAllCount();
                 totalF_in = usersVirus.getTotalF_in();
                 totalF_out = usersVirus.getTotalF_out();
-                //if (!getBuiltStatus())
-                //{
-                //    hideResults();
-                //    //NoSelected.Visible = true;
-                //}
+
                 if (totalNumberofAttributes > 0)
                 {
                     // Display Total.
@@ -561,6 +555,21 @@ namespace Trojan
         {
             noneSelected();
         }
+        private void severity(List<int> attributes)
+        {
+            Severity sevRating = new Severity(attributes);
+            List<severityRating> sevList = new List<severityRating>();
+            severityRating rating = sevRating.getSevRating();
+            sevList.Add(rating);
+            sevGrid.DataSource = sevList;
+            sevGrid.DataBind();
+            using (VirusDescriptionActions usersVirus = new VirusDescriptionActions())
+            {
+                rating.VirusId = usersVirus.GetVirusId();
+            }
+            db.severityRating.Add(rating);
+            db.SaveChanges();
+        }
 
         protected void BuildComboBtn_Click(object sender, EventArgs e)
         {
@@ -634,16 +643,19 @@ namespace Trojan
             //#5 Used for IAPL: 0101 1100 1101 => ( B . C'. D ) + ( A . B . C')
             else if ((categorySet.Contains("Abstraction") && !categorySet.Contains("Properties") && categorySet.Contains("Location")) || (categorySet.Contains("Chip Life Cycle") && categorySet.Contains("Abstraction") && !categorySet.Contains("Properties")))
             {
+                //
                 forwardPropagation(PropertiesList, virusId);
             }
             //# 7 Used for IAPL: 0011 1010 1011 => ( B'. C . D ) + ( A . B'. C )
             else if ((!categorySet.Contains("Abstraction") && categorySet.Contains("Properties") && categorySet.Contains("Location"))||(categorySet.Contains("Chip Life Cycle") && !categorySet.Contains("Abstraction") && categorySet.Contains("Properties")))
             {
+                //
                 backPropagationNoAbstraction(PropertiesList, virusId);
             }
             //#8 Used for IAPL: 0110 0111 1110 1111 => ( B . C )
             else if (categorySet.Contains("Abstraction") && categorySet.Contains("Properties"))
             {
+                //
                 backPropagationNoAbstraction(PropertiesList, virusId);
             }
             //#9 Used for IAPL: 1001 => ( A . B'. C'. D )
@@ -797,6 +809,7 @@ namespace Trojan
                 Nodes.Sort();
                 saveToDB(Nodes, Connections, virusId);
                 Visualize(Nodes, Connections, virusId);
+                severity(Nodes);
             }
             
         }
@@ -836,6 +849,7 @@ namespace Trojan
                 Nodes.Sort();
                 saveToDB(Nodes, Connections, virusId);
                 Visualize(Nodes, Connections, virusId);
+                severity(Nodes);
             }
         }
         private void insertionOnly(List<Trojan.Models.Attribute> userChosen, string virusId)
@@ -882,6 +896,7 @@ namespace Trojan
             Nodes.Sort();
             saveToDB(Nodes, Connections, virusId);
             Visualize(Nodes, Connections, virusId);
+            severity(Nodes);
         }
         private void locationOnly(List<Trojan.Models.Attribute> userChosen, string virusId)
         {
@@ -917,6 +932,7 @@ namespace Trojan
                 Nodes.Sort();
                 saveToDB(Nodes, Connections, virusId);
                 Visualize(Nodes, Connections, virusId);
+                severity(Nodes);
             }
 
         }
@@ -1218,6 +1234,7 @@ namespace Trojan
                     Nodes.Sort();
                     saveToDB(Nodes, Connections, virusId);
                     Visualize(Nodes, Connections, virusId);
+                    severity(Nodes);
                     return;
                 }
             }
@@ -1537,6 +1554,7 @@ namespace Trojan
                 Nodes.Sort();
                 saveToDB(Nodes, Connections, virusId);
                 Visualize(Nodes, Connections, virusId);
+                severity(Nodes);
                 return;
             }
         }
@@ -1627,6 +1645,7 @@ namespace Trojan
             Nodes.Sort();
             saveToDB(Nodes, Connections, virusId);
             Visualize(Nodes, Connections, virusId);
+            severity(Nodes);
             return;
         }
         //Receives a list of column numbers and determines which rows
@@ -1902,6 +1921,22 @@ namespace Trojan
                 ClientScript.RegisterArrayDeclaration("nod", json);
             }
             ScriptManager.RegisterStartupScript(this.Page, Page.GetType(), "id", "visualize('#visrep', " + Connections.Count + "," + Nodes.Count + ")", true);
+        }
+
+        protected void saveBtn_Click(object sender, EventArgs e)
+        {
+            Virus virus = new Virus();
+            string virusId = null;
+            using (VirusDescriptionActions usersVirus = new VirusDescriptionActions())
+            {
+                virusId = usersVirus.GetVirusId();
+                virus.virusId = virusId;
+                virus.userName = HttpContext.Current.User.Identity.Name;
+            }
+            List<Virus_Item> items = (from b in db.Virus_Item where (b.VirusId == virusId) select b).ToList();
+            items.Select(c => { c.Saved = true; return c; }).ToList();
+            virus.Virus_Items = items;
+            db.SaveChanges();
         }
     }
 }
