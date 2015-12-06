@@ -61,20 +61,28 @@ namespace Trojan.Logic
         {
             if (HttpContext.Current.Session[DescriptionSessionKey] == null)
             {
-                if (!string.IsNullOrWhiteSpace(HttpContext.Current.User.Identity.Name))
-                {
-                    HttpContext.Current.Session[DescriptionSessionKey] = HttpContext.Current.User.Identity.Name;
-                }
-                else
-                {
-                    // Generate a new random GUID using System.Guid class.     
-                    Guid tempDescriptionId = Guid.NewGuid();
-                    HttpContext.Current.Session[DescriptionSessionKey] = tempDescriptionId.ToString();
-                }
+                //If User is signed in use their username as id
+                //if (!string.IsNullOrWhiteSpace(HttpContext.Current.User.Identity.Name))
+                //{
+                //    HttpContext.Current.Session[DescriptionSessionKey] = HttpContext.Current.User.Identity.Name;
+                //}
+                //else
+                //{
+                //    // Generate a new random GUID using System.Guid class.     
+                //    Guid tempDescriptionId = Guid.NewGuid();
+                //    HttpContext.Current.Session[DescriptionSessionKey] = tempDescriptionId.ToString();
+                //}
+                // Generate a new random GUID using System.Guid class.     
+                Guid tempDescriptionId = Guid.NewGuid();
+                HttpContext.Current.Session[DescriptionSessionKey] = tempDescriptionId.ToString();
             }
             return HttpContext.Current.Session[DescriptionSessionKey].ToString();
         }
-
+        public void setNewVirusId()
+        {
+            Guid tempDescriptionId = Guid.NewGuid();
+            HttpContext.Current.Session[DescriptionSessionKey] = tempDescriptionId.ToString();
+        }
         public List<Virus_Item> GetDescriptionItems()
         {
             VirusDescriptionID = GetVirusId();

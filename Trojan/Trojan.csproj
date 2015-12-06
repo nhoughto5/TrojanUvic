@@ -201,6 +201,9 @@
     <Content Include="Application\Categorization\AddToDescription.aspx" />
     <Content Include="Admin\AdminPage.aspx" />
     <Content Include="Application\ApplicationHome.aspx" />
+    <Content Include="Application\Categorization\Review.aspx" />
+    <Content Include="Application\Categorization\CategorizationMain.aspx" />
+    <Content Include="Application\Detection\DetectionApplication.aspx" />
     <Content Include="Attacks.aspx" />
     <Content Include="Application\Categorization\AttributeDetails.aspx" />
     <Content Include="Application\Categorization\AttributeList.aspx" />
@@ -501,12 +504,33 @@
     <Compile Include="Application\ApplicationHome.aspx.designer.cs">
       <DependentUpon>ApplicationHome.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Application\Categorization\Review.aspx.cs">
+      <DependentUpon>Review.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Application\Categorization\Review.aspx.designer.cs">
+      <DependentUpon>Review.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Application\Categorization\Categorization.Master.cs">
       <DependentUpon>Categorization.Master</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Application\Categorization\Categorization.Master.designer.cs">
       <DependentUpon>Categorization.Master</DependentUpon>
+    </Compile>
+    <Compile Include="Application\Categorization\CategorizationMain.aspx.cs">
+      <DependentUpon>CategorizationMain.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Application\Categorization\CategorizationMain.aspx.designer.cs">
+      <DependentUpon>CategorizationMain.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Application\Detection\DetectionApplication.aspx.cs">
+      <DependentUpon>DetectionApplication.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Application\Detection\DetectionApplication.aspx.designer.cs">
+      <DependentUpon>DetectionApplication.aspx</DependentUpon>
     </Compile>
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="About.aspx.cs">
@@ -570,6 +594,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Logic\CatLogic.cs" />
     <Compile Include="Logic\RoleActions.cs" />
     <Compile Include="Logic\Severity.cs" />
     <Compile Include="Logic\VirusDescriptionActions.cs" />
@@ -625,7 +650,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Application\Attacks\" />
-    <Folder Include="Application\Detection\" />
     <Folder Include="App_Data\" />
   </ItemGroup>
   <PropertyGroup>

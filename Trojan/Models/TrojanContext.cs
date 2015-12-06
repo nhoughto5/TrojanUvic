@@ -17,5 +17,6 @@ namespace Trojan.Models
         public DbSet<Matrix_Cell> Matrix_Cell { get; set; }
         public DbSet<Connection> Connections { get; set; }
         public DbSet<severityRating> severityRating { get; set; }
+        public DbSet<Virus> Virus { get; set; }
     }
 }

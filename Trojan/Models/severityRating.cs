@@ -8,10 +8,12 @@ namespace Trojan.Models
 {
     public class severityRating
     {
-        [Key]
         public int id { get; set; }
         public string VirusId { get; set; }
-        public bool Saved;
+        public bool Saved { get; set; }
+        public bool coverage { get; set; }
+        public string nickName { get; set; }
+        public string userName { get; set; }
 
         public string iR { get; set; }
         public string iA { get; set; }

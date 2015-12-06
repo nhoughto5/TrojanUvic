@@ -12,7 +12,8 @@ using System.Web.ModelBinding;
 using Newtonsoft.Json;
 using System.Web.Services;
 using System.Web.Script.Services;
-
+using System.Data.Entity.Core;
+using System.Data.SqlClient;
 
 namespace Trojan
 {
@@ -22,52 +23,56 @@ namespace Trojan
         TrojanContext db = new TrojanContext();
         protected void Page_Load(object sender, EventArgs e)
         {
-            using (VirusDescriptionActions usersVirus = new VirusDescriptionActions())
+            if (!Page.IsPostBack)
             {
-                int totalNumberofAttributes = 0;
-                int totalF_in = 0;
-                int totalF_out = 0;
-                totalNumberofAttributes = usersVirus.getAllCount();
-                totalF_in = usersVirus.getTotalF_in();
-                totalF_out = usersVirus.getTotalF_out();
-
-                if (totalNumberofAttributes > 0)
+                using (VirusDescriptionActions usersVirus = new VirusDescriptionActions())
                 {
-                    // Display Total.
-                    hideResults();
-                    VirusDescriptionTitle.Visible = true;
-                    NoSelected.Visible = false;
-                    UpdateBtn.Visible = true;
-                    BuildCombo.Visible = true;
-                    BuildRow.Visible = true;
-                    BuildCol.Visible = true;
-                    ClearBtn.Visible = true;
-                    notes.Visible = false;
-                    canNot.Visible = false;
-                    buttonTable.Visible = true;
-                    abstractionEmpty.Visible = false;
-                    lblTotal.Text = String.Format("{0:d}", totalNumberofAttributes);
-                    VirusDescriptionTitle.InnerText = "Current Virus Total";
-                    if (totalF_in > 0)
+                    int totalNumberofAttributes = 0;
+                    int totalF_in = 0;
+                    int totalF_out = 0;
+                    totalNumberofAttributes = usersVirus.getAllCount();
+                    totalF_in = usersVirus.getTotalF_in();
+                    totalF_out = usersVirus.getTotalF_out();
+                    //usersVirus.setNewVirusId();
+                    if (totalNumberofAttributes > 0)
                     {
-                        lblTotalF_in.Text = String.Format("{0:d}", totalF_in);
+                        // Display Total.
+                        hideResults();
+                        VirusDescriptionTitle.Visible = true;
+                        NoSelected.Visible = false;
+                        UpdateBtn.Visible = true;
+                        BuildCombo.Visible = true;
+                        BuildRow.Visible = true;
+                        BuildCol.Visible = true;
+                        ClearBtn.Visible = true;
+                        notes.Visible = false;
+                        canNot.Visible = false;
+                        ErrorMessage.Visible = false;
+                        buttonTable.Visible = true;
+                        abstractionEmpty.Visible = false;
+                        //lblTotal.Text = String.Format("{0:d}", totalNumberofAttributes);
+                        VirusDescriptionTitle.InnerText = "Current Virus Total";
+                        //if (totalF_in > 0)
+                        //{
+                        //    lblTotalF_in.Text = String.Format("{0:d}", totalF_in);
+                        //}
+                        //else
+                        //{
+                        //    lblTotalF_in.Text = "0";
+                        //}
+                        //if (totalF_out > 0)
+                        //{
+                        //    lblTotalF_out.Text = String.Format("{0:d}", totalF_out);
+                        //}
+                        //else
+                        //{
+                        //    lblTotalF_out.Text = "0";
+                        //}
                     }
                     else
                     {
-                        lblTotalF_in.Text = "0";
+                        noneSelected();
                     }
-                    if (totalF_out > 0)
-                    {
-                        lblTotalF_out.Text = String.Format("{0:d}", totalF_out);
-                    }
-                    else
-                    {
-                        lblTotalF_out.Text = "0";
-                    }
-                }
-                else
-                {
-                    noneSelected();
                 }
             }
         }
@@ -135,9 +140,9 @@ namespace Trojan
                     }
                     else
                     {
-                        lblTotal.Text = String.Format("{0:d}", usersVirus.GetCount());
-                        lblTotalF_in.Text = String.Format("{0:d}", usersVirus.getTotalF_in());
-                        lblTotalF_out.Text = String.Format("{0:d}", usersVirus.getTotalF_out());
+                        //lblTotal.Text = String.Format("{0:d}", usersVirus.GetCount());
+                        //lblTotalF_in.Text = String.Format("{0:d}", usersVirus.getTotalF_in());
+                        //lblTotalF_out.Text = String.Format("{0:d}", usersVirus.getTotalF_out());
                         return usersVirus.GetDescriptionItems();
                     }
                 }
@@ -532,6 +537,7 @@ namespace Trojan
                 BuildCol.Visible = false;
                 ClearBtn.Visible = false;
                 VirusDescriptionTitle.Visible = false;
+                ErrorMessage.Visible = true;
             }
         }
 
@@ -553,6 +559,10 @@ namespace Trojan
 
         protected void ClearBtn_Click(object sender, EventArgs e)
         {
+            using(VirusDescriptionActions W = new VirusDescriptionActions())
+            {
+                W.setNewVirusId();
+            }
             noneSelected();
         }
         private void severity(List<int> attributes)
@@ -1864,11 +1874,11 @@ namespace Trojan
         }
         private void hideResults()
         {
-            labels.Visible = false;
+            //labels.Visible = false;
             NoSelected.Visible = false;
-            LabelTotalText.Visible = lblTotal.Visible = false;
-            LabelTotalF_in.Visible = lblTotalF_in.Visible = false;
-            LabelTotalF_out.Visible = lblTotalF_out.Visible = false;
+            //LabelTotalText.Visible = lblTotal.Visible = false;
+            //LabelTotalF_in.Visible = lblTotalF_in.Visible = false;
+            //LabelTotalF_out.Visible = lblTotalF_out.Visible = false;
             canNot.Visible = false;
             abstractionNone.Visible = abstractionNone.Visible = abstractionResults.Visible = abstractionGrid.Visible = false;
             directNone.Visible = direct.Visible = directGrid.Visible = false;
@@ -1885,16 +1895,8 @@ namespace Trojan
         }
         private void showVisButtons()
         {
-        //    UpdateBtn.Visible = false;
-        //    BuildCombo.Visible = false;
-        //    BuildRow.Visible = false;
-        //    BuildCol.Visible = false;
-        //    //VisualizeBtn.Visible = false;
-        //    ClearBtn.Visible = false;
-        //    buttonTable.Visible = false;
             startOverDiv.Visible = true;
             startOverBtn.Visible = true;
-            //noResult.Visible = false;
         }
         protected void Visualize(List<int> V_Items, List<Connection> Connections, string virusId)
         {
@@ -1925,18 +1927,46 @@ namespace Trojan
 
         protected void saveBtn_Click(object sender, EventArgs e)
         {
-            Virus virus = new Virus();
-            string virusId = null;
-            using (VirusDescriptionActions usersVirus = new VirusDescriptionActions())
+            if (this.saveNameTxtBx.Text == "")
             {
-                virusId = usersVirus.GetVirusId();
-                virus.virusId = virusId;
-                virus.userName = HttpContext.Current.User.Identity.Name;
+                ErrorMessage.Visible = true;
+                FailureText.Text = "Please Enter a nickname for your work to save it";
             }
-            List<Virus_Item> items = (from b in db.Virus_Item where (b.VirusId == virusId) select b).ToList();
-            items.Select(c => { c.Saved = true; return c; }).ToList();
-            virus.Virus_Items = items;
-            db.SaveChanges();
+            else
+            {
+                ErrorMessage.Visible = false;
+                if (db.severityRating.Any(W => (W.nickName == saveNameTxtBx.Text) && (W.userName == HttpContext.Current.User.Identity.Name) && (W.coverage == false)))
+                {
+                    ErrorMessage.Visible = true;
+                    FailureText.Text = "You already have a virus with that nickname";
+                }
+                else
+                {
+
+                    Virus virus = new Virus();
+                    string virusId = null;
+                    using (VirusDescriptionActions usersVirus = new VirusDescriptionActions())
+                    {
+                        virusId = usersVirus.GetVirusId();
+                        virus.virusId = virusId;
+                        virus.userName = HttpContext.Current.User.Identity.Name;
+                        virus.virusNickName = this.saveNameTxtBx.Text;
+                    }
+                    //List<Virus_Item> items = (from b in db.Virus_Item where (b.VirusId == virusId) select b).ToList();
+                    //items.Select(c => { c.Saved = true; return c; }).ToList();
+
+                    severityRating severityRating = db.severityRating.Where(c => c.VirusId == virusId).FirstOrDefault();
+                    severityRating.coverage = false;
+                    severityRating.Saved = true;
+                    severityRating.userName = HttpContext.Current.User.Identity.Name;
+                    severityRating.nickName = saveNameTxtBx.Text;
+                    db.severityRating.Add(severityRating);
+                    db.Virus.Add(virus);
+                    db.SaveChanges();
+                    SavedMessage.Visible = true;
+                    savedText.Text = "Virus Saved";
+                }
+            }
         }
     }
 }

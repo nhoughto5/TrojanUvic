@@ -68,7 +68,7 @@
         </asp:TemplateField>    
         </Columns>    
     </asp:GridView>
-    <div id="labels" runat="server">
+<%--    <div id="labels" runat="server">
         <p></p>
         <strong>
             <asp:Label ID="LabelTotalText" runat="server" Text="Total Attributes: "></asp:Label>
@@ -86,7 +86,7 @@
             <asp:Label ID="LabelTotalF_out" runat="server" Text="Total F_out: "></asp:Label>
             <asp:Label ID="lblTotalF_out" runat="server" EnableViewState="false"></asp:Label>
         </strong>
-    </div>
+    </div>--%>
     <br />
     <div id="startOverDiv" runat="server" align="center" class="Content">
         <div id ="noResult" runat="server" align="center" class="Content">
@@ -218,10 +218,28 @@
         <hr />
         <div class="well">
             <asp:GridView ID="sevGrid" runat="server" AutoGenerateColumns="true" CssClass="table table-striped table-bordered"></asp:GridView>
-            <div style="text-align: center">
-                <asp:Button ID="saveBtn" runat="server" Text="Save Virus" CssClass="btn btn-primary" OnClick="saveBtn_Click"/>
-            </div>
+            
         </div>
+        <asp:UpdatePanel runat="server" ID="updatePnl" UpdateMode="Conditional">
+            <ContentTemplate>
+                <div style="text-align:center;">
+                    <asp:PlaceHolder runat="server" ID="ErrorMessage" Visible="false">
+                        <p class="text-danger">
+                            <asp:Literal runat="server" ID="FailureText" />
+                        </p>
+                    </asp:PlaceHolder>
+                    <asp:PlaceHolder runat="server" ID="SavedMessage" Visible="false">
+                        <p class="text-danger">
+                            <asp:Literal runat="server" ID="savedText" />
+                        </p>
+                    </asp:PlaceHolder>
+                    Give your work a nickname &nbsp;
+                    <asp:TextBox ID="saveNameTxtBx" Columns="30" runat="server"></asp:TextBox>
+                    <hr />
+                    <asp:Button ID="saveBtn" runat="server" Text="Save Virus" CssClass="btn btn-primary" OnClick="saveBtn_Click" />
+                </div>
+            </ContentTemplate>
+        </asp:UpdatePanel>
     </div>
     
     <script src="http://marvl.infotech.monash.edu/webcola/cola.v3.min.js"></script>

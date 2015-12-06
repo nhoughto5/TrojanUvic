@@ -31,15 +31,6 @@ namespace Trojan.Application {
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl Div1;
         
         /// <summary>
-        /// detectionBtn control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.LinkButton detectionBtn;
-        
-        /// <summary>
         /// Div2 control.
         /// </summary>
         /// <remarks>
