@@ -1,4 +1,4 @@
-﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Categorization.Master.cs" Inherits="Trojan.Application.Categorization.Application" %>
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Categorization.Master.cs" Inherits="Trojan.Application.Categorization.Categorization" %>
 <!DOCTYPE html>
 <html lang="en">
 <head runat="server">

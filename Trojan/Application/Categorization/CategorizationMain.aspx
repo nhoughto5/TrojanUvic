@@ -3,10 +3,8 @@
     <div><h1>Categorization</h1></div>
 
     <div class="well" style="text-align:center">
-        <h4 style="display:inline"><a href="Application/VirusDescription.aspx">Create a new Trojan Visualization</a></h4>
-        <div style=" display:inline">
-            <asp:TextBox ID="trojanName" runat="server">Give it a name</asp:TextBox>
-        </div>
+        <%--<h4 style="display:inline"><a href="VirusDescription.aspx">Create a new Trojan Visualization</a></h4>--%>
+        <asp:Button ID="newVirusBtn" class="btn btn-primary" runat="server" Text="Create a new Trojan Visualization" OnClick="newVirusBtn_Click" />
     </div>
     <div class="well" style="text-align:center">
         <h4 style="display:inline">Review a Previous Trojan</h4>

@@ -27,6 +27,7 @@ namespace Trojan
             {
                 using (VirusDescriptionActions usersVirus = new VirusDescriptionActions())
                 {
+
                     int totalNumberofAttributes = 0;
                     int totalF_in = 0;
                     int totalF_out = 0;
@@ -570,9 +571,24 @@ namespace Trojan
             Severity sevRating = new Severity(attributes);
             List<severityRating> sevList = new List<severityRating>();
             severityRating rating = sevRating.getSevRating();
-            sevList.Add(rating);
-            sevGrid.DataSource = sevList;
-            sevGrid.DataBind();
+            trjnCelliR_lbl.InnerText = rating.iR;
+            trjnCelliA_lbl.InnerText = rating.iA;
+            trjnCelliE_lbl.InnerText = rating.iE;
+            trjnCelliL_lbl.InnerText = rating.iL;
+            trjnCelliF_lbl.InnerText = rating.iF;
+            trjnCelliC_lbl.InnerText = rating.iC;
+            trjnCelliP_lbl.InnerText = rating.iP;
+            trjnCelliO_lbl.InnerText = rating.iO;
+
+            trjnCellcR_lbl.InnerText = rating.cR;
+            trjnCellcA_lbl.InnerText = rating.cA;
+            trjnCellcE_lbl.InnerText = rating.cE;
+            trjnCellcL_lbl.InnerText = rating.cL;
+            trjnCellcF_lbl.InnerText = rating.cF;
+            trjnCellcC_lbl.InnerText = rating.cC;
+            trjnCellcP_lbl.InnerText = rating.cP;
+            trjnCellcO_lbl.InnerText = rating.cO;
+
             using (VirusDescriptionActions usersVirus = new VirusDescriptionActions())
             {
                 rating.VirusId = usersVirus.GetVirusId();
@@ -588,7 +604,7 @@ namespace Trojan
             RowGrid.Visible = RowResults.Visible = false;
             notes.Visible = false;
             
-            List<Trojan.Models.Attribute> PropertiesList = new List<Trojan.Models.Attribute>();
+            List<Trojan.Models.Attribute> Attributes = new List<Trojan.Models.Attribute>();
             VirusDescriptionActions.VirusDescriptionUpdates[] currentBuild = new VirusDescriptionActions.VirusDescriptionUpdates[DescriptionList.Rows.Count];
             Trojan.Models.Attribute tempAttr = new Models.Attribute();
             var categorySet = new HashSet<string>();
@@ -610,7 +626,7 @@ namespace Trojan
                         if (usersVirus.Get_OnOff(virusId, currentBuild[i].AttributeId))
                         {
                             categorySet.Add(tempAttr.CategoryName);
-                            PropertiesList.Add(tempAttr);
+                            Attributes.Add(tempAttr);
                         }
                     }
                 }
@@ -628,50 +644,50 @@ namespace Trojan
                 }
                 
             }
-            PropertiesList = Attribute_Sorting(PropertiesList);
+            Attributes = Attribute_Sorting(Attributes);
             hideResults();
             //#1 Used for IAPL: 0010
             if (!categorySet.Contains("Chip Life Cycle") && !categorySet.Contains("Abstraction") && categorySet.Contains("Properties") && !categorySet.Contains("Location"))
             {
-                propertiesOnly(PropertiesList, virusId);
+                propertiesOnly(Attributes, virusId);
             }
             //#2 Used for IAPL: 0100
             else if (!categorySet.Contains("Chip Life Cycle") && categorySet.Contains("Abstraction") && !categorySet.Contains("Properties") && !categorySet.Contains("Location"))
             {
-                abstractionOnly(PropertiesList, virusId);
+                abstractionOnly(Attributes, virusId);
             }
             //#3 Used for IAPL: 0001
             else if (!categorySet.Contains("Chip Life Cycle") && !categorySet.Contains("Abstraction") && !categorySet.Contains("Properties") && categorySet.Contains("Location"))
             {
-                locationOnly(PropertiesList, virusId);
+                locationOnly(Attributes, virusId);
             }
             //#4 Used for IAPL: 1000
             else if (categorySet.Contains("Chip Life Cycle") && !categorySet.Contains("Abstraction") && !categorySet.Contains("Properties") && !categorySet.Contains("Location"))
             {
-                insertionOnly(PropertiesList, virusId);
+                insertionOnly(Attributes, virusId);
             }
             //#5 Used for IAPL: 0101 1100 1101 => ( B . C'. D ) + ( A . B . C')
             else if ((categorySet.Contains("Abstraction") && !categorySet.Contains("Properties") && categorySet.Contains("Location")) || (categorySet.Contains("Chip Life Cycle") && categorySet.Contains("Abstraction") && !categorySet.Contains("Properties")))
             {
                 //
-                forwardPropagation(PropertiesList, virusId);
+                forwardPropagation(Attributes, virusId);
             }
             //# 7 Used for IAPL: 0011 1010 1011 => ( B'. C . D ) + ( A . B'. C )
             else if ((!categorySet.Contains("Abstraction") && categorySet.Contains("Properties") && categorySet.Contains("Location"))||(categorySet.Contains("Chip Life Cycle") && !categorySet.Contains("Abstraction") && categorySet.Contains("Properties")))
             {
                 //
-                backPropagationNoAbstraction(PropertiesList, virusId);
+                backPropagationNoAbstraction(Attributes, virusId);
             }
             //#8 Used for IAPL: 0110 0111 1110 1111 => ( B . C )
             else if (categorySet.Contains("Abstraction") && categorySet.Contains("Properties"))
             {
                 //
-                backPropagationNoAbstraction(PropertiesList, virusId);
+                backPropagationNoAbstraction(Attributes, virusId);
             }
             //#9 Used for IAPL: 1001 => ( A . B'. C'. D )
             else if (categorySet.Contains("Chip Life Cycle") && !categorySet.Contains("Abstraction") && !categorySet.Contains("Properties") && categorySet.Contains("Location"))
             {
-                splitPropagation(PropertiesList, virusId);
+                splitPropagation(Attributes, virusId);
             }
             //#X Used for IAPL: 0000
             else

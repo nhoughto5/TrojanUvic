@@ -217,8 +217,79 @@
         <h3>Severity Rating</h3>
         <hr />
         <div class="well">
-            <asp:GridView ID="sevGrid" runat="server" AutoGenerateColumns="true" CssClass="table table-striped table-bordered"></asp:GridView>
-            
+            <%--<asp:GridView ID="sevGrid" runat="server" AutoGenerateColumns="true" CssClass="table table-striped table-bordered"></asp:GridView>--%>
+            <asp:Table runat="server" ID="Table3" CssClass="table table-striped table-bordered">
+                    <asp:TableHeaderRow runat="server" ID="TableHeaderRow3">
+                        <asp:TableHeaderCell style="text-align:center"><span title="Insertion">iR</span></asp:TableHeaderCell>
+                        <asp:TableHeaderCell style="text-align:center"><span title="Abstraction">iA</span></asp:TableHeaderCell>
+                        <asp:TableHeaderCell style="text-align:center"><span title="Effect">iE</span></asp:TableHeaderCell>
+                        <asp:TableHeaderCell style="text-align:center"><span title="Logic Type">iL</span></asp:TableHeaderCell>
+                        <asp:TableHeaderCell style="text-align:center"><span title="Functionality">iF</span></asp:TableHeaderCell>
+                        <asp:TableHeaderCell style="text-align:center"><span title="Activation">iC</span></asp:TableHeaderCell>
+                        <asp:TableHeaderCell style="text-align:center"><span title="Physical Layout">iP</span></asp:TableHeaderCell>
+                        <asp:TableHeaderCell Style="border-right-width: medium; text-align:center"><span title="Location">iO</span></asp:TableHeaderCell>
+                        <asp:TableHeaderCell style="text-align:center"><span title="Insertion">cR</span></asp:TableHeaderCell>
+                        <asp:TableHeaderCell style="text-align:center"><span title="Abstraction">cA</span></asp:TableHeaderCell>
+                        <asp:TableHeaderCell style="text-align:center"><span title="Effect">cE</span></asp:TableHeaderCell>
+                        <asp:TableHeaderCell style="text-align:center"><span title="Logic Type">cL</span></asp:TableHeaderCell>
+                        <asp:TableHeaderCell style="text-align:center"><span title="Functionality">cF</span></asp:TableHeaderCell>
+                        <asp:TableHeaderCell style="text-align:center"><span title="Activation">cC</span></asp:TableHeaderCell>
+                        <asp:TableHeaderCell style="text-align:center"><span title="Physical Layout">cP</span></asp:TableHeaderCell>
+                        <asp:TableHeaderCell style="text-align:center"><span title="Location">cO</span></asp:TableHeaderCell>
+                    </asp:TableHeaderRow>
+                    <asp:TableRow runat="server" ID="TableRow3">
+                        <asp:TableCell style="text-align:center" ID="trjnCelliR">
+                            <label id="trjnCelliR_lbl" runat="server"></label>
+                        </asp:TableCell>
+                        <asp:TableCell style="text-align:center" ID="trjnCelliA">
+                            <label id="trjnCelliA_lbl" runat="server"></label>
+                        </asp:TableCell>
+                        <asp:TableCell style="text-align:center" ID="trjnCelliE">
+                            <label id="trjnCelliE_lbl" runat="server"></label>
+                        </asp:TableCell>
+                        <asp:TableCell style="text-align:center" ID="trjnCelliL">
+                            <label id="trjnCelliL_lbl" runat="server"></label>
+                        </asp:TableCell>
+                        <asp:TableCell style="text-align:center" ID="trjnCelliF">
+                            <label id="trjnCelliF_lbl" runat="server"></label>
+                        </asp:TableCell>
+                        <asp:TableCell style="text-align:center" ID="trjnCelliC">
+                            <label id="trjnCelliC_lbl" runat="server"></label>
+                        </asp:TableCell>
+                        <asp:TableCell style="text-align:center" ID="trjnCelliP">
+                            <label id="trjnCelliP_lbl" runat="server"></label>
+                        </asp:TableCell>
+                        <asp:TableCell ID="trjnCelliO" Style="border-right-width: medium; text-align:center">
+                            <label id="trjnCelliO_lbl" runat="server"></label>
+                        </asp:TableCell>
+
+
+                        <asp:TableCell style="text-align:center" ID="trjnCellcR">
+                            <label id="trjnCellcR_lbl" runat="server"></label>
+                        </asp:TableCell>
+                        <asp:TableCell style="text-align:center" ID="trjnCellcA">
+                            <label id="trjnCellcA_lbl" runat="server"></label>
+                        </asp:TableCell>
+                        <asp:TableCell style="text-align:center" ID="trjnCellcE">
+                            <label id="trjnCellcE_lbl" runat="server"></label>
+                        </asp:TableCell>
+                        <asp:TableCell style="text-align:center" ID="trjnCellcL">
+                            <label id="trjnCellcL_lbl" runat="server"></label>
+                        </asp:TableCell>
+                        <asp:TableCell style="text-align:center" ID="trjnCellcF">
+                            <label id="trjnCellcF_lbl" runat="server"></label>
+                        </asp:TableCell>
+                        <asp:TableCell style="text-align:center" ID="trjnCellcC">
+                            <label id="trjnCellcC_lbl" runat="server"></label>
+                        </asp:TableCell>
+                        <asp:TableCell style="text-align:center" ID="trjnCellcP">
+                            <label id="trjnCellcP_lbl" runat="server"></label>
+                        </asp:TableCell>
+                        <asp:TableCell style="text-align:center" ID="trjnCellcO">
+                            <label id="trjnCellcO_lbl" runat="server"></label>
+                        </asp:TableCell>
+                    </asp:TableRow>
+                </asp:Table>
         </div>
         <asp:UpdatePanel runat="server" ID="updatePnl" UpdateMode="Conditional">
             <ContentTemplate>

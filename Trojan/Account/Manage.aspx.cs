@@ -9,11 +9,13 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using Owin;
 using Trojan.Models;
+using System.Web.UI.WebControls;
 
 namespace Trojan.Account
 {
     public partial class Manage : System.Web.UI.Page
     {
+        TrojanContext db = new TrojanContext();
         protected string SuccessMessage
         {
             get;
@@ -60,7 +62,7 @@ namespace Trojan.Account
                     CreatePassword.Visible = true;
                     ChangePassword.Visible = false;
                 }
-
+                populate();
                 // Render success message
                 var message = Request.QueryString["m"];
                 if (message != null)
@@ -123,6 +125,50 @@ namespace Trojan.Account
             manager.SetTwoFactorEnabled(User.Identity.GetUserId(), true);
 
             Response.Redirect("/Account/Manage");
+        }
+
+        private void populate()
+        {
+            
+            trojanDrpDown.DataSource = (from b in db.severityRating where ((b.userName == HttpContext.Current.User.Identity.Name) && (b.coverage == false)) select b).ToList();
+            trojanDrpDown.DataValueField = "nickName";
+            trojanDrpDown.DataBind();
+            trojanDrpDown.Items.Insert(0, new ListItem("-- Select a Trojan --", "0"));
+
+            detectDrpDwn.DataSource = (from b in db.severityRating where ((b.userName == HttpContext.Current.User.Identity.Name) && (b.coverage == true)) select b).ToList();
+            detectDrpDwn.DataValueField = "nickName";
+            detectDrpDwn.DataBind();
+            detectDrpDwn.Items.Insert(0, new ListItem("-- Select a Method --", "0"));
+        }
+
+        protected void deleteTrojanBtn_Click(object sender, EventArgs e)
+        {
+            var virus = db.Virus.Where(c => (c.virusNickName == trojanDrpDown.SelectedValue)).FirstOrDefault();
+            string virusId = virus.virusId;
+
+            db.Virus.Remove(virus);
+            var items = db.Virus_Item.Where(c => c.VirusId == virusId).ToList();
+            foreach(var I in items)
+            {
+                db.Virus_Item.Remove(I);
+            }
+
+            var rating = db.severityRating.Where(c => (c.VirusId == virusId)).ToList();
+            foreach(var R in rating)
+            {
+                db.severityRating.Remove(R);
+            }
+            db.SaveChanges();
+            populate();
+        }
+
+        protected void dtcnDeleteBtn_Click(object sender, EventArgs e)
+        {
+            
+            var rating = db.severityRating.Where(c => (c.nickName == detectDrpDwn.SelectedValue) && (c.userName == HttpContext.Current.User.Identity.Name)).FirstOrDefault();
+            db.severityRating.Remove(rating);
+            db.SaveChanges();
+            populate();
         }
     }
 }

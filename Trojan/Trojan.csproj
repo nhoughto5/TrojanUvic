@@ -285,6 +285,7 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Images\Circuits.jpg" />
     <Content Include="Images\ComingSoon.png" />
+    <Content Include="Images\Detective.jpg" />
     <Content Include="Images\engBuild.jpg" />
     <Content Include="Images\fayezImg.jpg" />
     <Content Include="Images\HW_trojan.png" />

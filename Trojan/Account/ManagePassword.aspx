@@ -48,7 +48,6 @@
 
             <asp:PlaceHolder runat="server" ID="changePasswordHolder" Visible="false">
                 <div class="form-horizontal">
-                    <h4>Change Password Form</h4>
                     <hr />
                     <asp:ValidationSummary runat="server" ShowModelStateErrors="true" CssClass="text-danger" />
                     <div class="form-group">

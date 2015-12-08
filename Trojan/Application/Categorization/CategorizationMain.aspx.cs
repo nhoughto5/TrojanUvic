@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using Trojan.Logic;
 using Trojan.Models;
 
 namespace Trojan.Application.Categorization
@@ -43,6 +44,15 @@ namespace Trojan.Application.Categorization
                 selectedVirusName = trojanDrpDown.SelectedValue;
                 //Response.Redirect("~/Application/Categorization/Review.aspx");
                 Server.Transfer("~/Application/Categorization/Review.aspx", true);
+            }
+        }
+
+        protected void newVirusBtn_Click(object sender, EventArgs e)
+        {
+            using(VirusDescriptionActions usersVirus = new VirusDescriptionActions())
+            {
+                usersVirus.setNewVirusId();
+                Response.Redirect("~/Application/Categorization/VirusDescription.aspx");
             }
         }
     }
