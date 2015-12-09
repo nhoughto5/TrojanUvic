@@ -316,6 +316,7 @@
     <Content Include="Content\bootstrap-theme.css.map" />
     <Content Include="Content\bootstrap.css.map" />
     <Content Include="Application\Categorization\Categorization.Master" />
+    <None Include="Properties\PublishProfiles\TrojanSystemUvic %282%29.pubxml" />
     <None Include="Properties\PublishProfiles\TrojanSystemUvic.pubxml" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -599,6 +600,11 @@
     <Compile Include="Logic\RoleActions.cs" />
     <Compile Include="Logic\Severity.cs" />
     <Compile Include="Logic\VirusDescriptionActions.cs" />
+    <Compile Include="Migrations\201512092207354_Initial.cs" />
+    <Compile Include="Migrations\201512092207354_Initial.Designer.cs">
+      <DependentUpon>201512092207354_Initial.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Attribute.cs" />
     <Compile Include="Models\Category.cs" />
     <Compile Include="Models\Connection.cs" />
@@ -652,6 +658,11 @@
   <ItemGroup>
     <Folder Include="Application\Attacks\" />
     <Folder Include="App_Data\" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201512092207354_Initial.resx">
+      <DependentUpon>201512092207354_Initial.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -22,7 +22,7 @@ namespace Trojan
             BundleConfig.RegisterBundles(BundleTable.Bundles);
             Database.SetInitializer(new DatabaseInit());
             TrojanContext db = new TrojanContext();
-            //db.Database.Initialize(true);
+            db.Database.Initialize(force: true);
             RouteTable.Routes.MapHttpRoute("DescriptionAPI", "api/{controller}/{id}");
 
             // Create the custom role and user.

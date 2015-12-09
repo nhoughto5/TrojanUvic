@@ -36,7 +36,7 @@
                         </asp:UpdatePanel>
 
                     </dd>
-                    <dt>Delete a Metod:</dt>
+                    <dt>Delete a Method:</dt>
                     <dd>
                         <asp:UpdatePanel runat="server">
                             <ContentTemplate>
