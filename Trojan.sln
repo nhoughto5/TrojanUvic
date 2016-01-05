@@ -1,9 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Trojan", "Trojan\Trojan.csproj", "{11371430-1BB9-4B76-8041-1A1B508F11AA}"
+EndProject
+Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "uvicTrojanDB", "..\..\..\Visual Studio 2015\Projects\uvicTrojanDB\uvicTrojanDB.sqlproj", "{CC1ED3E1-D8BB-442E-881D-20C1FD668146}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WingtipToys", "..\..\..\Visual Studio 2015\Projects\C#\WingtipToys\WingtipToys.csproj", "{3F8458A7-02DD-4B8C-B4E0-F6132D51ADDD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +19,16 @@ Global
 		{11371430-1BB9-4B76-8041-1A1B508F11AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{11371430-1BB9-4B76-8041-1A1B508F11AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{11371430-1BB9-4B76-8041-1A1B508F11AA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CC1ED3E1-D8BB-442E-881D-20C1FD668146}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CC1ED3E1-D8BB-442E-881D-20C1FD668146}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CC1ED3E1-D8BB-442E-881D-20C1FD668146}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{CC1ED3E1-D8BB-442E-881D-20C1FD668146}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CC1ED3E1-D8BB-442E-881D-20C1FD668146}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CC1ED3E1-D8BB-442E-881D-20C1FD668146}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{3F8458A7-02DD-4B8C-B4E0-F6132D51ADDD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3F8458A7-02DD-4B8C-B4E0-F6132D51ADDD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3F8458A7-02DD-4B8C-B4E0-F6132D51ADDD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3F8458A7-02DD-4B8C-B4E0-F6132D51ADDD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

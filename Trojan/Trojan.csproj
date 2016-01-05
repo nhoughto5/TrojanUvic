@@ -282,6 +282,7 @@
     <Content Include="Content\Site.css" />
     <Content Include="Content\visualizer.css" />
     <Content Include="Detection.aspx" />
+    <Content Include="ErrorPage.aspx" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Images\Circuits.jpg" />
     <Content Include="Images\ComingSoon.png" />
@@ -317,6 +318,7 @@
     <Content Include="Content\bootstrap.css.map" />
     <Content Include="Application\Categorization\Categorization.Master" />
     <None Include="Properties\PublishProfiles\TrojanSystemUvic %282%29.pubxml" />
+    <None Include="Properties\PublishProfiles\TrojanSystemUvic - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\TrojanSystemUvic.pubxml" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -593,18 +595,21 @@
     <Compile Include="Detection.aspx.designer.cs">
       <DependentUpon>Detection.aspx</DependentUpon>
     </Compile>
+    <Compile Include="ErrorPage.aspx.cs">
+      <DependentUpon>ErrorPage.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ErrorPage.aspx.designer.cs">
+      <DependentUpon>ErrorPage.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Logic\CatLogic.cs" />
+    <Compile Include="Logic\ExceptionUtility.cs" />
     <Compile Include="Logic\RoleActions.cs" />
     <Compile Include="Logic\Severity.cs" />
     <Compile Include="Logic\VirusDescriptionActions.cs" />
-    <Compile Include="Migrations\201512092207354_Initial.cs" />
-    <Compile Include="Migrations\201512092207354_Initial.Designer.cs">
-      <DependentUpon>201512092207354_Initial.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Attribute.cs" />
     <Compile Include="Models\Category.cs" />
     <Compile Include="Models\Connection.cs" />
@@ -658,11 +663,6 @@
   <ItemGroup>
     <Folder Include="Application\Attacks\" />
     <Folder Include="App_Data\" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Migrations\201512092207354_Initial.resx">
-      <DependentUpon>201512092207354_Initial.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
