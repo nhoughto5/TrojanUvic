@@ -39,7 +39,8 @@ namespace Trojan.Logic
             var appUser = new ApplicationUser
             {
                 UserName = "canEditUser@TrojanUvic.com",
-                Email = "canEditUser@TrojanUvic.com"
+                Email = "canEditUser@TrojanUvic.com",
+                EmailConfirmed = true
             };
             IdUserResult = userMgr.Create(appUser, "Cardice0!");
 
