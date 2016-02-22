@@ -198,6 +198,7 @@
     <Content Include="Account\ResetPasswordConfirmation.aspx" />
     <Content Include="Account\TwoFactorAuthenticationSignIn.aspx" />
     <Content Include="Account\VerifyPhoneNumber.aspx" />
+    <Content Include="Application\Attacks\Attacks.aspx" />
     <Content Include="Application\Categorization\AddToDescription.aspx" />
     <Content Include="Admin\AdminPage.aspx" />
     <Content Include="Application\ApplicationHome.aspx" />
@@ -281,6 +282,7 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\Site.css" />
     <Content Include="Content\visualizer.css" />
+    <Content Include="Content\x3dom.css" />
     <Content Include="Detection.aspx" />
     <Content Include="ErrorPage.aspx" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
@@ -304,6 +306,7 @@
     <Content Include="JavaScript\DirectedGraph.js" />
     <Content Include="JavaScript\REference.js" />
     <Content Include="JavaScript\visualizer.js" />
+    <Content Include="JavaScript\x3dom-full.js" />
     <Content Include="packages.config" />
     <Content Include="Account\Web.config" />
     <Content Include="Catalog\Images\Thumbs.db" />
@@ -324,6 +327,7 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <Content Include="JavaScript\AttackGraph.js" />
     <Content Include="Scripts\d3\d3.js" />
     <Content Include="Scripts\d3\d3.min.js" />
     <Content Include="Scripts\d3\LICENSE" />
@@ -487,6 +491,13 @@
     <Compile Include="Account\VerifyPhoneNumber.aspx.designer.cs">
       <DependentUpon>VerifyPhoneNumber.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Application\Attacks\Attacks.aspx.cs">
+      <DependentUpon>Attacks.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Application\Attacks\Attacks.aspx.designer.cs">
+      <DependentUpon>Attacks.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Application\Categorization\AddToDescription.aspx.cs">
       <DependentUpon>AddToDescription.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -616,6 +627,7 @@
       <DependentUpon>201601051707517_Initial.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\AttackVector.cs" />
     <Compile Include="Models\Attribute.cs" />
     <Compile Include="Models\Category.cs" />
     <Compile Include="Models\Connection.cs" />
@@ -667,7 +679,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Application\Attacks\" />
     <Folder Include="App_Data\" />
   </ItemGroup>
   <ItemGroup>

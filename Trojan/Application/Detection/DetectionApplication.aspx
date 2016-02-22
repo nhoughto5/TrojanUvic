@@ -270,7 +270,7 @@
         
         <div runat="server" id="resultDiv">
             <hr />
-            <p style="font-size: 11px">Comparison Result: A value of 1 represents the case where the method covers Trojan</p>
+            <p style="font-size: 11px">Comparison Result: A value of 1 represents the case where the method covers the trojan</p>
             <asp:UpdatePanel runat="server" ID="resultPanel" UpdateMode="Conditional">
                 <ContentTemplate>
                     <asp:Table runat="server" ID="resultRow" CssClass="table table-striped table-bordered">

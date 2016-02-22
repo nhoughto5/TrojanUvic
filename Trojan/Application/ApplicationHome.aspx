@@ -46,8 +46,8 @@
         <div class="col-md-8" runat="server">
             <p>Coming Soon</p>
             <div runat="server">
-                <%--<a class="btn btn-primary"  runat="server" href="~/Attacks.aspx">Attack Tool &raquo;</a>--%>
-                <asp:LinkButton ID="attackBtn" class="btn btn-primary" runat="server" OnClick="attackBtn_Click">Attack Tool &raquo;</asp:LinkButton>
+                <a class="btn btn-primary"  runat="server" href="~/Application/Attacks/Attacks.aspx">Attack Tool &raquo;</a>
+                <%--<asp:LinkButton ID="attackBtn" class="btn btn-primary" runat="server" OnClick="attackBtn_Click">Attack Tool &raquo;</asp:LinkButton>--%>
             </div>
         </div>
     </div>
