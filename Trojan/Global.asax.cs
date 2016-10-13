@@ -20,9 +20,9 @@ namespace Trojan
             // Code that runs on application startup
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
-            //Database.SetInitializer(new DatabaseInit());
-            //TrojanContext db = new TrojanContext();
-            //db.Database.Initialize(force: true);
+            Database.SetInitializer(new DatabaseInit());
+            TrojanContext db = new TrojanContext();
+            db.Database.Initialize(force: true);
             RouteTable.Routes.MapHttpRoute("DescriptionAPI", "api/{controller}/{id}");
 
             // Create the custom role and user.

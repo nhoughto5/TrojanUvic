@@ -7,7 +7,7 @@ namespace Trojan.Models
 {
     public class TrojanContext : DbContext
     {
-        public TrojanContext() : base("Trojan")
+        public TrojanContext() : base("DefaultConnection")
         {
 
         }

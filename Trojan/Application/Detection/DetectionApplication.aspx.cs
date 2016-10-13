@@ -315,6 +315,7 @@ namespace Trojan.Application.Detection
                 if (trjnDtcnCompare(trojan.iR, method.iR))
                 {
                     resultLblIr.InnerText = "1";
+                    resultLblIr.Attributes.Clear();
                 }
                 else
                 {
@@ -334,6 +335,7 @@ namespace Trojan.Application.Detection
                 if (trjnDtcnCompare(trojan.iA, method.iA))
                 {
                     resultLblIa.InnerText = "1";
+                    resultLblIa.Attributes.Clear();
                 }
                 else
                 {
@@ -353,6 +355,8 @@ namespace Trojan.Application.Detection
                 if (trjnDtcnCompare(trojan.iE, method.iE))
                 {
                     resultLblIe.InnerText = "1";
+                    resultLblIe.Attributes.Clear();
+                    //resultLblIe.Attributes.Remove("class");
                 }
                 else
                 {
@@ -372,6 +376,7 @@ namespace Trojan.Application.Detection
                 if (trjnDtcnCompare(trojan.iL, method.iL))
                 {
                     resultLblIl.InnerText = "1";
+                    resultLblIl.Attributes.Clear();
                 }
                 else
                 {
@@ -391,6 +396,7 @@ namespace Trojan.Application.Detection
                 if (trjnDtcnCompare(trojan.iF, method.iF))
                 {
                     resultLblIf.InnerText = "1";
+                    resultLblIf.Attributes.Clear();
                 }
                 else
                 {
@@ -410,6 +416,7 @@ namespace Trojan.Application.Detection
                 if (trjnDtcnCompare(trojan.iC, method.iC))
                 {
                     resultLblIc.InnerText = "1";
+                    resultLblIc.Attributes.Clear();
                 }
                 else
                 {
@@ -429,6 +436,7 @@ namespace Trojan.Application.Detection
                 if (trjnDtcnCompare(trojan.iP, method.iP))
                 {
                     resultLblIp.InnerText = "1";
+                    resultLblIp.Attributes.Clear();
                 }
                 else
                 {
@@ -448,6 +456,7 @@ namespace Trojan.Application.Detection
                 if (trjnDtcnCompare(trojan.iO, method.iO))
                 {
                     resultLblIo.InnerText = "1";
+                    resultLblIo.Attributes.Clear();
                 }
                 else
                 {
@@ -469,6 +478,7 @@ namespace Trojan.Application.Detection
                 if (trjnDtcnCompare(trojan.cR, method.cR))
                 {
                     resultLblCr.InnerText = "1";
+                    resultLblCr.Attributes.Clear();
                 }
                 else
                 {
@@ -488,6 +498,7 @@ namespace Trojan.Application.Detection
                 if (trjnDtcnCompare(trojan.cA, method.cA))
                 {
                     resultLblCa.InnerText = "1";
+                    resultLblCa.Attributes.Clear();
                 }
                 else
                 {
@@ -507,6 +518,7 @@ namespace Trojan.Application.Detection
                 if (trjnDtcnCompare(trojan.cE, method.cE))
                 {
                     resultLblCe.InnerText = "1";
+                    resultLblCe.Attributes.Clear();
                 }
                 else
                 {
@@ -526,6 +538,7 @@ namespace Trojan.Application.Detection
                 if (trjnDtcnCompare(trojan.cL, method.cL))
                 {
                     resultLblCl.InnerText = "1";
+                    resultLblCl.Attributes.Clear();
                 }
                 else
                 {
@@ -545,6 +558,7 @@ namespace Trojan.Application.Detection
                 if (trjnDtcnCompare(trojan.cF, method.cF))
                 {
                     resultLblCf.InnerText = "1";
+                    resultLblCf.Attributes.Clear();
                 }
                 else
                 {
@@ -564,6 +578,7 @@ namespace Trojan.Application.Detection
                 if (trjnDtcnCompare(trojan.cC, method.cC))
                 {
                     resultLblCc.InnerText = "1";
+                    resultLblCc.Attributes.Clear();
                 }
                 else
                 {
@@ -583,6 +598,7 @@ namespace Trojan.Application.Detection
                 if (trjnDtcnCompare(trojan.cP, method.cP))
                 {
                     resultLblCp.InnerText = "1";
+                    resultLblCp.Attributes.Clear();
                 }
                 else
                 {
@@ -602,6 +618,7 @@ namespace Trojan.Application.Detection
                 if (trjnDtcnCompare(trojan.cO, method.cO))
                 {
                     resultLblCo.InnerText = "1";
+                    resultLblCo.Attributes.Clear();
                 }
                 else
                 {

@@ -123,7 +123,15 @@ namespace Trojan
             // Send the email.
             if (transportWeb != null)
             {
-                await transportWeb.DeliverAsync(myMessage);
+                try
+                {
+                    await transportWeb.DeliverAsync(myMessage);
+                }
+                catch (Exception)
+                {
+
+                    //throw;
+                }
             }
             else
             {

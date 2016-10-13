@@ -1890,11 +1890,7 @@ namespace Trojan
         }
         private void hideResults()
         {
-            //labels.Visible = false;
             NoSelected.Visible = false;
-            //LabelTotalText.Visible = lblTotal.Visible = false;
-            //LabelTotalF_in.Visible = lblTotalF_in.Visible = false;
-            //LabelTotalF_out.Visible = lblTotalF_out.Visible = false;
             canNot.Visible = false;
             abstractionNone.Visible = abstractionNone.Visible = abstractionResults.Visible = abstractionGrid.Visible = false;
             directNone.Visible = direct.Visible = directGrid.Visible = false;
@@ -1968,9 +1964,6 @@ namespace Trojan
                         virus.userName = HttpContext.Current.User.Identity.Name;
                         virus.virusNickName = this.saveNameTxtBx.Text;
                     }
-                    //List<Virus_Item> items = (from b in db.Virus_Item where (b.VirusId == virusId) select b).ToList();
-                    //items.Select(c => { c.Saved = true; return c; }).ToList();
-
                     severityRating severityRating = db.severityRating.Where(c => c.VirusId == virusId).FirstOrDefault();
                     severityRating.coverage = false;
                     severityRating.Saved = true;

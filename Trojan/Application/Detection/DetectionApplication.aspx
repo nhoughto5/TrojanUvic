@@ -13,22 +13,22 @@
             <p style="font-size: 11px">*Hover Over Each Column Heading for Information*</p>
             <asp:Table runat="server" ID="covrgTable" CssClass="table table-striped table-bordered">
                 <asp:TableHeaderRow runat="server" ID="HeaderRow">
-                    <asp:TableHeaderCell style="text-align:center"><span title="Insertion">iR</span></asp:TableHeaderCell>
-                    <asp:TableHeaderCell style="text-align:center"><span title="Abstraction">iA</span></asp:TableHeaderCell>
-                    <asp:TableHeaderCell style="text-align:center"><span title="Effect">iE</span></asp:TableHeaderCell>
-                    <asp:TableHeaderCell style="text-align:center"><span title="Logic Type">iL</span></asp:TableHeaderCell>
-                    <asp:TableHeaderCell style="text-align:center"><span title="Functionality">iF</span></asp:TableHeaderCell>
-                    <asp:TableHeaderCell style="text-align:center"><span title="Activation">iC</span></asp:TableHeaderCell>
-                    <asp:TableHeaderCell style="text-align:center"><span title="Physical Layout">iP</span></asp:TableHeaderCell>
-                    <asp:TableHeaderCell style="border-right-width: medium; text-align:center"><span title="Location">iO</span></asp:TableHeaderCell>
-                    <asp:TableHeaderCell style="text-align:center"><span title="Insertion">cR</span></asp:TableHeaderCell>
-                    <asp:TableHeaderCell style="text-align:center"><span title="Abstraction">cA</span></asp:TableHeaderCell>
-                    <asp:TableHeaderCell style="text-align:center"><span title="Effect">cE</span></asp:TableHeaderCell>
-                    <asp:TableHeaderCell style="text-align:center"><span title="Logic Type">cL</span></asp:TableHeaderCell>
-                    <asp:TableHeaderCell style="text-align:center"><span title="Functionality">cF</span></asp:TableHeaderCell>
-                    <asp:TableHeaderCell style="text-align:center"><span title="Activation">cC</span></asp:TableHeaderCell>
-                    <asp:TableHeaderCell style="text-align:center"><span title="Physical Layout">cP</span></asp:TableHeaderCell>
-                    <asp:TableHeaderCell style="text-align:center"><span title="Location">cO</span></asp:TableHeaderCell>
+                    <asp:TableHeaderCell style="text-align:center" Font-Size="Large"><span title="Insertion">I<sub>R</sub></span></asp:TableHeaderCell>
+                    <asp:TableHeaderCell style="text-align:center" Font-Size="Large"><span title="Abstraction">I<sub>A</sub></span></asp:TableHeaderCell>
+                    <asp:TableHeaderCell style="text-align:center" Font-Size="Large"><span title="Effect">I<sub>E</sub></span></asp:TableHeaderCell>
+                    <asp:TableHeaderCell style="text-align:center" Font-Size="Large"><span title="Logic Type">I<sub>L</sub></span></asp:TableHeaderCell>
+                    <asp:TableHeaderCell style="text-align:center" Font-Size="Large"><span title="Functionality">I<sub>F</sub></span></asp:TableHeaderCell>
+                    <asp:TableHeaderCell style="text-align:center" Font-Size="Large"><span title="Activation">I<sub>C</sub></span></asp:TableHeaderCell>
+                    <asp:TableHeaderCell style="text-align:center" Font-Size="Large"><span title="Physical Layout">I<sub>P</sub></span></asp:TableHeaderCell>
+                    <asp:TableHeaderCell style="border-right-width: medium; text-align:center" Font-Size="Large"><span title="Location">I<sub>O</sub></span></asp:TableHeaderCell>
+                    <asp:TableHeaderCell style="text-align:center" Font-Size="Large"><span title="Insertion">C<sub>R</sub></span></asp:TableHeaderCell>
+                    <asp:TableHeaderCell style="text-align:center" Font-Size="Large"><span title="Abstraction">C<sub>A</sub></span></asp:TableHeaderCell>
+                    <asp:TableHeaderCell style="text-align:center" Font-Size="Large"><span title="Effect">C<sub>E</sub></span></asp:TableHeaderCell>
+                    <asp:TableHeaderCell style="text-align:center" Font-Size="Large"><span title="Logic Type">C<sub>L</sub></span></asp:TableHeaderCell>
+                    <asp:TableHeaderCell style="text-align:center" Font-Size="Large"><span title="Functionality">C<sub>F</sub></span></asp:TableHeaderCell>
+                    <asp:TableHeaderCell style="text-align:center" Font-Size="Large"><span title="Activation">C<sub>C</sub></span></asp:TableHeaderCell>
+                    <asp:TableHeaderCell style="text-align:center" Font-Size="Large"><span title="Physical Layout">C<sub>P</sub></span></asp:TableHeaderCell>
+                    <asp:TableHeaderCell style="text-align:center" Font-Size="Large"><span title="Location">C<sub>O</sub></span></asp:TableHeaderCell>
                 </asp:TableHeaderRow>
                 <asp:TableRow runat="server" ID="cvrgTblRow1">
                     <asp:TableCell style="text-align:center" ID="celliR">
@@ -110,22 +110,22 @@
             <ContentTemplate>
                 <asp:Table runat="server" ID="Table1" CssClass="table table-striped table-bordered">
                 <asp:TableHeaderRow runat="server" ID="TableHeaderRow1">
-                    <asp:TableHeaderCell style="text-align:center"><span title="Insertion">iR</span></asp:TableHeaderCell>
-                    <asp:TableHeaderCell style="text-align:center"><span title="Abstraction">iA</span></asp:TableHeaderCell>
-                    <asp:TableHeaderCell style="text-align:center"><span title="Effect">iE</span></asp:TableHeaderCell>
-                    <asp:TableHeaderCell style="text-align:center"><span title="Logic Type">iL</span></asp:TableHeaderCell>
-                    <asp:TableHeaderCell style="text-align:center"><span title="Functionality">iF</span></asp:TableHeaderCell>
-                    <asp:TableHeaderCell style="text-align:center"><span title="Activation">iC</span></asp:TableHeaderCell>
-                    <asp:TableHeaderCell style="text-align:center"><span title="Physical Layout">iP</span></asp:TableHeaderCell>
-                    <asp:TableHeaderCell Style="border-right-width: medium; text-align:center"><span title="Location">iO</span></asp:TableHeaderCell>
-                    <asp:TableHeaderCell style="text-align:center"><span title="Insertion">cR</span></asp:TableHeaderCell>
-                    <asp:TableHeaderCell style="text-align:center"><span title="Abstraction">cA</span></asp:TableHeaderCell>
-                    <asp:TableHeaderCell style="text-align:center"><span title="Effect">cE</span></asp:TableHeaderCell>
-                    <asp:TableHeaderCell style="text-align:center"><span title="Logic Type">cL</span></asp:TableHeaderCell>
-                    <asp:TableHeaderCell style="text-align:center"><span title="Functionality">cF</span></asp:TableHeaderCell>
-                    <asp:TableHeaderCell style="text-align:center"><span title="Activation">cC</span></asp:TableHeaderCell>
-                    <asp:TableHeaderCell style="text-align:center"><span title="Physical Layout">cP</span></asp:TableHeaderCell>
-                    <asp:TableHeaderCell style="text-align:center"><span title="Location">cO</span></asp:TableHeaderCell>
+                    <asp:TableHeaderCell style="text-align:center" Font-Size="Large"><span title="Insertion">I<sub>R</sub></span></asp:TableHeaderCell>
+                    <asp:TableHeaderCell style="text-align:center" Font-Size="Large"><span title="Abstraction">I<sub>A</sub></span></asp:TableHeaderCell>
+                    <asp:TableHeaderCell style="text-align:center" Font-Size="Large"><span title="Effect">I<sub>E</sub></span></asp:TableHeaderCell>
+                    <asp:TableHeaderCell style="text-align:center" Font-Size="Large"><span title="Logic Type">I<sub>L</sub></span></asp:TableHeaderCell>
+                    <asp:TableHeaderCell style="text-align:center" Font-Size="Large"><span title="Functionality">I<sub>F</sub></span></asp:TableHeaderCell>
+                    <asp:TableHeaderCell style="text-align:center" Font-Size="Large"><span title="Activation">I<sub>C</sub></span></asp:TableHeaderCell>
+                    <asp:TableHeaderCell style="text-align:center" Font-Size="Large"><span title="Physical Layout">I<sub>P</sub></span></asp:TableHeaderCell>
+                    <asp:TableHeaderCell style="border-right-width: medium; text-align:center" Font-Size="Large"><span title="Location">I<sub>O</sub></span></asp:TableHeaderCell>
+                    <asp:TableHeaderCell style="text-align:center" Font-Size="Large"><span title="Insertion">C<sub>R</sub></span></asp:TableHeaderCell>
+                    <asp:TableHeaderCell style="text-align:center" Font-Size="Large"><span title="Abstraction">C<sub>A</sub></span></asp:TableHeaderCell>
+                    <asp:TableHeaderCell style="text-align:center" Font-Size="Large"><span title="Effect">C<sub>E</sub></span></asp:TableHeaderCell>
+                    <asp:TableHeaderCell style="text-align:center" Font-Size="Large"><span title="Logic Type">C<sub>L</sub></span></asp:TableHeaderCell>
+                    <asp:TableHeaderCell style="text-align:center" Font-Size="Large"><span title="Functionality">C<sub>F</sub></span></asp:TableHeaderCell>
+                    <asp:TableHeaderCell style="text-align:center" Font-Size="Large"><span title="Activation">C<sub>C</sub></span></asp:TableHeaderCell>
+                    <asp:TableHeaderCell style="text-align:center" Font-Size="Large"><span title="Physical Layout">C<sub>P</sub></span></asp:TableHeaderCell>
+                    <asp:TableHeaderCell style="text-align:center" Font-Size="Large"><span title="Location">C<sub>O</sub></span></asp:TableHeaderCell>
                 </asp:TableHeaderRow>
                 <asp:TableRow runat="server" ID="TableRow1">
                     <asp:TableCell style="text-align:center" ID="dtctnCelliR">
@@ -192,22 +192,22 @@
             <ContentTemplate>
                 <asp:Table runat="server" ID="Table3" CssClass="table table-striped table-bordered">
                     <asp:TableHeaderRow runat="server" ID="TableHeaderRow3">
-                        <asp:TableHeaderCell style="text-align:center"><span title="Insertion">iR</span></asp:TableHeaderCell>
-                        <asp:TableHeaderCell style="text-align:center"><span title="Abstraction">iA</span></asp:TableHeaderCell>
-                        <asp:TableHeaderCell style="text-align:center"><span title="Effect">iE</span></asp:TableHeaderCell>
-                        <asp:TableHeaderCell style="text-align:center"><span title="Logic Type">iL</span></asp:TableHeaderCell>
-                        <asp:TableHeaderCell style="text-align:center"><span title="Functionality">iF</span></asp:TableHeaderCell>
-                        <asp:TableHeaderCell style="text-align:center"><span title="Activation">iC</span></asp:TableHeaderCell>
-                        <asp:TableHeaderCell style="text-align:center"><span title="Physical Layout">iP</span></asp:TableHeaderCell>
-                        <asp:TableHeaderCell Style="border-right-width: medium; text-align:center"><span title="Location">iO</span></asp:TableHeaderCell>
-                        <asp:TableHeaderCell style="text-align:center"><span title="Insertion">cR</span></asp:TableHeaderCell>
-                        <asp:TableHeaderCell style="text-align:center"><span title="Abstraction">cA</span></asp:TableHeaderCell>
-                        <asp:TableHeaderCell style="text-align:center"><span title="Effect">cE</span></asp:TableHeaderCell>
-                        <asp:TableHeaderCell style="text-align:center"><span title="Logic Type">cL</span></asp:TableHeaderCell>
-                        <asp:TableHeaderCell style="text-align:center"><span title="Functionality">cF</span></asp:TableHeaderCell>
-                        <asp:TableHeaderCell style="text-align:center"><span title="Activation">cC</span></asp:TableHeaderCell>
-                        <asp:TableHeaderCell style="text-align:center"><span title="Physical Layout">cP</span></asp:TableHeaderCell>
-                        <asp:TableHeaderCell style="text-align:center"><span title="Location">cO</span></asp:TableHeaderCell>
+                    <asp:TableHeaderCell style="text-align:center" Font-Size="Large"><span title="Insertion">I<sub>R</sub></span></asp:TableHeaderCell>
+                    <asp:TableHeaderCell style="text-align:center" Font-Size="Large"><span title="Abstraction">I<sub>A</sub></span></asp:TableHeaderCell>
+                    <asp:TableHeaderCell style="text-align:center" Font-Size="Large"><span title="Effect">I<sub>E</sub></span></asp:TableHeaderCell>
+                    <asp:TableHeaderCell style="text-align:center" Font-Size="Large"><span title="Logic Type">I<sub>L</sub></span></asp:TableHeaderCell>
+                    <asp:TableHeaderCell style="text-align:center" Font-Size="Large"><span title="Functionality">I<sub>F</sub></span></asp:TableHeaderCell>
+                    <asp:TableHeaderCell style="text-align:center" Font-Size="Large"><span title="Activation">I<sub>C</sub></span></asp:TableHeaderCell>
+                    <asp:TableHeaderCell style="text-align:center" Font-Size="Large"><span title="Physical Layout">I<sub>P</sub></span></asp:TableHeaderCell>
+                    <asp:TableHeaderCell style="border-right-width: medium; text-align:center" Font-Size="Large"><span title="Location">I<sub>O</sub></span></asp:TableHeaderCell>
+                    <asp:TableHeaderCell style="text-align:center" Font-Size="Large"><span title="Insertion">C<sub>R</sub></span></asp:TableHeaderCell>
+                    <asp:TableHeaderCell style="text-align:center" Font-Size="Large"><span title="Abstraction">C<sub>A</sub></span></asp:TableHeaderCell>
+                    <asp:TableHeaderCell style="text-align:center" Font-Size="Large"><span title="Effect">C<sub>E</sub></span></asp:TableHeaderCell>
+                    <asp:TableHeaderCell style="text-align:center" Font-Size="Large"><span title="Logic Type">C<sub>L</sub></span></asp:TableHeaderCell>
+                    <asp:TableHeaderCell style="text-align:center" Font-Size="Large"><span title="Functionality">C<sub>F</sub></span></asp:TableHeaderCell>
+                    <asp:TableHeaderCell style="text-align:center" Font-Size="Large"><span title="Activation">C<sub>C</sub></span></asp:TableHeaderCell>
+                    <asp:TableHeaderCell style="text-align:center" Font-Size="Large"><span title="Physical Layout">C<sub>P</sub></span></asp:TableHeaderCell>
+                    <asp:TableHeaderCell style="text-align:center" Font-Size="Large"><span title="Location">C<sub>O</sub></span></asp:TableHeaderCell>
                     </asp:TableHeaderRow>
                     <asp:TableRow runat="server" ID="TableRow3">
                         <asp:TableCell style="text-align:center" ID="trjnCelliR">
@@ -275,22 +275,22 @@
                 <ContentTemplate>
                     <asp:Table runat="server" ID="resultRow" CssClass="table table-striped table-bordered">
                         <asp:TableHeaderRow runat="server" CssClass="info">
-                    <asp:TableHeaderCell style="text-align:center"><span title="Insertion">iR</span></asp:TableHeaderCell>
-                    <asp:TableHeaderCell style="text-align:center"><span title="Abstraction">iA</span></asp:TableHeaderCell>
-                    <asp:TableHeaderCell style="text-align:center"><span title="Effect">iE</span></asp:TableHeaderCell>
-                    <asp:TableHeaderCell style="text-align:center"><span title="Logic Type">iL</span></asp:TableHeaderCell>
-                    <asp:TableHeaderCell style="text-align:center"><span title="Functionality">iF</span></asp:TableHeaderCell>
-                    <asp:TableHeaderCell style="text-align:center"><span title="Activation">iC</span></asp:TableHeaderCell>
-                    <asp:TableHeaderCell style="text-align:center"><span title="Physical Layout">iP</span></asp:TableHeaderCell>
-                    <asp:TableHeaderCell Style="border-right-width: medium; text-align:center"><span title="Location">iO</span></asp:TableHeaderCell>
-                    <asp:TableHeaderCell style="text-align:center"><span title="Insertion">cR</span></asp:TableHeaderCell>
-                    <asp:TableHeaderCell style="text-align:center"><span title="Abstraction">cA</span></asp:TableHeaderCell>
-                    <asp:TableHeaderCell style="text-align:center"><span title="Effect">cE</span></asp:TableHeaderCell>
-                    <asp:TableHeaderCell style="text-align:center"><span title="Logic Type">cL</span></asp:TableHeaderCell>
-                    <asp:TableHeaderCell style="text-align:center"><span title="Functionality">cF</span></asp:TableHeaderCell>
-                    <asp:TableHeaderCell style="text-align:center"><span title="Activation">cC</span></asp:TableHeaderCell>
-                    <asp:TableHeaderCell style="text-align:center"><span title="Physical Layout">cP</span></asp:TableHeaderCell>
-                    <asp:TableHeaderCell style="text-align:center"><span title="Location">cO</span></asp:TableHeaderCell>
+                    <asp:TableHeaderCell style="text-align:center" Font-Size="Large"><span title="Insertion">I<sub>R</sub></span></asp:TableHeaderCell>
+                    <asp:TableHeaderCell style="text-align:center" Font-Size="Large"><span title="Abstraction">I<sub>A</sub></span></asp:TableHeaderCell>
+                    <asp:TableHeaderCell style="text-align:center" Font-Size="Large"><span title="Effect">I<sub>E</sub></span></asp:TableHeaderCell>
+                    <asp:TableHeaderCell style="text-align:center" Font-Size="Large"><span title="Logic Type">I<sub>L</sub></span></asp:TableHeaderCell>
+                    <asp:TableHeaderCell style="text-align:center" Font-Size="Large"><span title="Functionality">I<sub>F</sub></span></asp:TableHeaderCell>
+                    <asp:TableHeaderCell style="text-align:center" Font-Size="Large"><span title="Activation">I<sub>C</sub></span></asp:TableHeaderCell>
+                    <asp:TableHeaderCell style="text-align:center" Font-Size="Large"><span title="Physical Layout">I<sub>P</sub></span></asp:TableHeaderCell>
+                    <asp:TableHeaderCell style="border-right-width: medium; text-align:center" Font-Size="Large"><span title="Location">I<sub>O</sub></span></asp:TableHeaderCell>
+                    <asp:TableHeaderCell style="text-align:center" Font-Size="Large"><span title="Insertion">C<sub>R</sub></span></asp:TableHeaderCell>
+                    <asp:TableHeaderCell style="text-align:center" Font-Size="Large"><span title="Abstraction">C<sub>A</sub></span></asp:TableHeaderCell>
+                    <asp:TableHeaderCell style="text-align:center" Font-Size="Large"><span title="Effect">C<sub>E</sub></span></asp:TableHeaderCell>
+                    <asp:TableHeaderCell style="text-align:center" Font-Size="Large"><span title="Logic Type">C<sub>L</sub></span></asp:TableHeaderCell>
+                    <asp:TableHeaderCell style="text-align:center" Font-Size="Large"><span title="Functionality">C<sub>F</sub></span></asp:TableHeaderCell>
+                    <asp:TableHeaderCell style="text-align:center" Font-Size="Large"><span title="Activation">C<sub>C</sub></span></asp:TableHeaderCell>
+                    <asp:TableHeaderCell style="text-align:center" Font-Size="Large"><span title="Physical Layout">C<sub>P</sub></span></asp:TableHeaderCell>
+                    <asp:TableHeaderCell style="text-align:center" Font-Size="Large"><span title="Location">C<sub>O</sub></span></asp:TableHeaderCell>
                 </asp:TableHeaderRow>
                         <asp:TableRow>
                             <asp:TableHeaderCell style="text-align:center" ID="cmprResultiR">
